@@ -61,6 +61,27 @@
 
         // 塗りつぶしの実行
         context0.fill();
+    
+    // 点を描画する関数
+    function drawNode(x, y){
+
+        // サブパスのリセット
+        context0.beginPath();    
+        // 塗りつぶしのスタイル指定
+        context0.fillStyle = "rgb(190, 0, 0)";
+
+        // 塗りつぶしの円を描画
+        context0.arc(x, y, 5, 0 / 180 * Math.PI, 360 / 180 * Math.PI);
+
+        // 塗りつぶしの実行
+        context0.fill();
+
+    }
+
+        // 動作確認
+        drawNode(50, 50);
+        drawNode(50, 400);
+        drawNode(300, 400);
 
 
 // 
