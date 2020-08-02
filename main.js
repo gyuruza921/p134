@@ -73,12 +73,15 @@
         // 始点の座標
         const point0 = {x: 20, y: 250};
 
+        // 始点を描画する
+        drawNode(point0.x, point0.y);
+
         // 始点とつながっている点を探し、隣接する点のリストを作成
-        const neighberNodelist = [];
+        let neighberNodelist = [];
+
         for(let i = 0; i <= startNode.length; i++){
 
             if(startNode[i] > 0){
-                console.log(i);
                 neighberNodelist.push(i);
             }
 
@@ -86,8 +89,40 @@
 
         console.log(neighberNodelist);
 
+        // 始点に隣接する点を描画
+        for(let i = 0; i <= neighberNodelist.length - 1; i ++){
+
+            // 描画する点の座標を決める(最初の点は150、次の点が300)
+            const pointN = {x: 80, y: 50 + i * point0.y * 2 / neighberNodelist.length}
+
+            console.log(pointN);
+            // 描画する
+            drawNode(pointN.x, pointN.y);
+
+        }
+
+
         // 配列から終点を取り出す(最も番号の大きい点)
         const endNode = graph[ graph.length - 1 ];
+
+        // リストの初期化
+        neighberNodelist = [];
+
+        // 
+        for(let i = 0; i <= startNode.length; i++){
+
+            if(endNode[i] > 0){
+                neighberNodelist.push(i);
+            }
+
+        }
+
+        console.log(neighberNodelist);
+
+        // 
+        const pointEnd = {x: 480, y: 250};
+
+        drawNode(pointEnd.x, pointEnd.y);
 
         // 
         console.log(startNode, endNode);
