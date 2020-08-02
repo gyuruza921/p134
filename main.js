@@ -26,9 +26,9 @@
 
         [0, 2, 3, -1, -1, -1], // 点0 点1,2と接する
         [2, 0, 3, -1, -1, -1], // 点1　点0,2と接する
-        [-1, 3, 0, 4, -1, -1], // 点2　点3,4と接する
+        [3, 3, 0, 4, -1, -1], // 点2　点0,3,4と接する
         [-1, -1, 4, 0, 5, 3], // 点3　点2,4,5と接する
-        [-1, -1, -1, 5, 0, 2], // 点4　点3,4,5と接する
+        [-1, -1, -1, 5, 0, 2], // 点4　点3,5と接する
         [-1, -1, -1, 3, 2, 0], // 点5　再右端　点3,4と接する
 
     ]
@@ -93,69 +93,58 @@
 
         console.log(nodeList);
 
-        // 配列から始点を取り出す(最も番号の若い点)
-        const startNode = graph[0]
-
         // 基準の座標
         const point0 = {x: 20, y: 250};
 
         // 始点を描画する
         drawNode(point0.x, point0.y);
 
-        // 始点とつながっている点を探し、隣接する点のリストを作成
-        let neighberNodelist = [];
 
-        for(let i = 0; i <= startNode.length; i++){
+        // グラフ内の各店の接点を探す
+        for(let i = 0 ; i <= nodeList.length -1; i ++){
 
-            if(startNode[i] > 0){
-                neighberNodelist.push(i);
+            const node = graph[i];
+
+            console.log(node);
+
+            // 各点とつながっている点を探し、隣接する点のリストを作成
+            let neighberNodelist2 = [];
+            for(let i = 0; i <= node.length - 1; i ++){
+                if(node[i] > 0){
+                    neighberNodelist2.push(i)
+                }
+
+            }
+
+            console.log(i, neighberNodelist2);
+
+            // 始点(i=0)の時
+            if(i == 0){
+
+                // 始点を描画
+                console.log("point0", point0.x, point0.y);
+
+                // 次の接点の間隔を決める
+                const spaceN2 = point0.y * 2 / (neighberNodelist2.length + 2);
+                console.log(spaceN2);        
+
+                // 始点に隣接する点を描画
+                for(let i = 0; i <= neighberNodelist2.length - 1; i ++){
+
+                    // 描画する点の座標を決める(最初の点は150、次の点が300)
+                    const pointN2 = {x: 80, y: 50 + (i + 1) * spaceN2}
+
+                    console.log(`point${neighberNodelist2[i]}`, pointN2);
+                    // 描画する
+                    drawNode(pointN2.x, pointN2.y);
+
+                }
+
             }
 
         }
 
-        console.log(neighberNodelist);
 
-        // 次の接点の間隔を決める
-        const spaceN = point0.y * 2 / (neighberNodelist.length + 2);
-        console.log(spaceN);        
-
-        // 始点に隣接する点を描画
-        for(let i = 0; i <= neighberNodelist.length - 1; i ++){
-
-            // 描画する点の座標を決める(最初の点は150、次の点が300)
-            const pointN = {x: 80, y: 50 + (i + 1) * spaceN}
-
-            console.log(pointN);
-            // 描画する
-            drawNode(pointN.x, pointN.y);
-
-        }
-
-
-        // 配列から終点を取り出す(最も番号の大きい点)
-        const endNode = graph[ graph.length - 1 ];
-
-        // リストの初期化
-        neighberNodelist = [];
-
-        // 
-        for(let i = 0; i <= startNode.length; i++){
-
-            if(endNode[i] > 0){
-                neighberNodelist.push(i);
-            }
-
-        }
-
-        console.log(neighberNodelist);
-
-        // 
-        const pointEnd = {x: 480, y: 250};
-
-        drawNode(pointEnd.x, pointEnd.y);
-
-        // 
-        console.log(startNode, endNode);
 
     }
 
