@@ -63,14 +63,40 @@
 
     }
 
+    // 数字を描画する関数
+    function drawNumber(x, y, num){
+
+        // サブパスのリセット
+        context0.beginPath();
+
+        // スタイル指定
+        context0.fillStyle = "rgb(0, 200, 0)";
+
+        // 塗りつぶしの数字を描画
+
+
+        // 塗りつぶしの実行
+        context0.fill();        
+
+    }
+
     // 路線図を描画する処理
-    // 一番番号の若い点を左端に、最も番号の大きい点を右端に描画する
+    // 最も番号の若い点を左端に、最も番号の大きい点を右端に描画する
     function drawStartAndEndNode(graph){
+
+        // 点のリスト
+        const nodeList = [];
+        // 
+        for(let i = 0; i <= graph.length - 1; i ++){
+            nodeList.push(i);
+        }
+
+        console.log(nodeList);
 
         // 配列から始点を取り出す(最も番号の若い点)
         const startNode = graph[0]
 
-        // 始点の座標
+        // 基準の座標
         const point0 = {x: 20, y: 250};
 
         // 始点を描画する
@@ -89,11 +115,15 @@
 
         console.log(neighberNodelist);
 
+        // 次の接点の間隔を決める
+        const spaceN = point0.y * 2 / (neighberNodelist.length + 2);
+        console.log(spaceN);        
+
         // 始点に隣接する点を描画
         for(let i = 0; i <= neighberNodelist.length - 1; i ++){
 
             // 描画する点の座標を決める(最初の点は150、次の点が300)
-            const pointN = {x: 80, y: 50 + i * point0.y * 2 / neighberNodelist.length}
+            const pointN = {x: 80, y: 50 + (i + 1) * spaceN}
 
             console.log(pointN);
             // 描画する
