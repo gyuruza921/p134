@@ -6,7 +6,7 @@
 //
 
 // body要素の取得
-const BODY = document.getElementByTagName("body");
+const BODY = document.getElementsByTagName("body");
 
 // canvas要素の作成
 const canvas0 = document.createElement("canvas");
