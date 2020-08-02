@@ -63,6 +63,40 @@
 
     }
 
+    // 路線図を描画する処理
+    // 一番番号の若い点を左端に、最も番号の大きい点を右端に描画する
+    function drawStartAndEndNode(graph){
+
+        // 配列から始点を取り出す(最も番号の若い点)
+        const startNode = graph[0]
+
+        // 始点の座標
+        const point0 = {x: 20, y: 250};
+
+        // 始点とつながっている点を探し、隣接する点のリストを作成
+        const neighberNodelist = [];
+        for(let i = 0; i <= startNode.length; i++){
+
+            if(startNode[i] > 0){
+                console.log(i);
+                neighberNodelist.push(i);
+            }
+
+        }
+
+        console.log(neighberNodelist);
+
+        // 配列から終点を取り出す(最も番号の大きい点)
+        const endNode = graph[ graph.length - 1 ];
+
+        // 
+        console.log(startNode, endNode);
+
+    }
+
+    // 動作確認
+    drawStartAndEndNode(graph);
+
 
 
 // 
