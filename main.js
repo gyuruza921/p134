@@ -12,7 +12,7 @@ canvas0.height = 500;
 canvas0.width = 500;
 
 // 要素のドキュメントへの追加
-document.appendChild(canvas0);
+document.body.appendChild(canvas0);
 
 // 
 // 入力部
