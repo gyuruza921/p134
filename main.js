@@ -37,11 +37,18 @@
     const context0 = canvas0.getContext("2d");
 
     // 点を描画
-        // 
-        context0.fillStyle = "rgb(0, 250, 0)";
-        // 
-        context0.beginPath();
+        // サブパスのリセット
+        context0.beginPath();    
+        // 塗りつぶしのスタイル指定
+        context0.fillStyle = "rgb(0, 200, 0)";
+
+        // 塗りつぶしの四角を描画
         context0.fillRect(200, 200, 50, 50);
+
+        // 塗りつぶしの円を描画
+        context0.arc(100, 100, 15, 0 / 180 * Math.PI, 360 / 180 * Math.PI);
+
+        // 塗りつぶしの実行
         context0.fill();
 
 
