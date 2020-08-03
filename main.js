@@ -73,12 +73,13 @@
         context0.fillStyle = "rgb(0, 200, 0)";
 
         // 塗りつぶしの数字を描画
-
+        context0.fillText(num, x, y, 5);
 
         // 塗りつぶしの実行
         context0.fill();        
 
     }
+
 
     // 路線図を描画する処理
     // 最も番号の若い点を左端に描画する
@@ -124,7 +125,6 @@
 
             console.log("neighberNodeList",i, neighberNodelist);
 
-
             const point1 = cordinateList[i];
 
             console.log(`point${i}`, point1);
@@ -132,7 +132,7 @@
             if(point1 != null){
 
                 // 次の接点の間隔を決める
-                const spaceN = point1.y / (neighberNodelist.length);
+                const spaceN = Math.floor( point1.y / (neighberNodelist.length) );
                 console.log(spaceN);        
 
                 // 分岐の上下の間隔を計算
@@ -142,8 +142,6 @@
                     if(cordinateList[ neighberNodelist[i] ] == null){
                         // 描画する点の座標を決める
                         const pointN = {x: point1.x + 50 , y: spaceN / 2 + (i + 1) * spaceN};
-                        // 描画する点の座標を決める
-                        // const pointN = {x: point1.x + 50 , y: point0.y -  + i * spaceN};
 
                         console.log(`point${neighberNodelist[i]}`, pointN);
 
@@ -157,12 +155,18 @@
 
         }
 
-        // console.log(cordinateList);
 
+        let nodeNum = 0;
         // 座標リストに基づいて接点を描画する
         for(let point of cordinateList){
             console.log(point);
+            // 接点を描画
             drawNode(point.x, point.y);
+
+            // 数字を描画
+            drawNumber(point.x, point.y - 10, nodeNum);
+            nodeNum ++;
+
         }
 
     }
