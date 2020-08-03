@@ -109,7 +109,7 @@
 
             console.log(node);
 
-            // 各点とつながっている点を探し、隣接する点のリストを作成
+            // 各点とつながっている点のリストを作成
             let neighberNodelist = [];
             for(let i = 0; i <= node.length - 1; i ++){
                 if(node[i] > 0){
@@ -118,59 +118,37 @@
 
             }
 
-            console.log("neighberNoderist",i, neighberNodelist);
 
-            // 始点(i=0)の時
-            if(i == 0){
+            // 最初の点の座標をリストに登録
+            cordinateList[0] = {x: point0.x, y: point0.y} 
 
-                // 座標リストに登録
-                cordinateList[0] = {x: point0.x, y: point0.y} 
-                console.log("point0", point0.x, point0.y);
+            console.log("neighberNodeList",i, neighberNodelist);
+
+
+            const point1 = cordinateList[i];
+
+            console.log(`point${i}`, point1);
+
+            if(point1 != null){
 
                 // 次の接点の間隔を決める
-                const spaceN = point0.y * 2 / (neighberNodelist.length + 2);
+                const spaceN = point1.y / (neighberNodelist.length);
                 console.log(spaceN);        
 
-                // 始点に隣接する点を登録
+                // 分岐の上下の間隔を計算
                 for(let i = 0; i <= neighberNodelist.length - 1; i ++){
 
-                    // 描画する点の座標を決める(最初の点は150、次の点が300)
-                    const pointN = {x: point0.x + 50 , y: spaceN / 2 + (i + 1) * spaceN}
+                    // 座標リストが未記入の場合
+                    if(cordinateList[ neighberNodelist[i] ] == null){
+                        // 描画する点の座標を決める
+                        const pointN = {x: point1.x + 50 , y: spaceN / 2 + (i + 1) * spaceN};
+                        // 描画する点の座標を決める
+                        // const pointN = {x: point1.x + 50 , y: point0.y -  + i * spaceN};
 
-                    console.log(`point${neighberNodelist[i]}`, pointN);
+                        console.log(`point${neighberNodelist[i]}`, pointN);
 
-                    // 座標リストに登録
-                    cordinateList[ neighberNodelist[i] ] = pointN;
-
-                }
-
-            }
-            // 
-            else {
-
-                const point1 = cordinateList[i];
-
-                console.log(`point${i}`, point1);
-
-                if(point1 != null){
-
-                    // 次の接点の間隔を決める
-                    const spaceN = point1.y * 2 / (neighberNodelist.length + 2);
-                    console.log(spaceN);        
-
-                    // 始点に隣接する点を描画
-                    for(let i = 0; i <= neighberNodelist.length - 1; i ++){
-
-                        if(neighberNodelist[i] == null){
-                            // 描画する点の座標を決める
-                            const pointN = {x: point1.x + 50 , y: (i + 1) * spaceN}
-
-                            console.log(`point${neighberNodelist[i]}`, pointN);
-
-                            // 座標リストに登録
-                            cordinateList[ neighberNodelist[i] ] = pointN;                        
-                        }
-
+                        // 座標リストに登録
+                        cordinateList[ neighberNodelist[i] ] = pointN;                        
                     }
 
                 }
@@ -179,15 +157,12 @@
 
         }
 
-        console.log(cordinateList);
-        // 
+        // console.log(cordinateList);
+
+        // 座標リストに基づいて接点を描画する
         for(let point of cordinateList){
-
-            if(point != null){
-                console.log(point);
-                drawNode(point.x, point.y);                
-            }
-
+            console.log(point);
+            drawNode(point.x, point.y);
         }
 
     }
