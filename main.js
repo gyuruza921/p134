@@ -68,13 +68,10 @@
 
         // サブパスのリセット
         context0.beginPath();
-
         // スタイル指定
         context0.fillStyle = "rgb(0, 200, 0)";
-
         // 塗りつぶしの数字を描画
         context0.fillText(num, x, y, 5);
-
         // 塗りつぶしの実行
         context0.fill();        
 
@@ -120,33 +117,32 @@
             }
 
 
-            // 最初の点の座標をリストに登録
-            cordinateList[0] = {x: point0.x, y: point0.y} 
+            // 基準となる点の座標をリストに登録(ここではリストの最初の点とする)
+            if(i == 0){
+                cordinateList[0] = {x: point0.x, y: point0.y}; 
+            }
 
             console.log("neighberNodeList",i, neighberNodelist);
 
             const point1 = cordinateList[i];
 
-            console.log(`point${i}`, point1);
-
             if(point1 != null){
 
-                // 次の接点の間隔を決める
+                // 次の接点の分岐の上下間隔を決める
                 const spaceN = Math.floor( point1.y / (neighberNodelist.length) );
-                console.log(spaceN);        
+                // console.log(spaceN);   
 
-                // 分岐の上下の間隔を計算
                 for(let i = 0; i <= neighberNodelist.length - 1; i ++){
 
-                    // 座標リストが未記入の場合
-                    if(cordinateList[ neighberNodelist[i] ] == null){
-                        // 描画する点の座標を決める
-                        const pointN = {x: point1.x + 50 , y: spaceN / 2 + (i + 1) * spaceN};
+                    // 描画する点の座標を決める
+                    const pointN = {x: point1.x + 50 , y: spaceN / 2 + (i + 1) * spaceN};
 
-                        console.log(`point${neighberNodelist[i]}`, pointN);
+                    // 
+                    console.log(`point${neighberNodelist[i]}`, pointN);
 
-                        // 座標リストに登録
-                        cordinateList[ neighberNodelist[i] ] = pointN;                        
+                    // まだ未登録なら座標リストに登録
+                    if(cordinateList[ neighberNodelist[i] ] == null ){
+                        cordinateList[ neighberNodelist[i] ] = pointN; 
                     }
 
                 }
@@ -156,6 +152,7 @@
         }
 
 
+        // 各ノードの番号
         let nodeNum = 0;
         // 座標リストに基づいて接点を描画する
         for(let point of cordinateList){
@@ -164,7 +161,7 @@
             drawNode(point.x, point.y);
 
             // 数字を描画
-            drawNumber(point.x, point.y - 10, nodeNum);
+            drawNumber(point.x - 2, point.y - 10, nodeNum);
             nodeNum ++;
 
         }
