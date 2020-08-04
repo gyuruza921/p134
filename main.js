@@ -78,6 +78,26 @@
     }
 
 
+    // 2点間に線を引く関数
+    function drawLineBetweenPoints(point1, point2) {
+
+        // サブパスのリセット
+        context0.beginPath();
+        // スタイル指定
+        context0.strokeStyle = "rgb(0, 200, 0)";
+        // 始点の設定
+        context0.moveTo(point1.x, point1.y);
+        // 次の点の設定
+        context0.lineTo(point2.x, point2.y);
+        // 線を引く
+        context0.stroke();
+
+    }
+
+    // 動作確認
+    drawLineBetweenPoints({x: 100, y: 50}, {x: 150, y: 50});
+
+
     // 路線図を描画する処理
     // 最も番号の若い点を左端に描画する
     function drawStartAndEndNode(graph){
