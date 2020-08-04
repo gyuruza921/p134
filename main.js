@@ -25,8 +25,8 @@
     const graph = [
 
         [0, 2, 3, -1, -1, -1], // 点0 点1,2と接する
-        [2, 0, 3, -1, -1, -1], // 点1　点0,2と接する
-        [3, 3, 0, 4, -1, -1], // 点2　点0,3,4と接する
+        [2, 0, -1, 6, -1, -1], // 点1　点0,2と接する
+        [3, -1, 0, 4, -1, -1], // 点2　点0,2,3と接する
         [-1, -1, 4, 0, 5, 3], // 点3　点2,4,5と接する
         [-1, -1, -1, 5, 0, 2], // 点4　点3,5と接する
         [-1, -1, -1, 3, 2, 0], // 点5　再右端　点3,4と接する
@@ -53,13 +53,11 @@
         // サブパスのリセット
         context0.beginPath();    
         // 塗りつぶしのスタイル指定
-        context0.fillStyle = "rgb(0, 200, 0)";
-
+        context0.strokeStyle = "rgb(0, 200, 0)";
         // 塗りつぶしの円を描画
         context0.arc(x, y, 5, 0 / 180 * Math.PI, 360 / 180 * Math.PI);
-
         // 塗りつぶしの実行
-        context0.fill();
+        context0.stroke();
 
     }
 
@@ -136,6 +134,20 @@
 
             }
 
+            // 座標リストに登録済みの接点のリストアップ
+            let prev = [];
+            for(let i = 0; i <= neighberNodelist.length - 1; i ++){
+
+                // console.log(neighberNodelist);
+                // 
+                if(cordinateList[ neighberNodelist[i] ] != null){
+                    prev.push(neighberNodelist[i]);
+                    // console.log("done!");
+                }
+            }
+
+            console.log("prev", prev);
+
 
             // 基準となる点の座標をリストに登録(ここではリストの最初の点とする)
             if(i == 0){
@@ -144,27 +156,41 @@
 
             console.log("neighberNodeList",i, neighberNodelist);
 
+            // 分岐の数
+            const junctions = neighberNodelist.length - prev.length;
+            console.log("junction", junctions);
+
             const point1 = cordinateList[i];
 
-            if(point1 != null){
+            const n1 = i;
 
-                // 次の接点の分岐の上下間隔を決める
-                const spaceN = Math.floor( point1.y / (neighberNodelist.length) );
-                // console.log(spaceN);   
+            // 次の接点の分岐の上下間隔を決める
+            const spaceN = Math.floor( point1.y / neighberNodelist.length );
+            // console.log(spaceN);   
 
-                for(let i = 0; i <= neighberNodelist.length - 1; i ++){
+            // 隣接する点のリスト
+            for(let i = 0; i <= neighberNodelist.length - 1; i ++){
 
-                    // 描画する点の座標を決める
-                    const pointN = {x: point1.x + 50 , y: spaceN / 2 + (i + 1) * spaceN};
+                // 描画する点の座標を決める
+                const pointN = {x: point1.x + 50 , y: spaceN / 2 + (i + 1) * spaceN};
 
-                    // 
-                    console.log(`point${neighberNodelist[i]}`, pointN);
+                // 分岐が１つならまっすぐ進む
+                if(junctions == 1){
+                    pointN.y = point1.y;
+                }
 
-                    // まだ未登録なら座標リストに登録
-                    if(cordinateList[ neighberNodelist[i] ] == null ){
-                        cordinateList[ neighberNodelist[i] ] = pointN; 
-                    }
+                // 
+                console.log(`point${neighberNodelist[i]}`, pointN);
 
+                // まだ未登録なら座標リストに登録
+                if(cordinateList[ neighberNodelist[i] ] == null ){
+                    cordinateList[ neighberNodelist[i] ] = pointN; 
+                }
+
+                // 登録済みの接点との間に線を引く
+                if(cordinateList[neighberNodelist[i]] != null){
+                    console.log(`drawLine${n1}to${neighberNodelist[i]}`);
+                    drawLineBetweenPoints(point1, cordinateList[neighberNodelist[i]]);
                 }
 
             }
