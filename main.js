@@ -92,9 +92,6 @@
 
     }
 
-    // 動作確認
-    // drawLineBetweenPoints({x: 100, y: 50}, {x: 150, y: 50});
-
 
     // 路線図を描画する処理
     // 最も番号の若い点を左端に描画する
@@ -141,12 +138,11 @@
             let prev = [];
             for(let i = 0; i <= neighberNodelist.length - 1; i ++){
 
-                // console.log(neighberNodelist);
                 // 
                 if(cordinateList[ neighberNodelist[i] ] != null){
                     prev.push(neighberNodelist[i]);
-                    // console.log("done!");
                 }
+
             }
 
             console.log("prev", prev);
@@ -205,11 +201,6 @@
                 if(cordinateList[neighberNodelist[i]] != null){
 
                     console.log(`drawLine${n1}to${neighberNodelist[i]}`);
-                    // drawLineBetweenPoints(point1, cordinateList[neighberNodelist[i]]);
-                    // 辺の長さを表示する
-                    // drawNumber(pointN.x - pointN.x / 2, pointN.y + (pointN.y / 2) - 10, graph[n1][neighberNodelist[i]]);
-                    // 辺のリストへ登録する
-                    // edges.push( `drawLine${n1}to${neighberNodelist[i]}` );
                     edges.push({start: n1, end: neighberNodelist[i]});
 
                 }
@@ -219,18 +210,45 @@
         }
 
         // 辺のリストを表示する
-        console.log(edges);
+        // console.log(edges);
+
         // 辺のリストから重複する辺を取り除く
+        for(let edge of edges){
+            // ある辺の始点と終点を取り出す
+            const start = edge.start;
+            const end = edge.end;
+            // console.log("ref", edge);
+
+            let cnt = 0;
+
+            // 取り出した辺と始点と終点が逆転した辺を探す
+            for(let edge of edges) {
+
+                if(edge.start == end && edge.end == start){
+                    // console.log("target", edge);
+                    // console.log("target", cnt, edges[cnt]);
+                    // 見つけたらリストから削除する
+                    edges.splice(cnt, 1);
+                }
+
+                cnt ++;
+
+            }
+
+        }
+
+        // console.log(edges);
 
         for(let edge of edges){
 
-            console.log("edge", edge);
+            // console.log("edge", edge);
             // 辺の始点
             const start = cordinateList[edge.start];
             // 辺の終点
             const end = cordinateList[edge.end];
             // 辺を描く
             drawLineBetweenPoints(start, end);
+            // 辺の距離を記入する
 
         }
 
@@ -239,12 +257,12 @@
         let nodeNum = 0;
         // 座標リストに基づいて接点を描画する
         for(let point of cordinateList){
-            console.log(point);
+
+            // console.log(point);
             // 接点を描画
             drawNode(point.x, point.y);
-
-            // 数字を描画
-            drawNumber(point.x - 3, point.y + 3, nodeNum);
+            // ノードの番号を描画
+            drawNumber(point.x - 2, point.y + 3, nodeNum);
             nodeNum ++;
 
         }
