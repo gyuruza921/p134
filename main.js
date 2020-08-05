@@ -25,9 +25,9 @@
     const graph = [
 
         [0, 2, 3, -1, -1, -1], // 点0 点1,2と接する
-        [2, 0, -1, 6, -1, -1], // 点1　点0,2と接する
-        [3, -1, 0, 4, -1, -1], // 点2　点0,2,3と接する
-        [-1, -1, 4, 0, 5, 3], // 点3　点2,4,5と接する
+        [2, 0, -1, 6, -1, -1], // 点1　点0,2,3と接する
+        [3, -1, 0, 4, -1, -1], // 点2　点0,3と接する
+        [-1, 6, 4, 0, 5, 3], // 点3　点1,2,4,5と接する
         [-1, -1, -1, 5, 0, 2], // 点4　点3,5と接する
         [-1, -1, -1, 3, 2, 0], // 点5　再右端　点3,4と接する
 
@@ -117,6 +117,9 @@
         const cordinateList = new Array(graph.length);
         cordinateList.fill(null);
 
+        // 各辺のリスト
+        const edges = [];
+
 
         // グラフ内の各店の接点を探す
         for(let i = 0 ; i <= nodeList.length -1; i ++){
@@ -184,6 +187,11 @@
                     pointN.x = point1.x + 80;
                     pointN.y = spaceN / 2 + (i + 1) * spaceN;
                 }
+                // 分岐が0ならもう1つ進む
+                else if(junctions == 0){
+                    pointN.x = point1.x + 160;
+                    pointN.y = point0;
+                }
 
                 // 
                 console.log(`point${neighberNodelist[i]}`, pointN);
@@ -195,14 +203,36 @@
 
                 // 登録済みの接点との間に線を引く
                 if(cordinateList[neighberNodelist[i]] != null){
+
                     console.log(`drawLine${n1}to${neighberNodelist[i]}`);
-                    drawLineBetweenPoints(point1, cordinateList[neighberNodelist[i]]);
+                    // drawLineBetweenPoints(point1, cordinateList[neighberNodelist[i]]);
+                    // 辺の長さを表示する
+                    // drawNumber(pointN.x - pointN.x / 2, pointN.y + (pointN.y / 2) - 10, graph[n1][neighberNodelist[i]]);
+                    // 辺のリストへ登録する
+                    // edges.push( `drawLine${n1}to${neighberNodelist[i]}` );
+                    edges.push({start: n1, end: neighberNodelist[i]});
+
                 }
 
             }
 
         }
 
+        // 辺のリストを表示する
+        console.log(edges);
+        // 辺のリストから重複する辺を取り除く
+
+        for(let edge of edges){
+
+            console.log("edge", edge);
+            // 辺の始点
+            const start = cordinateList[edge.start];
+            // 辺の終点
+            const end = cordinateList[edge.end];
+            // 辺を描く
+            drawLineBetweenPoints(start, end);
+
+        }
 
         console.log(cordinateList);
         // 各ノードの番号
@@ -214,7 +244,6 @@
             drawNode(point.x, point.y);
 
             // 数字を描画
-            // drawNumber(point.x - 2, point.y - 10, nodeNum);
             drawNumber(point.x - 3, point.y + 3, nodeNum);
             nodeNum ++;
 
