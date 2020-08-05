@@ -53,11 +53,11 @@
         // サブパスのリセット
         context0.beginPath();    
         // 塗りつぶしのスタイル指定
-        context0.strokeStyle = "rgb(0, 200, 0)";
+        context0.fillStyle = "rgb(0, 0, 250)";
         // 塗りつぶしの円を描画
-        context0.arc(x, y, 5, 0 / 180 * Math.PI, 360 / 180 * Math.PI);
+        context0.arc(x, y, 10, 0 / 180 * Math.PI, 2 * Math.PI);
         // 塗りつぶしの実行
-        context0.stroke();
+        context0.fill();
 
     }
 
@@ -67,7 +67,7 @@
         // サブパスのリセット
         context0.beginPath();
         // スタイル指定
-        context0.fillStyle = "rgb(0, 200, 0)";
+        context0.fillStyle = "rgb(250, 250, 250)";
         // 塗りつぶしの数字を描画
         context0.fillText(num, x, y, 5);
         // 塗りつぶしの実行
@@ -82,7 +82,7 @@
         // サブパスのリセット
         context0.beginPath();
         // スタイル指定
-        context0.strokeStyle = "rgb(0, 200, 0)";
+        context0.strokeStyle = "rgb(0, 0, 250)";
         // 始点の設定
         context0.moveTo(point1.x, point1.y);
         // 次の点の設定
@@ -93,7 +93,7 @@
     }
 
     // 動作確認
-    drawLineBetweenPoints({x: 100, y: 50}, {x: 150, y: 50});
+    // drawLineBetweenPoints({x: 100, y: 50}, {x: 150, y: 50});
 
 
     // 路線図を描画する処理
@@ -172,11 +172,17 @@
             for(let i = 0; i <= neighberNodelist.length - 1; i ++){
 
                 // 描画する点の座標を決める
-                const pointN = {x: point1.x + 50 , y: spaceN / 2 + (i + 1) * spaceN};
+                const pointN = {x:0, y:0};
 
                 // 分岐が１つならまっすぐ進む
                 if(junctions == 1){
+                    pointN.x = point1.x + 80;
                     pointN.y = point1.y;
+                }
+                // 分岐が複数なら枝分かれさせる
+                else if(junctions >= 2){
+                    pointN.x = point1.x + 80;
+                    pointN.y = spaceN / 2 + (i + 1) * spaceN;
                 }
 
                 // 
@@ -198,6 +204,7 @@
         }
 
 
+        console.log(cordinateList);
         // 各ノードの番号
         let nodeNum = 0;
         // 座標リストに基づいて接点を描画する
@@ -207,7 +214,8 @@
             drawNode(point.x, point.y);
 
             // 数字を描画
-            drawNumber(point.x - 2, point.y - 10, nodeNum);
+            // drawNumber(point.x - 2, point.y - 10, nodeNum);
+            drawNumber(point.x - 3, point.y + 3, nodeNum);
             nodeNum ++;
 
         }
