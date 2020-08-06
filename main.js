@@ -145,7 +145,7 @@
 
             }
 
-            console.log("prev", prev);
+            // console.log("prev", prev);
 
 
             // 基準となる点の座標をリストに登録(ここではリストの最初の点とする)
@@ -153,11 +153,11 @@
                 cordinateList[0] = {x: point0.x, y: point0.y}; 
             }
 
-            console.log("neighberNodeList",i, neighberNodelist);
+            // console.log("neighberNodeList",i, neighberNodelist);
 
             // 分岐の数
             const junctions = neighberNodelist.length - prev.length;
-            console.log("junction", junctions);
+            // console.log("junction", junctions);
 
             const point1 = cordinateList[i];
 
@@ -190,7 +190,7 @@
                 }
 
                 // 
-                console.log(`point${neighberNodelist[i]}`, pointN);
+                // console.log(`point${neighberNodelist[i]}`, pointN);
 
                 // まだ未登録なら座標リストに登録
                 if(cordinateList[ neighberNodelist[i] ] == null ){
@@ -200,7 +200,7 @@
                 // 登録済みの接点との間に線を引く
                 if(cordinateList[neighberNodelist[i]] != null){
 
-                    console.log(`drawLine${n1}to${neighberNodelist[i]}`);
+                    // console.log(`drawLine${n1}to${neighberNodelist[i]}`);
                     edges.push({start: n1, end: neighberNodelist[i]});
 
                 }
@@ -241,14 +241,18 @@
 
         for(let edge of edges){
 
-            // console.log("edge", edge);
+            console.log("edge", edge);
             // 辺の始点
             const start = cordinateList[edge.start];
             // 辺の終点
             const end = cordinateList[edge.end];
             // 辺を描く
             drawLineBetweenPoints(start, end);
+
+            // console.log(graph[edge.start]);
+            // console.log(graph[edge.end]);
             // 辺の距離を記入する
+            drawNumber(start.x + ( (end.x - start.x) / 2 ), start.y -( (start.y - end.y) / 2 )  - 6, graph[edge.start][edge.end]);
 
         }
 
