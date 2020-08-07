@@ -198,137 +198,57 @@
     // 動作確認
     const cordinateList = nodeCordinateList(graph, 20,250)
     console.log( "cordinateList", cordinateList );
-    // console.log( "cordinateList", nodeCordinateList(graph, 20, 250) );
 
 // 辺を探す処理
+function serchEdges(graph){
 
+    // 
+    // 前準備
+    // 
 
-    // グラフを描画する処理
-    let number = 0;
-
-    for(let node of cordinateList){
-        drawNode(node.x, node.y);
-        drawNumber(node.x - 2, node.y + 3, number);
-        number++;
+    // 頂点のリストを作る
+    const nodeList = [];
+    // リストに頂点番号を加えていく
+    for(let i = 0; i <= graph.length - 1; i ++) {
+        nodeList.push(i);
     }
 
+    // 各辺のリスト
+    const edges = [];
 
-    // 隣接行列のデータをある点を基準に点と線で描画する
-    function drawStartAndEndNode(graph){
-
-        // 点のリスト
-        const nodeList = [];
-        // 
-        for(let i = 0; i <= graph.length - 1; i ++){
-            nodeList.push(i);
-        }
-
-        console.log(nodeList);
-
-        // 基準の座標
-        const point0 = {x: 20, y: 250};
-
-        // 各点の座標のリスト
-        const cordinateList = new Array(graph.length);
-        cordinateList.fill(null);
-
-        // 各辺のリスト
-        const edges = [];
-
-
-        // グラフ内の各点の接点を探す
-        for(let i = 0 ; i <= nodeList.length -1; i ++){
+        // 各頂点に隣接する頂点を探す
+        for(let i = 0; i <= nodeList.length - 1; i++) {
 
             const node = graph[i];
 
-            console.log(node);
-
-            // 各点とつながっている点のリストを作成
-            let neighberNodelist = [];
-            for(let i = 0; i <= node.length - 1; i ++){
-                if(node[i] > 0){
-                    neighberNodelist.push(i)
-                }
-
-            }
-
-            // 座標リストに登録済みの接点のリストアップ
-            let prev = [];
-            for(let i = 0; i <= neighberNodelist.length - 1; i ++){
-
-                // 
-                if(cordinateList[ neighberNodelist[i] ] != null){
-                    prev.push(neighberNodelist[i]);
-                }
-
-            }
-
-            // console.log("prev", prev);
-
-
-            // 基準となる点の座標をリストに登録(ここではリストの最初の点とする)
-            if(i == 0){
-                cordinateList[0] = {x: point0.x, y: point0.y}; 
-            }
-
-            // console.log("neighberNodeList",i, neighberNodelist);
-
-            // 分岐の数
-            const junctions = neighberNodelist.length - prev.length;
-            // console.log("junction", junctions);
-
-            const point1 = cordinateList[i];
-
             const n1 = i;
 
-            // 次の接点の分岐の上下間隔を決める
-            const spaceN = Math.floor( point1.y / neighberNodelist.length );
-            // console.log(spaceN);   
-
-            // 隣接する点のリスト
-            for(let i = 0; i <= neighberNodelist.length - 1; i ++){
-
-                // 描画する点の座標を決める
-                const pointN = {x:0, y:0};
-
-                // 分岐が１つならまっすぐ進む
-                if(junctions == 1){
-                    pointN.x = point1.x + 80;
-                    pointN.y = point1.y;
+            // 各頂点に隣接する頂点のリストを作成
+            let neighbourIndexList = [];
+            for(let i = 0; i <= node.length - 1; i++) {
+                if(node[i] > 0) {
+                    neighbourIndexList.push(i);
                 }
-                // 分岐が複数なら枝分かれさせる
-                else if(junctions >= 2){
-                    pointN.x = point1.x + 80;
-                    pointN.y = spaceN / 2 + (i + 1) * spaceN;
-                }
-                // 分岐が0ならもう1つ進む
-                else if(junctions == 0){
-                    pointN.x = point1.x + 160;
-                    pointN.y = point0;
-                }
+            }
+            
+            console.log("neighbourIndex", neighbourIndexList);
 
-                // 
-                // console.log(`point${neighberNodelist[i]}`, pointN);
 
-                // まだ未登録なら座標リストに登録
-                if(cordinateList[ neighberNodelist[i] ] == null ){
-                    cordinateList[ neighberNodelist[i] ] = pointN; 
-                }
+            // 隣接する頂点のリストを基に各頂点を分岐させ座標を登録していく
+            for(let i = 0; i <= neighbourIndexList.length - 1; i ++){
+            
 
                 // 登録済みの接点との間に線を引く
-                if(cordinateList[neighberNodelist[i]] != null){
+                if(cordinateList[neighbourIndexList[i]] != null){
 
                     // console.log(`drawLine${n1}to${neighberNodelist[i]}`);
-                    edges.push({start: n1, end: neighberNodelist[i]});
+                    edges.push({start: n1, end: neighbourIndexList[i]});
 
                 }
 
             }
 
         }
-
-        // 辺のリストを表示する
-        // console.log(edges);
 
         // 辺のリストから重複する辺を取り除く
         for(let edge of edges){
@@ -355,44 +275,35 @@
 
         }
 
-        // console.log(edges);
+        return edges;
 
-        for(let edge of edges){
+}
 
-            console.log("edge", edge);
-            // 辺の始点
-            const start = cordinateList[edge.start];
-            // 辺の終点
-            const end = cordinateList[edge.end];
-            // 辺を描く
-            drawLineBetweenPoints(start, end);
+// 動作確認
+const edges = serchEdges(graph);
+console.log("edges", edges);
 
-            // console.log(graph[edge.start]);
-            // console.log(graph[edge.end]);
-            // 辺の距離を記入する
-            drawNumber(start.x + ( (end.x - start.x) / 2 ), start.y -( (start.y - end.y) / 2 )  - 6, graph[edge.start][edge.end]);
 
-        }
+// グラフを描画する処理
 
-        console.log(cordinateList);
-        // 各ノードの番号
-        let nodeNum = 0;
-        // 座標リストに基づいて接点を描画する
-        for(let point of cordinateList){
-
-            // console.log(point);
-            // 接点を描画
-            drawNode(point.x, point.y);
-            // ノードの番号を描画
-            drawNumber(point.x - 2, point.y + 3, nodeNum);
-            nodeNum ++;
-
-        }
-
+    // 頂点を描画
+    for(let node of cordinateList){
+        drawNode(node.x, node.y);
     }
 
-    // 動作確認
-    // drawStartAndEndNode(graph);
+    // 辺を描画
+    for(let edge of edges){
+        const start = edge.start;
+        const end = edge.end;
+        drawLineBetweenPoints(cordinateList[start], cordinateList[end]);
+    }
+
+    // 番号を記入
+    let number = 0;
+    for(let node of cordinateList){
+        drawNumber(node.x - 2, node.y + 3, number);
+        number++;
+    }
 
 
 // 
