@@ -94,7 +94,126 @@
 
 
     // 路線図を描画する処理
-    // 最も番号の若い点を左端に描画する
+    // 隣接行列から各頂点の座標のリストを作る
+    function nodeCordinateList(graph, x, y){
+        // 
+        // 前準備
+        // 
+
+        // 頂点のリストを作る
+        const nodeList = [];
+        // リストに頂点番号を加えていく
+        for(let i = 0; i <= graph.length - 1; i ++) {
+            nodeList.push(i);
+        }
+
+        // 基準の座標
+        const standardPoint = {x:x, y:y};
+
+        // 各点の座標のリスト
+        const cordinateList = new Array(graph.length);
+        // リストをnullで埋める
+        cordinateList.fill(null);
+
+        // 各頂点に隣接する頂点を探す
+        for(let i = 0; i <= nodeList.length - 1; i++) {
+
+            const node = graph[i];
+
+            // 各頂点に隣接する頂点のリストを作成
+            let neighbourIndexList = [];
+            for(let i = 0; i <= node.length - 1; i++) {
+                if(node[i] > 0) {
+                    neighbourIndexList.push(i);
+                }
+            }
+            
+            console.log("neighbourIndex", neighbourIndexList);
+
+            // 座標リストに登録済みの接点のリストアップ
+            let prev = [];
+            for(let i = 0; i <= neighbourIndexList.length - 1; i ++){
+                // 
+                if(cordinateList[ neighbourIndexList[i] ] != null){
+                    prev.push(neighbourIndexList[i]);
+                }
+
+            }
+
+            console.log("prev", prev);
+
+            // 基準となる点の座標をリストに登録(ここではリストの最初の点とする)
+            if(i == 0){
+                cordinateList[0] = standardPoint; 
+            }
+
+            // 分岐の数
+            const junctions = neighbourIndexList.length - prev.length;
+            console.log("junction", junctions);
+
+            const point1 = cordinateList[i];
+            console.log("point1", point1);
+
+            // 次の接点の分岐の上下間隔を決める
+            const spaceN = Math.floor( (point1.y * 2) / (junctions + 2) );
+            console.log("spaceN", spaceN);
+
+            // 隣接する頂点のリストを基に各頂点を分岐させ座標を登録していく
+            for(let i = 0; i <= neighbourIndexList.length - 1; i ++){
+
+                // 描画する点の座標を決める
+                const pointN = {x:0, y:0};
+
+                // 分岐が１つならまっすぐ進む
+                if(junctions == 1){
+                    pointN.x = point1.x + 80;
+                    pointN.y = point1.y;
+                }
+                // 分岐が複数なら枝分かれさせる
+                else if(junctions >= 2){
+                    pointN.x = point1.x + 80;
+                    pointN.y = (spaceN * (i + 1)) + (spaceN / 2);
+                }
+                // 分岐が0ならもう1つ進む
+                else if(junctions == 0){
+                    pointN.x = point1.x + 160;
+                    pointN.y = standardPoint.y;
+                }
+
+                console.log("pointN", pointN);
+
+                // まだ未登録なら座標リストに登録
+                if(cordinateList[ neighbourIndexList[i] ] == null ){
+                    cordinateList[ neighbourIndexList[i] ] = pointN; 
+                }                
+
+            }
+
+        }
+
+        return cordinateList;
+    }
+
+
+    // 動作確認
+    const cordinateList = nodeCordinateList(graph, 20,250)
+    console.log( "cordinateList", cordinateList );
+    // console.log( "cordinateList", nodeCordinateList(graph, 20, 250) );
+
+// 辺を探す処理
+
+
+    // グラフを描画する処理
+    let number = 0;
+
+    for(let node of cordinateList){
+        drawNode(node.x, node.y);
+        drawNumber(node.x - 2, node.y + 3, number);
+        number++;
+    }
+
+
+    // 隣接行列のデータをある点を基準に点と線で描画する
     function drawStartAndEndNode(graph){
 
         // 点のリスト
@@ -105,7 +224,6 @@
         }
 
         console.log(nodeList);
-
 
         // 基準の座標
         const point0 = {x: 20, y: 250};
@@ -274,14 +392,14 @@
     }
 
     // 動作確認
-    drawStartAndEndNode(graph);
+    // drawStartAndEndNode(graph);
 
 
 // 
-// 最短距離を計算する
+// 最短経路を算出する
 // 
 
-    // ダイクストラ法で最短距離を算出する
+    // ダイクストラ法で最短経路を算出する
     // graphは隣接行列、startIndexとgoalIndexは頂点番号
     function dijkstra(graph, startIndex, goalIndex) {
         // 
