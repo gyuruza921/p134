@@ -118,7 +118,7 @@
         const edges = [];
 
 
-        // グラフ内の各店の接点を探す
+        // グラフ内の各点の接点を探す
         for(let i = 0 ; i <= nodeList.length -1; i ++){
 
             const node = graph[i];
@@ -276,6 +276,133 @@
     // 動作確認
     drawStartAndEndNode(graph);
 
+
+// 
+// 最短距離を計算する
+// 
+
+    // ダイクストラ法で最短距離を算出する
+    // graphは隣接行列、startIndexとgoalIndexは頂点番号
+    function dijkstra(graph, startIndex, goalIndex) {
+        // 
+        // 前準備
+        // 
+        const nodeNum = graph.length;           // 配列に入ってる配列の数が頂点数
+        const distance = new Array(nodeNum);    // スタート地点からの距離表を作成する
+        distance.fill(Infinity);                // 距離を無限大で埋める
+        distance[startIndex] = 0;               // ただしスタート地点からスタート地点への距離のみゼロ
+
+        const nodeIndexList = []; // 頂点番号リスト
+        for(let i = 0; i < nodeNum; i++){
+            nodeIndexList.push(i); // 頂点番号をリストに入れる
+        }
+
+        const previousNode = new Array(nodeNum); // 前の頂点
+        previousNode.fill(-1); // -1(無効)で埋める
+
+        // 
+        // 計算
+        // 
+
+        // 頂点番号リストが空でないあいだ
+        while(nodeIndexList.length > 0) {
+            // 頂点番号リストから、スタート地点からの距離が最小の頂点を選ぶ
+            // スタート地点からの総距離はdistance[nodeIndex[i]]で取得できる
+            // distance[i]がdistance[minDistanceIndex]より小さい番号iを
+            // どんどんminDistanceIndexに入れていけば、最終的に最小のiが得られる
+            let minDistanceIndex = 0;
+            for(let i = 0; i < nodeIndexList.length; i++) {
+                // 
+                // 課題：ここを埋める
+                // 
+                // 頂点iからスタート地点への総距離
+                const distanceToStart = distance[nodeIndexList[i]];
+
+                    if(distanceToStart < distance[minDistanceIndex]) {
+
+                    minDistanceIndex = i;
+
+                    }
+
+            }
+
+            const nodeIndex = nodeIndexList[minDistanceIndex];
+            nodeIndexList.splice(minDistanceIndex, 1); // 選んだノードを削除
+
+            // 選んだ頂点（nodeIndex）から繋がっているノードの一覧を作る
+            // 頂点fromから頂点toへの距離はgraph[from][to]で取得できる
+            // 距離が0より大きければ繋がっている
+            // 繋がっていたら番号iをneighbourIndexListに入れる
+            const neighbourIndexList = [];
+            for(let i = 0; i < nodeNum; i++) {
+                // 
+                // 課題：ここを埋める
+                // 
+
+                const from = nodeIndex;
+                const to = nodeIndexList[i];
+          
+                // console.log(`from ${from} to ${to}`, graph[from][to]);
+          
+                if(graph[from][to] > 0) {
+                  neighbourIndexList.push(to);
+                }
+
+            }
+
+            // スタート地点からnIndexまでの現在の総距離（これをAとする）と、
+            // 「スタート地点からnodeIndexまでの総距離」と「nodeIndexからnIndexまでの距離」
+            // を足したもの（これをBとする）を比較して、
+            // Bが小さい場合はdistance[nIndex]をBで更新し、
+            // previousNode[nIndex]にnodeIndexを入れる
+            for(const nIndex of neighbourIndexList) {
+                // 
+                // 課題：ここを埋める
+                // 
+
+                // Aを求める
+                // console.log("nIndex", nIndex);
+                let A;
+                // スタート地点からnIndexまでの距離を入力する
+                // A = graph[startIndex][nIndex];
+                A = distance[nIndex];
+
+                // console.log("A", A);
+
+                // Bを求める
+                let B;
+
+                const B1 = distance[nodeIndex];
+                const B2 = graph[nodeIndex][nIndex];
+                B = B1 + B2;
+
+                // console.log(`B1,${B1} , B2,${B2}`);
+                // console.log("B", B);
+
+                if(B <= A) {
+                    distance[nIndex] = B;
+                    previousNode[nIndex] = nodeIndex;
+                }
+
+            }
+
+        }
+ 
+        // 答えは出たが人間が読みやすい形式ではないので
+        // ゴールから逆順に辿って最短経路として出す
+        const shortestPath = [goalIndex];
+        for(let prev = previousNode[goalIndex]; prev >= 0; prev = previousNode[prev]) {
+            shortestPath.unshift(prev);
+        }
+
+        return shortestPath;
+
+    }
+
+    // 動作確認
+    console.log(dijkstra(graph, 0, 5));
+    console.log(dijkstra(graph, 0, 3));
+    console.log(dijkstra(graph, 3, 5));
 
 
 // 
