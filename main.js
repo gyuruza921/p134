@@ -48,12 +48,12 @@
     const context0 = canvas0.getContext("2d");
     
     // 点を描画する関数
-    function drawNode(x, y){
+    function drawNode(x, y, color){
 
         // サブパスのリセット
         context0.beginPath();    
         // 塗りつぶしのスタイル指定
-        context0.fillStyle = "rgb(0, 0, 250)";
+        context0.fillStyle = color;
         // 塗りつぶしの円を描画
         context0.arc(x, y, 10, 0 / 180 * Math.PI, 2 * Math.PI);
         // 塗りつぶしの実行
@@ -62,12 +62,12 @@
     }
 
     // 数字を描画する関数
-    function drawNumber(x, y, num){
+    function drawNumber(x, y, num, color){
 
         // サブパスのリセット
         context0.beginPath();
         // スタイル指定
-        context0.fillStyle = "rgb(250, 250, 250)";
+        context0.fillStyle = color;
         // 塗りつぶしの数字を描画
         context0.fillText(num, x, y, 5);
         // 塗りつぶしの実行
@@ -77,12 +77,12 @@
 
 
     // 2点間に線を引く関数
-    function drawLineBetweenPoints(point1, point2) {
+    function drawLineBetweenPoints(point1, point2, color) {
 
         // サブパスのリセット
         context0.beginPath();
         // スタイル指定
-        context0.strokeStyle = "rgb(0, 0, 250)";
+        context0.strokeStyle = color;
         // 始点の設定
         context0.moveTo(point1.x, point1.y);
         // 次の点の設定
@@ -288,20 +288,29 @@ console.log("edges", edges);
 
     // 頂点を描画
     for(let node of cordinateList){
-        drawNode(node.x, node.y);
+        drawNode(node.x, node.y, "rgb(0, 0, 250)");
     }
 
     // 辺を描画
     for(let edge of edges){
         const start = edge.start;
         const end = edge.end;
-        drawLineBetweenPoints(cordinateList[start], cordinateList[end]);
+        drawLineBetweenPoints(cordinateList[start], cordinateList[end], "rgb(0, 0, 250)");
+        // 辺の距離を描画
+        // 距離を表示する座標を算出
+        const xs = cordinateList[start].x;
+        const xe = cordinateList[end].x;
+        const ys = cordinateList[start].y;
+        const ye = cordinateList[end].y;
+        const cost = graph[start][end];
+        // 
+        drawNumber(xs + ((xe - xs) / 2), ys - 5 + ((ye - ys) / 2), cost, "rgb( 0, 0, 0)")
     }
 
     // 番号を記入
     let number = 0;
     for(let node of cordinateList){
-        drawNumber(node.x - 2, node.y + 3, number);
+        drawNumber(node.x - 2, node.y + 3, number, "rgb(250, 250, 250)");
         number++;
     }
 
