@@ -19,9 +19,15 @@
     button.id = "button";
     button.innerHTML = "click here";
 
+    // reset button
+    const button1 = document.createElement("button");
+    button1.id = "button1";
+    button1.innerHTML = "reset";
+
     // 要素のドキュメントへの追加
     BODY.appendChild(canvas0);
     BODY.appendChild(button);
+    BODY.appendChild(button1);
 
 // 
 // 入力部
@@ -291,6 +297,7 @@ console.log("edges", edges);
 
 
 // グラフを描画する処理
+function drawGraph(){
 
     // 頂点を描画
     for(let node of cordinateList){
@@ -319,6 +326,11 @@ console.log("edges", edges);
         drawNumber(node.x - 2, node.y + 3, number, "rgb(250, 250, 250)");
         number++;
     }
+
+}
+
+drawGraph();
+
 
 
 // 
@@ -470,7 +482,9 @@ console.log("edges", edges);
             drawNumber(cordinateList[node].x - 3, cordinateList[node].y + 2, node, "rgb(250, 250, 250)");
         }
 
-    })
+    });
+
+    button1.addEventListener("click", drawGraph);
 
 
 // 
