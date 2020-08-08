@@ -14,8 +14,14 @@
     canvas0.height = 500;
     canvas0.width = 500;
 
+    // button
+    const button = document.createElement("button");
+    button.id = "button";
+    button.innerHTML = "click here";
+
     // 要素のドキュメントへの追加
     BODY.appendChild(canvas0);
+    BODY.appendChild(button);
 
 // 
 // 入力部
@@ -438,9 +444,33 @@ console.log("edges", edges);
     }
 
     // 動作確認
-    console.log(dijkstra(graph, 0, 5));
+    const path = dijkstra(graph, 0, 5);
+    // console.log(dijkstra(graph, 0, 5));
+    console.log("path", path);
     console.log(dijkstra(graph, 0, 3));
     console.log(dijkstra(graph, 3, 5));
+
+    // 最短経路を表示
+
+    // 
+    button.addEventListener("click", ()=>{
+
+        // 辺を描画
+        for(let i = 1; i <= path.length - 1; i ++) {
+            const start = cordinateList[ path[i -1] ];
+            const end = cordinateList[ path[i] ];
+            console.log("node",path[i - 1], path[i]);
+            console.log("edge", start, end);
+            drawLineBetweenPoints(start, end, "rgb(250, 0, 0)");
+        }
+
+        // 経路の頂点を赤で表示
+        for(const node of path){
+            drawNode(cordinateList[node].x, cordinateList[node].y, "rgb(250, 0, 0)");
+            drawNumber(cordinateList[node].x - 3, cordinateList[node].y + 2, node, "rgb(250, 250, 250)");
+        }
+
+    })
 
 
 // 
