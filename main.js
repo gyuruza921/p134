@@ -304,7 +304,7 @@ console.log("edges", edges);
         const ye = cordinateList[end].y;
         const cost = graph[start][end];
         // 
-        drawNumber(xs + ((xe - xs) / 2), ys - 5 + ((ye - ys) / 2), cost, "rgb( 0, 0, 0)")
+        drawNumber(xs - 5 + ((xe - xs) / 2), ys - 9 + ((ye - ys) / 2), cost, "rgb( 0, 0, 0)")
     }
 
     // 番号を記入
