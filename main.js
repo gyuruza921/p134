@@ -199,6 +199,8 @@
                 }
             }
 
+            // 分岐の先にある頂点のリスト
+            let next = [];
 
             // 座標リストに登録済みの接点のリストアップ
             let prev = [];
@@ -207,8 +209,15 @@
                 if(cordinateList[ neighbourIndexList[i] ] != null){
                     prev.push(neighbourIndexList[i]);
                 }
+                else {
+                    next.push( neighbourIndexList[i] )
+                }
 
             }
+
+            console.log("neighbourIndexList", neighbourIndexList);
+            console.log("prev", prev);
+            console.log("next", next);
 
 
             // 基準となる点の座標をリストに登録(ここではリストの最初の点とする)
@@ -219,13 +228,16 @@
             // 分岐の数
             const junctions = neighbourIndexList.length - prev.length;
 
+            // 分岐元の頂点の座標
             const point1 = cordinateList[i];
 
             // 次の接点の分岐の上下間隔を決める
-            const spaceN = Math.floor( (point1.y * 2) / (junctions + 2) );
+            // 分岐元の頂点のy座標を2倍してそれを次の分岐の数+1の数で割る
+            const spaceN = Math.floor( (point1.y * 2) / (junctions + 1) );
+            console.log("spaceN", spaceN);
 
             // 隣接する頂点のリストを基に各頂点を分岐させ座標を登録していく
-            for(let i = 0; i <= neighbourIndexList.length - 1; i ++){
+            for(let i = 0; i <= next.length - 1; i ++){
 
                 // 描画する点の座標を決める
                 const pointN = {x:0, y:0};
@@ -235,27 +247,33 @@
                     pointN.x = point1.x + 80;
                     pointN.y = point1.y;
                 }
-                // 分岐が複数なら枝分かれさせる
+                // 分岐が複数なら枝分かれさせ、上から順に割り振る
                 else if(junctions >= 2){
                     pointN.x = point1.x + 80;
-                    pointN.y = (spaceN * (i + 1)) + (spaceN / 2);
+                    // point1.yを基準に、まずspaceN*junctionsの分だけ上に移動しそこから1個ずつ降りる
+                    // 0番目のy座標
+                    const height0 = point1.y - (spaceN / 2);
+                    console.log("height0", height0);
+                    // 
+                    pointN.y = height0 + ( (i) * spaceN);
                 }
                 // 分岐が0ならもう1つ進む
-                else if(junctions == 0){
+                else if(junctions == 0 && i != 0){
                     pointN.x = point1.x + 160;
                     pointN.y = standardPoint.y;
                 }
 
 
                 // まだ未登録なら座標リストに登録
-                if(cordinateList[ neighbourIndexList[i] ] == null ){
-                    cordinateList[ neighbourIndexList[i] ] = pointN; 
+                if(cordinateList[ next[i] ] == null ){
+                    cordinateList[ next[i] ] = pointN; 
                 }                
 
             }
 
         }
 
+        console.log("cordinateList", cordinateList)
         return cordinateList;
     }
 
@@ -384,13 +402,11 @@
     }
 
 
-    // 動作確認
-    const cordinateList = nodeCordinateList(graph, 20,250)
-
-
-
-    // 動作確認
-    const edges = serchEdges(graph);
+    // 座標のリストと辺のリスト
+        // 各頂点の座標
+        const cordinateList = nodeCordinateList(graph, 20,250)
+        // 各頂点間の辺
+        const edges = serchEdges(graph);
 
 
     // グラフを描画する処理
@@ -453,7 +469,10 @@
     });
 
     // 画面のリセット
-    button1.addEventListener("click", drawGraph);
+    button1.addEventListener("click", ()=>{
+        context0.clearRect(0, 0, 500, 500);
+        drawGraph();
+    } );
 
 
 
