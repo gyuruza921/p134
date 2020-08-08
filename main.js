@@ -19,9 +19,15 @@
     button.id = "button";
     button.innerHTML = "click here";
 
+    // reset button
+    const button1 = document.createElement("button");
+    button1.id = "button1";
+    button1.innerHTML = "reset";
+
     // 要素のドキュメントへの追加
     BODY.appendChild(canvas0);
     BODY.appendChild(button);
+    BODY.appendChild(button1);
 
 // 
 // 入力部
