@@ -14,20 +14,112 @@
     canvas0.height = 500;
     canvas0.width = 500;
 
+    // form要素の追加
+    const form = document.createElement("form");
+    form.id = "form";
+
+    // スタート地点入力欄の作成
+    const label0 = document.createElement("label");
+    label0.innerText = "スタート地点を入力";
+    label0.setAttribute("for", "selectStart");
+
+        // 
+        const selectStart = document.createElement("select");
+        selectStart.id = "selectStart";
+
+        // 
+        const option0 = document.createElement("option");
+        option0.value = 0;
+        option0.innerText = 0;
+        // 
+        const option1 = document.createElement("option");
+        option1.value = 1;
+        option1.innerText = 1;
+        // 
+        const option2 = document.createElement("option");
+        option2.value = 2;
+        option2.innerText = 2;
+        // 
+        const option3 = document.createElement("option");
+        option3.value = 3;
+        option3.innerText = 3;
+        // 
+        const option4 = document.createElement("option");
+        option4.value = 4;
+        option4.innerText = 4;
+        // 
+        const option5 = document.createElement("option");
+        option5.value = 5;
+        option5.innerText = 5;
+
+
+        // selectStartに追加
+        selectStart.appendChild(option0);
+        selectStart.appendChild(option1);
+        selectStart.appendChild(option2);
+        selectStart.appendChild(option3);
+        selectStart.appendChild(option4);
+        selectStart.appendChild(option5);
+
+    // optionを追加する関数
+    function addOption(options, select) {
+
+        for(let option of options) {
+            select.appendChild(option);
+        }
+
+    }
+
+    // ゴール地点入力欄の作成
+    const selectGoal = document.createElement("select");
+    selectGoal.id = "selectGoal";
+
+    const label1 = document.createElement("label");
+    label1.innerText = "ゴール地点を入力";
+    label1.setAttribute("for", "selectGoal");
+
+    // 選択肢を追加
+        // 選択肢を収める配列
+        const goalOptions = [];
+
+        const optionG0 = document.createElement("option");
+        optionG0.value = 0;
+        optionG0.innerText = 0;
+
+        for(let i = 0;i <= 5; i ++) {
+
+            goalOptions[i] = document.createElement("option");
+            goalOptions[i].value = i;
+            goalOptions[i].innerText = i;
+
+        }
+
+        addOption(goalOptions, selectGoal);
+    
+
     // button
     const button = document.createElement("button");
     button.id = "button";
+    button.setAttribute("type", "button");
     button.innerHTML = "click here";
 
     // reset button
     const button1 = document.createElement("button");
     button1.id = "button1";
+    button1.setAttribute("type", "button");
     button1.innerHTML = "reset";
+
+    // formへの要素追加
+    form.appendChild(button);
+    form.appendChild(button1);
+    form.appendChild(label0);
+    form.appendChild(selectStart);
+    form.appendChild(label1);
+    form.appendChild(selectGoal);
 
     // 要素のドキュメントへの追加
     BODY.appendChild(canvas0);
-    BODY.appendChild(button);
-    BODY.appendChild(button1);
+    BODY.appendChild(form);
 
 // 
 // 入力部
@@ -449,6 +541,13 @@
 // 操作部
 // 
 // ドキュメント部のスイッチ等を操作した時に対応した処理を実行する
+
+    // 選択された値を表示
+    selectStart.addEventListener("change", ()=>{
+        // document.write(selectStart.value);
+        context0.clearRect(0, 0, 500, 20);
+        drawNumber(30, 10, selectStart.value, "rgb( 0, 0, 0)");
+    })
 
     // 最短経路を表示
     button.addEventListener("click", ()=>{
