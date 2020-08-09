@@ -82,14 +82,10 @@
         // 選択肢を収める配列
         const goalOptions = [];
 
-        const optionG0 = document.createElement("option");
-        optionG0.value = 0;
-        optionG0.innerText = 0;
-
         for(let i = 0;i <= 5; i ++) {
 
             goalOptions[i] = document.createElement("option");
-            goalOptions[i].value = i;
+            goalOptions[i].value = +i;
             goalOptions[i].innerText = i;
 
         }
@@ -545,23 +541,43 @@
     // 選択された値を表示
     selectStart.addEventListener("change", ()=>{
         // document.write(selectStart.value);
-        context0.clearRect(0, 0, 500, 20);
+        context0.clearRect(0, 0, 60, 20);
         drawNumber(30, 10, selectStart.value, "rgb( 0, 0, 0)");
-    })
+    });
+
+    // 選択された値を表示
+    selectGoal.addEventListener("change", ()=>{
+        // document.write(selectStart.value);
+        context0.clearRect(50, 0, 20, 20);
+        drawNumber(60, 10, selectGoal.value, "rgb( 0, 0, 0)");
+    });
+
+
+    // 前準備
+    let start = 0;
+    let goal = 0;
 
     // 最短経路を表示
     button.addEventListener("click", ()=>{
 
+        // 最短経路の始点と終点を設定
+        start = selectStart.value;
+        goal = selectGoal.value;
+
+        // 最短経路を計算
+        const path1 = dijkstra(graph, start, goal);
+        console.log("path1", path1);        
+
         // 辺を描画
-        for(let i = 1; i <= path.length - 1; i ++) {
-            const start = cordinateList[ path[i -1] ];
-            const end = cordinateList[ path[i] ];
-            drawLineBetweenPoints(start, end, "rgb(250, 0, 0)");
+        for(let i = 1; i <= path1.length - 1; i ++) {
+            const start = cordinateList[ path1[i - 1] ];
+            const end = cordinateList[ path1[i] ];
+            drawLineBetweenPoints(start, end, "rgb(0, 150, 0)");
         }
 
-        // 経路の頂点を赤で表示
-        for(const node of path){
-            drawNode(cordinateList[node].x, cordinateList[node].y, "rgb(250, 0, 0)");
+        // 経路の頂点を緑で表示
+        for(const node of path1){
+            drawNode(cordinateList[node].x, cordinateList[node].y, "rgb(0, 150, 0)");
             drawNumber(cordinateList[node].x - 3, cordinateList[node].y + 2, node, "rgb(250, 250, 250)");
         }
 
