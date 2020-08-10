@@ -71,21 +71,29 @@
         addOption(goalOptions, selectGoal);
     
 
-    // button
+    // 最短経路表示ボタン
     const button = document.createElement("button");
     button.id = "button";
     button.setAttribute("type", "button");
     button.innerHTML = "click here";
 
-    // reset button
+    // リセットボタン
     const button1 = document.createElement("button");
     button1.id = "button1";
     button1.setAttribute("type", "button");
     button1.innerHTML = "reset";
 
+    // 経路図再設定ボタン
+    const button2= document.createElement("button");
+    button2.id = "button2";
+    button2.setAttribute("type", "button");
+    button2.innerHTML = "graph setting";
+
+
     // formへの要素追加
     form.appendChild(button);
     form.appendChild(button1);
+    form.appendChild(button2);
     form.appendChild(label0);
     form.appendChild(selectStart);
     form.appendChild(label1);
@@ -109,7 +117,20 @@
         [-1, -1, -1, 5, 0, 2], // 点4　点3,5と接する
         [-1, -1, -1, 3, 2, 0], // 点5　再右端　点3,4と接する
 
-    ]
+    ];
+
+    // 
+    const graph1 = [
+
+        [0, 2, 3, -1, -1, -1, -1], // 頂点0　再左端　頂点1,2と接する
+        [2, 0, 4, 5, -1, -1, -1], // 頂点1　頂点0,2,3と接する
+        [3, -1, 0, 2, -1, -1, -1], // 頂点2　頂点0,3と接する
+        [-1, 5, 2, 0, 2, 4, -1], // 頂点3　頂点1,2,4,5と接する
+        [-1, -1, -1, 2, 0, 7, 5], // 頂点4　頂点3,5,6と接する
+        [-1, -1, -1, 4, 7, 0, 3], // 頂点5　頂点3,4,6と接する
+        [-1, -1, -1, -1, 5, 3, 0], // 頂点6　再右端 頂点4,5と接する
+
+    ];
 
 
 // 
@@ -228,7 +249,9 @@
     }
 
     // 動作確認
-    const path = dijkstra(graph, 0, 5);
+    // const path = dijkstra(graph, 0, 5);
+
+    const path = dijkstra(graph1, 0, 5);
 
 
     // 隣接行列から各頂点の座標のリストを作る
@@ -469,10 +492,15 @@
 
 
     // 座標のリストと辺のリスト
+
         // 各頂点の座標
-        const cordinateList = nodeCordinateList(graph, 20,250)
+        // const cordinateList = nodeCordinateList(graph, 20,250);
         // 各頂点間の辺
-        const edges = serchEdges(graph);
+        // const edges = serchEdges(graph);
+        // 各頂点の座標
+        const cordinateList = nodeCordinateList(graph1, 20,250);
+        // 各頂点間の辺
+        const edges = serchEdges(graph1);
 
 
     // グラフを描画する処理
@@ -494,7 +522,8 @@
             const xe = cordinateList[end].x;
             const ys = cordinateList[start].y;
             const ye = cordinateList[end].y;
-            const cost = graph[start][end];
+            // const cost = graph[start][end];
+            const cost = graph1[start][end];
             // 
             drawNumber(xs - 5 + ((xe - xs) / 2), ys - 9 + ((ye - ys) / 2), cost, "rgb( 0, 0, 0)")
         }
@@ -543,7 +572,8 @@
         goal = selectGoal.value;
 
         // 最短経路を計算
-        const path1 = dijkstra(graph, start, goal);
+        // const path1 = dijkstra(graph, start, goal);
+        const path1 = dijkstra(graph1, start, goal);
         console.log("path1", path1);        
 
         // 辺を描画
@@ -567,7 +597,33 @@
         drawGraph();
     } );
 
+    // 経路図の再設定
+    button2.addEventListener("click", ()=> {
 
+        // セレクトボックスの選択肢を再設定
+            // 始点
+            for(let option = 0; option <= graph1.length - 1; option++){
+                startOptions[option] = document.createElement("option");
+                startOptions[option].value = option;
+                startOptions[option].innerText = option;
+            }
 
+            // 初期化
+            selectStart.textContent = null;
+            // 子要素の追加
+            addOption(startOptions, selectStart);
+            
+            // 最終点
+            for(let option = 0; option <= graph1.length - 1; option++){
+                goalOptions[option] = document.createElement("option");
+                goalOptions[option].value = option;
+                goalOptions[option].innerText = option;
+            }
 
+            // 初期化
+            selectGoal.textContent = null;
+            // 子要素の追加
+            addOption(goalOptions, selectGoal);
+
+    });
 
