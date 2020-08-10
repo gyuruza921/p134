@@ -302,6 +302,10 @@
         // リストをnullで埋める
         cordinateList.fill(null);
 
+        // 
+        // 計算
+        // 
+
         // 各頂点に隣接する頂点を探す
         for(let i = 0; i <= nodeList.length - 1; i++) {
 
@@ -315,21 +319,10 @@
                 }
             }
 
+            // 座標リストに登録済みの頂点のリストアップ
+            const prev = neighbourIndexList.filter( function(i) { return cordinateList[i] != null });
             // 分岐の先にある頂点のリスト
-            let next = [];
-            // 座標リストに登録済みの接点のリストアップ
-            let prev = [];
-            // 座標を登録済みの頂点はprev未登録の頂点はnextに登録
-            for(let i = 0; i <= neighbourIndexList.length - 1; i ++){
-                // 
-                if(cordinateList[ neighbourIndexList[i] ] != null){
-                    prev.push(neighbourIndexList[i]);
-                }
-                else {
-                    next.push( neighbourIndexList[i] )
-                }
-
-            }
+            const next = neighbourIndexList.filter( function(i) { return cordinateList[i] == null });
 
             console.log("neighbourIndexList", neighbourIndexList);
             console.log("prev", prev);
