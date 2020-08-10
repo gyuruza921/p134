@@ -18,49 +18,6 @@
     const form = document.createElement("form");
     form.id = "form";
 
-    // スタート地点入力欄の作成
-    const label0 = document.createElement("label");
-    label0.innerText = "スタート地点を入力";
-    label0.setAttribute("for", "selectStart");
-
-        // 
-        const selectStart = document.createElement("select");
-        selectStart.id = "selectStart";
-
-        // 
-        const option0 = document.createElement("option");
-        option0.value = 0;
-        option0.innerText = 0;
-        // 
-        const option1 = document.createElement("option");
-        option1.value = 1;
-        option1.innerText = 1;
-        // 
-        const option2 = document.createElement("option");
-        option2.value = 2;
-        option2.innerText = 2;
-        // 
-        const option3 = document.createElement("option");
-        option3.value = 3;
-        option3.innerText = 3;
-        // 
-        const option4 = document.createElement("option");
-        option4.value = 4;
-        option4.innerText = 4;
-        // 
-        const option5 = document.createElement("option");
-        option5.value = 5;
-        option5.innerText = 5;
-
-
-        // selectStartに追加
-        selectStart.appendChild(option0);
-        selectStart.appendChild(option1);
-        selectStart.appendChild(option2);
-        selectStart.appendChild(option3);
-        selectStart.appendChild(option4);
-        selectStart.appendChild(option5);
-
     // optionを追加する関数
     function addOption(options, select) {
 
@@ -69,6 +26,29 @@
         }
 
     }
+
+    // スタート地点入力欄
+        // ラベル作成
+        const label0 = document.createElement("label");
+        label0.innerText = "スタート地点を入力";
+        label0.setAttribute("for", "selectStart");
+
+        // セレクトボックス要素
+        const selectStart = document.createElement("select");
+        selectStart.id = "selectStart";
+
+        // selectStartにoption要素を追加
+        const startOptions = [];
+
+        for(let i = 0; i <= 5; i++){
+            startOptions[i] = document.createElement("option");
+            startOptions[i].value = i;
+            startOptions[i].innerText = i;
+        }
+
+        addOption(startOptions, selectStart)
+
+
 
     // ゴール地点入力欄の作成
     const selectGoal = document.createElement("select");
@@ -83,11 +63,9 @@
         const goalOptions = [];
 
         for(let i = 0;i <= 5; i ++) {
-
             goalOptions[i] = document.createElement("option");
             goalOptions[i].value = +i;
             goalOptions[i].innerText = i;
-
         }
 
         addOption(goalOptions, selectGoal);
