@@ -40,35 +40,17 @@
         // selectStartにoption要素を追加
         const startOptions = [];
 
-        for(let i = 0; i <= 5; i++){
-            startOptions[i] = document.createElement("option");
-            startOptions[i].value = i;
-            startOptions[i].innerText = i;
-        }
-
-        addOption(startOptions, selectStart)
-
-
 
     // ゴール地点入力欄の作成
-    const selectGoal = document.createElement("select");
-    selectGoal.id = "selectGoal";
+        const selectGoal = document.createElement("select");
+        selectGoal.id = "selectGoal";
 
-    const label1 = document.createElement("label");
-    label1.innerText = "ゴール地点を入力";
-    label1.setAttribute("for", "selectGoal");
+        const label1 = document.createElement("label");
+        label1.innerText = "ゴール地点を入力";
+        label1.setAttribute("for", "selectGoal");
 
-    // 選択肢を追加
         // 選択肢を収める配列
         const goalOptions = [];
-
-        for(let i = 0;i <= 5; i ++) {
-            goalOptions[i] = document.createElement("option");
-            goalOptions[i].value = +i;
-            goalOptions[i].innerText = i;
-        }
-
-        addOption(goalOptions, selectGoal);
     
 
     // 最短経路表示ボタン
@@ -106,6 +88,26 @@
 // 
 // 入力部
 // 
+
+    // Treeクラスの用意
+        // TreeNode
+        class TreeNode {
+            constructor(value){
+                // そのノードの値
+                this.value = value;
+                // 他のノードとの位置関係
+                this.N;
+                this.NE;
+                this.E;
+                this.SE
+                this.S;
+                this.SW;
+                this.W;
+                this.NW;
+            }
+        }
+
+        // Tree
 
     // グラフのデータ
     const graph = [
@@ -161,6 +163,8 @@
             addOption(goalOptions, selectGoal);
 
         };
+
+    setSelects();
 
 // 
 // 処理部
@@ -301,6 +305,9 @@
         const cordinateList = new Array(graph.length);
         // リストをnullで埋める
         cordinateList.fill(null);
+        // 最初の頂点だけは事前に設定しておく
+        cordinateList[0] = standardPoint;
+
 
         // 
         // 計算
