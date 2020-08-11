@@ -192,14 +192,6 @@
         const node4 = new TreeNode(graph[4]);
         const node5 = new TreeNode(graph[5]);
 
-        // Treeクラスの動作確認
-        const tree = new Tree();
-        tree.addNode(node0);
-        console.log(tree);
-        tree.addNode(node1);
-        console.log(tree);
-        tree.addNode(node2);
-        console.log(tree);
 
     // 第二の隣接行列のデータ
     const graph1 = [
@@ -213,8 +205,6 @@
         [-1, -1, -1, -1, 5, 3, 0], // 頂点6　再右端 頂点4,5と接する
 
     ];
-
-
 
 
     // セレクトボックスの選択肢を再設定
@@ -413,9 +403,9 @@
             // 分岐の先にある頂点のリスト
             const next = neighbourIndexList.filter( function(i) { return cordinateList[i] == null });
 
-            console.log("neighbourIndexList", neighbourIndexList);
-            console.log("prev", prev);
-            console.log("next", next);
+            // console.log("neighbourIndexList", neighbourIndexList);
+            // console.log("prev", prev);
+            // console.log("next", next);
 
 
             // 基準となる点の座標をリストに登録(ここではリストの最初の点とする)
@@ -432,7 +422,7 @@
             // 次の接点の分岐の上下間隔を決める
             // 分岐元の頂点のy座標を2倍してそれを次の分岐の数+1の数で割る
             const spaceN = Math.floor( (point1.y * 2) / (junctions + 1) );
-            console.log("spaceN", spaceN);
+            // console.log("spaceN", spaceN);
 
             // 隣接する頂点のリストを基に各頂点を分岐させ座標を登録していく
             for(let i = 0; i <= next.length - 1; i ++){
@@ -451,7 +441,7 @@
                     // point1.yを基準に、まずspaceN*junctionsの分だけ上に移動しそこから1個ずつ降りる
                     // 0番目のy座標
                     const height0 = point1.y - (spaceN / 2);
-                    console.log("height0", height0);
+                    // console.log("height0", height0);
                     // 
                     pointN.y = height0 + ( (i) * spaceN);
                 }
@@ -470,9 +460,89 @@
 
         }
 
-        console.log("cordinateList", cordinateList)
+        // console.log("cordinateList", cordinateList);
         return cordinateList;
     }
+
+
+    // 木にノードを追加する関数
+    function addNodeTree(graph) {
+
+        // 
+        // 前準備
+        // 
+        // console.log("begun!");
+
+        // 頂点のリストを作る
+        const nodeList = [];
+
+        // リストに木のノードを作り加えていく
+        for(let i = 0; i <= graph.length - 1; i ++) {
+            const treeNode = new TreeNode( {id:i, distance: graph[i]} )
+            nodeList.push(treeNode);
+        }
+
+        console.log("nodeList", nodeList);
+
+        // 木を作る
+        const tree = { root:nodeList[0]}
+
+        // 
+        // 計算
+        // 
+
+        // 作成したノードを繋げていく
+
+        // 各頂点と接する頂点のリストを作成する
+        for(let node of nodeList){
+
+            // 隣接する頂点のリストを作成
+            let neighbourIndexList = [];
+            for(let i = 0; i <= node.value.distance.length - 1; i++) {
+
+                // console.log(node.value.distance);
+                if(node.value.distance[i] > 0) {
+                    neighbourIndexList.push(i);
+                }
+            }
+
+            // 座標リストに登録済みの頂点のリストアップ
+            // const prev = neighbourIndexList.filter( function(i) { return cordinateList[i] != null });
+            // 分岐の先にある頂点のリスト
+            // const next = neighbourIndexList.filter( function(i) { return cordinateList[i] == null });
+
+            console.log("neighbourIndexList trees", neighbourIndexList);
+            // console.log("prev", prev);
+            // console.log("next", next);
+
+            // neighbourIndexList内の頂点を北から順に各方位に登録する
+            for(let index of neighbourIndexList ) {
+
+                console.log("index", index);
+                // node内の値がnullの方位を探す
+                for(let direction in node) {
+
+                    console.log("direction", direction);
+
+                    // 空の方位が見つかったらnodeListからノードを追加する
+                    if( node[direction] == null) {
+
+                        node[direction] = nodeList[index];
+
+                        break;
+                    }
+                }
+            }
+
+
+        }
+
+        console.log("tree", tree);
+
+    }
+
+    // 動作確認
+    addNodeTree(graph);
 
 
     // 辺を探す処理
