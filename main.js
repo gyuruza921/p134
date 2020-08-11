@@ -108,6 +108,16 @@
         }
 
         // Tree
+        class Tree {
+            constructor(){
+                // 一番先頭の値
+                this.root;
+            }
+            // ノードを追加する
+            addNode(node){
+
+            }
+        }
 
     // グラフのデータ
     const graph = [
@@ -121,7 +131,42 @@
 
     ];
 
-    // 
+    // 隣接行列graphを使ったTreeNodeクラスの動作確認
+        // 各頂点のインスタンス作成
+        const node0 = new TreeNode(graph[0]);
+        const node1 = new TreeNode(graph[1]);
+        const node2 = new TreeNode(graph[2]);
+        const node3 = new TreeNode(graph[3]);
+        const node4 = new TreeNode(graph[4]);
+        const node5 = new TreeNode(graph[5]);
+
+        // 作成したノードを繋げていく
+        node0.NE = node1;
+        node0.SE = node2;
+        // node1
+        node1.NW = node0;
+        node1.SW = node2;
+        node1.E = node3;
+        // node2
+        node2.NW = node0;
+        node2.E = node3;
+        // node3
+        node3.NW = node1; 
+        node3.SW = node2;
+        node3.NE = node4;
+        node3.SE = node5;
+        // node4
+        node4.NW = node3;
+        node4.E = node5;
+        // node5
+        node5.NW = node3;
+        node5.SW = node4;
+
+        // node0からnode5までを辿って表示する
+        console.log( node0.SE.E.SE );
+        console.log( node5 );
+
+    // 第二の隣接行列のデータ
     const graph1 = [
 
         [0, 2, 3, -1, -1, -1, -1], // 頂点0　再左端　頂点1,2と接する
@@ -133,6 +178,8 @@
         [-1, -1, -1, -1, 5, 3, 0], // 頂点6　再右端 頂点4,5と接する
 
     ];
+
+
 
 
     // セレクトボックスの選択肢を再設定
@@ -378,7 +425,6 @@
                     pointN.x = point1.x + 160;
                     pointN.y = standardPoint.y;
                 }
-
 
                 // まだ未登録なら座標リストに登録
                 if(cordinateList[ next[i] ] == null ){
