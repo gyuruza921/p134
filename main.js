@@ -96,14 +96,15 @@
                 // そのノードの値
                 this.value = value;
                 // 他のノードとの位置関係
-                this.N;
-                this.NE;
-                this.E;
-                this.SE
-                this.S;
-                this.SW;
-                this.W;
-                this.NW;
+                this.N = null;
+                this.NE= null;
+                this.E= null;
+                this.SE= null;
+                this.S= null;
+                this.SW= null;
+                this.W= null;
+                this.NW= null;
+
             }
         }
 
@@ -111,12 +112,63 @@
         class Tree {
             constructor(){
                 // 一番先頭の値
-                this.root;
+                this.root = null;
             }
+
             // ノードを追加する
             addNode(node){
+                // まだrootノードがなければそれをrootノードとする
+                if( !this.root) {
+                    this.root = node;
+                    return
+                }
 
+                // rootノードがあればそれをどんどん辿っていく
+                // nullに当たったら終わり
+                let current = this.root;
+                // ノードを追加する方位を決める
+                // 比較条件:北東から順に空いている方位を探す
+                let direction
+                // currentから方位を順に抜き出す
+                for(let direct in current ){
+                    
+                    console.log(direct);
+                    console.log(current[direct]);
+                    if(current[direct] == null ){
+                        direction = direct;
+                        break;
+                    }
+
+                }
+
+                while(current[direction]) {
+
+                    current = current[direction];
+                    
+                        for(let direct in current ){
+                        
+                            console.log(direct);
+                            console.log(current[direct]);
+                            if(current[direct] == null ){
+                                direction = direct;
+                                break;
+                            }
+        
+                        }
+
+                }
+
+                // 参考例
+                // let direction = node.value < current.value ? 'left' : 'right';
+                // while(current[direction]) {
+                //   current = current[direction];
+                //   direction = node.value < current.value ? 'left' : 'right';
+                // }
+            
+                // 空いてる部分にノードを追加する
+                current[direction] = node;
             }
+
         }
 
     // グラフのデータ
@@ -140,31 +192,14 @@
         const node4 = new TreeNode(graph[4]);
         const node5 = new TreeNode(graph[5]);
 
-        // 作成したノードを繋げていく
-        node0.NE = node1;
-        node0.SE = node2;
-        // node1
-        node1.NW = node0;
-        node1.SW = node2;
-        node1.E = node3;
-        // node2
-        node2.NW = node0;
-        node2.E = node3;
-        // node3
-        node3.NW = node1; 
-        node3.SW = node2;
-        node3.NE = node4;
-        node3.SE = node5;
-        // node4
-        node4.NW = node3;
-        node4.E = node5;
-        // node5
-        node5.NW = node3;
-        node5.SW = node4;
-
-        // node0からnode5までを辿って表示する
-        console.log( node0.SE.E.SE );
-        console.log( node5 );
+        // Treeクラスの動作確認
+        const tree = new Tree();
+        tree.addNode(node0);
+        console.log(tree);
+        tree.addNode(node1);
+        console.log(tree);
+        tree.addNode(node2);
+        console.log(tree);
 
     // 第二の隣接行列のデータ
     const graph1 = [
