@@ -208,10 +208,10 @@
 
 
     // セレクトボックスの選択肢を再設定
-    function setSelects() {
+    function setSelects(graph) {
 
             // 始点
-            for(let option = 0; option <= graph1.length - 1; option++){
+            for(let option = 0; option <= graph.length - 1; option++){
                 startOptions[option] = document.createElement("option");
                 startOptions[option].value = option;
                 startOptions[option].innerText = option;
@@ -223,7 +223,7 @@
             addOption(startOptions, selectStart);
             
             // 最終点
-            for(let option = 0; option <= graph1.length - 1; option++){
+            for(let option = 0; option <= graph.length - 1; option++){
                 goalOptions[option] = document.createElement("option");
                 goalOptions[option].value = option;
                 goalOptions[option].innerText = option;
@@ -236,7 +236,7 @@
 
         };
 
-    setSelects();
+    setSelects(graph);
 
 // 
 // 処理部
@@ -354,7 +354,7 @@
     }
 
     // 動作確認
-    const path = dijkstra(graph1, 0, 5);
+    // const path = dijkstra(graph1, 0, 5);
 
 
     // 隣接行列から各頂点の座標のリストを作る
@@ -406,7 +406,6 @@
             // console.log("neighbourIndexList", neighbourIndexList);
             // console.log("prev", prev);
             // console.log("next", next);
-
 
             // 基準となる点の座標をリストに登録(ここではリストの最初の点とする)
             if(i == 0){
@@ -471,21 +470,21 @@
         // 
         // 前準備
         // 
-        // console.log("begun!");
 
         // 頂点のリストを作る
         const nodeList = [];
-
         // リストに木のノードを作り加えていく
         for(let i = 0; i <= graph.length - 1; i ++) {
             const treeNode = new TreeNode( {id:i, distance: graph[i]} )
             nodeList.push(treeNode);
         }
-
         console.log("nodeList", nodeList);
 
+        // 定義済みのノードのリストを作る
+        const definedNodes = [];
+
         // 木を作る
-        const tree = { root:nodeList[0]}
+        const tree = { root:nodeList[0] }
 
         // 
         // 計算
@@ -496,6 +495,7 @@
         // 各頂点と接する頂点のリストを作成する
         for(let node of nodeList){
 
+            console.log("own",node);
             // 隣接する頂点のリストを作成
             let neighbourIndexList = [];
             for(let i = 0; i <= node.value.distance.length - 1; i++) {
@@ -506,38 +506,95 @@
                 }
             }
 
-            // 座標リストに登録済みの頂点のリストアップ
-            // const prev = neighbourIndexList.filter( function(i) { return cordinateList[i] != null });
+            // 
+            console.log("neighbourIndexList trees", neighbourIndexList);
+
+            // 隣接する点のリストから方位を登録済みの頂点を探す
+            let prev = []
+            for(let i of neighbourIndexList) {
+
+                // console.log("prevnode", i);
+                // 既に方位を登録済みの頂点を登録する
+                console.log("own",node);
+                console.log("node.value.id", node.value.id);
+                console.log("i", i);
+                
+                // 現在位置の頂点のid
+                const ownid = node.value.id;
+                console.log("nodeList[ownid]", nodeList[ownid]);
+                // const ownNode = Array.from( nodeList[ownid] );
+                // console.log("ownNode",ownNode);
+                // console.log("ownNode1", Object.assign( nodeList[ownid] ));
+                // console.log("ownNode2", Array.from( nodeList ));
+
+                // 現在の頂点の周囲を探索する
+                for(let direction in node) {
+
+                    // console.log("proparty", direction);
+                    // console.log("nodeList[ownid][direction]", nodeList[ownid][direction]);
+                    // console.log("node.direction", node[direction]);
+                    // console.log("nodeList.direction", nodeList[i][direction]);
+                    
+                    // 
+                    if( direction != 'value') {
+                        
+                        // prev.push(i);
+                        console.log("direction", direction);
+                        console.log("nodeList[ownid][direction]", nodeList[ownid][direction])
+
+                        // if(nodeList[ownid][direction].id == i) {
+                        //     console.log("same",);
+                        // }
+                        // else {
+
+                        // }
+                        
+                    }
+                    
+                }
+
+            }
+            console.log("prev", prev);
+
+            // 頂点リストに登録済みの頂点のリストアップ
+            // const prev = neighbourIndexList.filter( function(i) { return nodeList[i] != null });
             // 分岐の先にある頂点のリスト
             // const next = neighbourIndexList.filter( function(i) { return cordinateList[i] == null });
 
-            console.log("neighbourIndexList trees", neighbourIndexList);
+            
             // console.log("prev", prev);
             // console.log("next", next);
 
             // neighbourIndexList内の頂点を北から順に各方位に登録する
+            // 登録する包囲の選び方をprevとnextの大きさに応じて変更する
             for(let index of neighbourIndexList ) {
 
-                console.log("index", index);
+                // console.log("index", index);
                 // node内の値がnullの方位を探す
                 for(let direction in node) {
 
-                    console.log("direction", direction);
 
                     // 空の方位が見つかったらnodeListからノードを追加する
                     if( node[direction] == null) {
 
                         node[direction] = nodeList[index];
-
+                        // console.log("direction", direction);
                         break;
                     }
+
+                    // 
+                    if( node[direction].id == index ) {
+                        // console.log(`same node${index}`, node[direction].id)
+                    }
+
+
                 }
             }
 
 
         }
 
-        console.log("tree", tree);
+        console.log("tree.root", tree.root);
 
     }
 
@@ -558,6 +615,9 @@
         for(let i = 0; i <= graph.length - 1; i ++) {
             nodeList.push(i);
         }
+
+        // 座標のリスト
+        const cordinateList = nodeCordinateList(graph, 80, 250);
 
         // 各辺のリスト
         const edges = [];
@@ -671,14 +731,20 @@
 
     // 座標のリストと辺のリスト
 
-        // 各頂点の座標
-        const cordinateList = nodeCordinateList(graph1, 20,250);
-        // 各頂点間の辺
-        const edges = serchEdges(graph1);
+
 
 
     // グラフを描画する処理
-    function drawGraph(){
+    function drawGraph(graph) {
+
+        // 
+        // 前準備
+        // 
+
+        // 各頂点の座標
+        const cordinateList = nodeCordinateList(graph, 20,250);
+        // 各頂点間の辺
+        const edges = serchEdges(graph);
 
         // 頂点を描画
         for(let node of cordinateList){
@@ -696,7 +762,7 @@
             const xe = cordinateList[end].x;
             const ys = cordinateList[start].y;
             const ye = cordinateList[end].y;
-            const cost = graph1[start][end];
+            const cost = graph[start][end];
             // 
             drawNumber(xs - 5 + ((xe - xs) / 2), ys - 9 + ((ye - ys) / 2), cost, "rgb( 0, 0, 0)")
         }
@@ -710,7 +776,7 @@
 
     }
 
-    drawGraph();
+    drawGraph(graph);
 
 
 // 
