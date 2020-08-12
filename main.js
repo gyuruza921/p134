@@ -484,7 +484,9 @@
         const definedNodes = [];
 
         // 木を作る
-        const tree = { root:nodeList[0] }
+        const tree = new Tree();
+        tree.addNode(nodeList[0])
+        // const tree = { root:nodeList[0] }
 
         // 
         // 計算
@@ -506,6 +508,8 @@
                 }
             }
 
+            // neighbourIndexList = node.value.distance.filter( function(i) { return node.value.distance[i] > 0 } )
+
             // 
             console.log("neighbourIndexList trees", neighbourIndexList);
 
@@ -521,6 +525,8 @@
 
 
             // neighbourIndexList内の頂点を北から順に各方位に登録する
+            // 登録する方位の候補リスト
+            const directions = [];
             // 登録する包囲の選び方をprevとnextの大きさに応じて変更する
             // nextに登録された頂点の処理
             for(let index of next ) {
@@ -555,10 +561,33 @@
                 // 場合分け
                 // 分岐が1つだけの場合
                 if(prev.length == 1) {
-                    node.W = nodeList[index];
-                    break;
+                   
                     // 実装予定
                     // 前の頂点との相対的位置に応じて登録する方位を変更する
+                    // 前の頂点と現在の頂点との位置関係を調べる
+                    // 前の頂点
+                    const prevNode = nodeList[index];
+                    // 前の頂点と現在位置との方位
+                    let prevDirection;
+                    // console.log("prevNode", prevNode);
+                    // 前の頂点のどこに現在の頂点が収められてるか調べる
+                    for(let direction in prevNode) {
+                        // console.log("direction", direction);
+                        if(prevNode[direction] != null && direction != "value" && prevNode[direction].value.id == ownId){
+                            // console.log("direction", direction);
+                            prevDirection = direction;
+                            // console.log("prevDirection", prevDirection);
+                            break;
+                        }
+                    }
+                    // 前の頂点を現在の頂点の方位に登録
+                    if(prevDirection == "NE"){
+                        node.SW = nodeList[index];
+                    }
+                    else{
+                        node.W = nodeList[index]
+                    }
+                    break;
                 }
                 // 分岐が2つだけの場合
                 else if(prev.length == 2) {
@@ -572,7 +601,6 @@
 
         }
 
-        console.log("tree.root", tree.root);
         return tree;
 
     }
