@@ -107,6 +107,27 @@
 
             }
         }
+        // TreeNodeテスト
+        class TreeNodeE {
+            constructor(value){
+                // そのノードの値
+                this.value = value;
+                // id
+                this.id = value.id;
+                // 他のノードとの距離
+                this.distance = value.distance;
+                // 他のノードとの位置関係
+                this.N = null;
+                this.NE= null;
+                this.E= null;
+                this.SE= null;
+                this.S= null;
+                this.SW= null;
+                this.W= null;
+                this.NW= null;
+
+            }
+        }
 
         // Tree
         class Tree {
@@ -390,13 +411,9 @@
 
             const node = graph[i];
 
-            // 各頂点に隣接する頂点のリストを作成
-            let neighbourIndexList = [];
-            for(let i = 0; i <= node.length - 1; i++) {
-                if(node[i] > 0) {
-                    neighbourIndexList.push(i);
-                }
-            }
+
+            // 隣接する頂点のリストを作成
+            const neighbourIndexList = nodeList.map((node)=>{ return node; }).filter( (i)=>{ return node[i] > 0; } );
 
             // 座標リストに登録済みの頂点のリストアップ
             const prev = neighbourIndexList.filter( function(i) { return cordinateList[i] != null });
@@ -413,7 +430,7 @@
             }
 
             // 分岐の数
-            const junctions = neighbourIndexList.length - prev.length;
+            const junctions = next.length;
 
             // 分岐元の頂点の座標
             const point1 = cordinateList[i];
@@ -515,30 +532,60 @@
 
 
             // neighbourIndexList内の頂点を北から順に各方位に登録する
-
             // 登録する包囲の選び方をprevとnextの大きさに応じて変更する
             // nextに登録された頂点の処理
             for(let index of next ) {
-
+                let directionsN = Array.from(directions);
                 // 場合分け
                 // 分岐が1つだけの場合
                 if(next.length == 1) {
+                    // 動作確認
+                    directionsN = directionsN.splice(2, 1);
+                    // console.log("directionsN" ,directionsN[0]);
                     // 東に進む
-                    node.E = nodeList[index];
+                    node[directionsN[0]] = nodeList[index];
                     break;
                 }
                 // 分岐が2つの場合
                 else if(next.length == 2) {
+                    // 動作確認
+                    directionsN = directionsN.splice(1, 3);
+                    directionsN.splice(1, 1);
+                    // console.log("directionsN2" ,directionsN);
                     // 北東と南東に進む
-                    node.NE = nodeList[next[0]];
-                    node.SE = nodeList[next[1]];
+                    node[directionsN[0]] = nodeList[next[0]];
+                    node[directionsN[1]] = nodeList[next[1]];
+
+                    console.log("ndex", index)
+                    // もし終点が含まれていたら
+                    for(let i of next) {
+
+                        if(i == nodeList.length - 1) {
+                            console.log(`node${i} is last node!`);
+                            // その頂点の北か南に登録し、もう一方を北東か南東に登録
+                            const other = next.filter( (i)=>{ return i != nodeList.length - 1 } );
+                            // もし片方の頂点の番号が現在の頂点より若ければ北違うなら南に登録
+                            if(other < node.value.id){
+                                node.N = nodeList[other];
+                            }
+                            else {
+                                node.S = nodeList[other];
+                            }
+                            
+                        }                        
+
+                    }
+
                     break;
+
                 }
                 // その他の場合
                 else {
+                    directionsN = directionsN.splice(0, 4);
+                    console.log("directionsN" ,directionsN);
                     // 北から順に空いてる方位に登録
-                    for(let direction in node) {
-                        if(direction == null) {
+                    for(let direction in directionsN) {
+                        if( node[direction] == null) {
                             node[direction] = nodeList[index];
                         }
                     }
@@ -548,6 +595,9 @@
             // prevに登録された頂点の処理
             for(let index of prev) {
                 // 場合分け
+                let directionsP = Array.from(directions);
+                directionsP.splice(1, 3);
+                console.log("directionsP", directionsP)
                 // 分岐が1つだけの場合
                 if(prev.length == 1) {
                    
@@ -559,9 +609,9 @@
                     let prevDirection;
                     // console.log("prevNode", prevNode);
                     // 前の頂点から見てどこに現在の頂点があるか調べる
-                    for(let direction in prevNode) {
-                        // console.log("direction", direction);
-                        if(prevNode[direction] != null && direction != "value" && prevNode[direction].value.id == ownId){
+                    for(let direction of directionsP) {
+                        console.log("direction[direction]", prevNode[direction]);
+                        if(prevNode[direction] != null && prevNode[direction].value.id == ownId){
                             // console.log("direction", direction);
                             prevDirection = direction;
                             // console.log("prevDirection", prevDirection);
@@ -569,15 +619,22 @@
                         }
                     }
                     // 前の頂点を現在の頂点の方位に登録
-                    if(prevDirection == "NE"){
+                    if(prevDirection == "N"){
+                        node.S = nodeList[index];
+                    }
+                    else if(prevDirection == "NE"){
                         node.SW = nodeList[index];
                     }
-                    else if(prevDirection == "SE"){
+                    else if(prevDirection == "E") {
+                        node.W = nodeList[index]
+                    }                    
+                    else if(prevDirection == "S") {
+                        node.N = nodeList[index]
+                    }                    
+                    else if(prevDirection == "SE") {
                         node.NW = nodeList[index];
                     }
-                    else{
-                        node.W = nodeList[index]
-                    }
+
                     break;
                 }
                 // 分岐が2つだけの場合
@@ -588,7 +645,6 @@
                 }
 
             }
-
 
         }
 
@@ -655,6 +711,7 @@
                 const start = edge.start;
                 const end = edge.end;
 
+                // 取り出した辺の添え字
                 let cnt = 0;
 
                 // 取り出した辺と始点と終点が逆転した辺を探す
