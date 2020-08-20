@@ -110,8 +110,6 @@
         // TreeNodeテスト
         class TreeNodeE {
             constructor(value){
-                // そのノードの値
-                this.value = value;
                 // id
                 this.id = value.id;
                 // 他のノードとの距離
@@ -135,59 +133,32 @@
                 // 一番先頭の値
                 this.root = null;
             }
+            // 内部の頂点を探す
+            serch(id) {
 
-            // ノードを追加する
-            addNode(node){
-                // まだrootノードがなければそれをrootノードとする
-                if( !this.root) {
-                    this.root = node;
-                    return
-                }
-
-                // rootノードがあればそれをどんどん辿っていく
-                // nullに当たったら終わり
+                // 
                 let current = this.root;
-                // ノードを追加する方位を決める
-                // 比較条件:北東から順に空いている方位を探す
-                let direction
-                // currentから方位を順に抜き出す
-                for(let direct in current ){
-                    
-                    console.log(direct);
-                    console.log(current[direct]);
-                    if(current[direct] == null ){
-                        direction = direct;
-                        break;
-                    }
-
-                }
-
-                while(current[direction]) {
-
-                    current = current[direction];
-                    
-                        for(let direct in current ){
-                        
-                            console.log(direct);
-                            console.log(current[direct]);
-                            if(current[direct] == null ){
-                                direction = direct;
-                                break;
-                            }
-        
+                // 木のノードのプロパティから方位のみを取り出す
+                const directions = Object.keys(this.root).filter( (key)=> key.match( /[NEWS]/ ) != null );
+                // console.log(directions);
+                // 一番先頭の値が探していた値ならそれを返す
+                if(id == current.value.id){ return current }
+                // 見つからなければ枝を辿っていく
+                // loop
+                while(true){
+                    for(let direction of directions){
+                        if(current[direction] != null && current[direction].value.id == id){
+                            return current[direction];
                         }
-
+                        else if(current[direction] != null && current[direction].value.id != id){
+                            current = current[direction];
+                            console.log("current", current);
+                        }
+                        else{ continue }
+                    }
+                    return false;
                 }
 
-                // 参考例
-                // let direction = node.value < current.value ? 'left' : 'right';
-                // while(current[direction]) {
-                //   current = current[direction];
-                //   direction = node.value < current.value ? 'left' : 'right';
-                // }
-            
-                // 空いてる部分にノードを追加する
-                current[direction] = node;
             }
 
         }
@@ -504,7 +475,7 @@
 
         // 木を作る
         const tree = new Tree();
-        tree.addNode(nodeList[0]);
+        tree.root = nodeList[0];
 
         // 
         // 計算
@@ -696,9 +667,115 @@
 
     }
 
+
+    // 木から各頂点の座標のリストを作る
+    function cordinateListFromTree(tree, graph, x, y){
+        // 
+        // 前準備
+        // 
+
+        // 頂点のリストを作る
+        const nodeList = [];
+        // リストに頂点番号を加えていく
+        for(let i = 0; i <= graph.length - 1; i ++) {
+            nodeList.push(i);
+        }
+
+        // 基準の座標
+        const standardPoint = {x:x, y:y};
+
+        // 各点の座標のリスト
+        const cordinateList = new Array(graph.length);
+        // リストをnullで埋める
+        cordinateList.fill(null);
+        // 最初の頂点だけは事前に設定しておく
+        cordinateList[0] = standardPoint;
+
+
+        // 
+        // 計算
+        // 
+
+        // 各頂点に隣接する頂点を探す
+        for(let i = 0; i <= nodeList.length - 1; i++) {
+
+            const node = graph[i];
+
+
+            // 隣接する頂点のリストを作成
+            const neighbourIndexList = nodeList.map((node)=>{ return node; }).filter( (i)=>{ return node[i] > 0; } );
+
+            // 座標リストに登録済みの頂点のリストアップ
+            const prev = neighbourIndexList.filter( function(i) { return cordinateList[i] != null });
+            // 分岐の先にある頂点のリスト
+            const next = neighbourIndexList.filter( function(i) { return cordinateList[i] == null });
+
+            // console.log("neighbourIndexList", neighbourIndexList);
+            // console.log("prev", prev);
+            // console.log("next", next);
+
+            // 基準となる点の座標をリストに登録(ここではリストの最初の点とする)
+            if(i == 0){
+                cordinateList[0] = standardPoint; 
+            }
+
+            // 分岐の数
+            const junctions = next.length;
+
+            // 分岐元の頂点の座標
+            const point1 = cordinateList[i];
+
+            // 次の接点の分岐の上下間隔を決める
+            // 分岐元の頂点のy座標を2倍してそれを次の分岐の数+1の数で割る
+            const spaceN = Math.floor( (point1.y * 2) / (junctions + 1) );
+            // console.log("spaceN", spaceN);
+
+            // 隣接する頂点のリストを基に各頂点を分岐させ座標を登録していく
+            for(let i = 0; i <= next.length - 1; i ++){
+
+                // 描画する点の座標を決める
+                const pointN = {x:0, y:0};
+
+                // 分岐が１つならまっすぐ進む
+                if(junctions == 1){
+                    pointN.x = point1.x + 80;
+                    pointN.y = point1.y;
+                }
+                // 分岐が複数なら枝分かれさせ、上から順に割り振る
+                else if(junctions >= 2){
+                    pointN.x = point1.x + 80;
+                    // point1.yを基準に、まずspaceN*junctionsの分だけ上に移動しそこから1個ずつ降りる
+                    // 0番目のy座標
+                    const height0 = point1.y - (spaceN / 2);
+                    // console.log("height0", height0);
+                    // 
+                    pointN.y = height0 + ( (i) * spaceN);
+                }
+                // 分岐が0ならもう1つ進む
+                else if(junctions == 0 && i != 0){
+                    pointN.x = point1.x + 160;
+                    pointN.y = standardPoint.y;
+                }
+
+                // まだ未登録なら座標リストに登録
+                if(cordinateList[ next[i] ] == null ){
+                    cordinateList[ next[i] ] = pointN; 
+                }                
+
+            }
+
+        }
+
+        // console.log("cordinateList", cordinateList);
+        return cordinateList;
+    }    
+
     // 動作確認
     const nodeTree = addNodeTree(graph);
-    console.log("nodeTree", nodeTree)
+    console.log("nodeTree", nodeTree);
+    console.log("nodeTree", nodeTree.serch(0));
+    console.log("nodeTree serch1", nodeTree.serch(1));
+    console.log("nodeTree serch5", nodeTree.serch(5));
 
 
     // 辺を探す処理
