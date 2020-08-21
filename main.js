@@ -145,11 +145,10 @@
                 if(id == current.value.id){ return current }
                 // 見つからなければ枝を辿っていく
                 // loop
-                let limit = 0;
-                while(limit < 5){
+                let limit = this.root.value.distance.length;
+                while(limit > 0){
 
-                    let directions1 = Array.from(directions).filter( (i)=> current[i] != null );
-                    console.log("directions1", directions1);
+                    let directions1 = Array.from(directions).filter( (d)=> current[d] != null );
 
                     for(let direction of directions1){
                         // 探している頂点のidと一致したらcurrentの値を返す                        
@@ -158,26 +157,22 @@
                         }
                         // 全ての方位を探索したらcurrentの値を更新する
                         else if(direction == directions1[directions1.length - 1]){
-                        // else if(current[direction].value.id != id && direction == directions1[directions1.length - 1]){
                             console.log("all serched!");
-                            current = current[direction];
+                            current = current[directions1[0]];
                             console.log("current", current);
-                            directions1 = Array.from(directions).filter( (i)=> current[i] != null && i.match(/[E]/) != null);
-                            // console.log("directions1", directions1);
                             break;
                         }
                         // 一致しなければcurrent内の別の方位を探す
-                        // else if(current[direction].value.id != id){
                         else{
                             console.log("continue!", direction);
                             continue;
                         }
                     
                     }
-                    limit ++;
-                    // return false;
+                    limit --;
                 }
-                
+
+            return false;    
             }
 
         }
@@ -797,8 +792,8 @@
     console.log("nodeTree serch2", nodeTree.serch(2));
     console.log("nodeTree serch3", nodeTree.serch(3));
     console.log("nodeTree serch4", nodeTree.serch(4));
-    // console.log("nodeTree serch5", nodeTree.serch(5));
-    // console.log("nodeTree serch6", nodeTree.serch(6));
+    console.log("nodeTree serch5", nodeTree.serch(5));
+    console.log("nodeTree serch6", nodeTree.serch(6));
 
 
     // 辺を探す処理
