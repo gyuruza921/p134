@@ -145,20 +145,39 @@
                 if(id == current.value.id){ return current }
                 // 見つからなければ枝を辿っていく
                 // loop
-                while(true){
-                    for(let direction of directions){
-                        if(current[direction] != null && current[direction].value.id == id){
+                let limit = 0;
+                while(limit < 5){
+
+                    let directions1 = Array.from(directions).filter( (i)=> current[i] != null );
+                    console.log("directions1", directions1);
+
+                    for(let direction of directions1){
+                        // 探している頂点のidと一致したらcurrentの値を返す                        
+                        if(current[direction].value.id == id){
                             return current[direction];
                         }
-                        else if(current[direction] != null && current[direction].value.id != id){
+                        // 全ての方位を探索したらcurrentの値を更新する
+                        else if(direction == directions1[directions1.length - 1]){
+                        // else if(current[direction].value.id != id && direction == directions1[directions1.length - 1]){
+                            console.log("all serched!");
                             current = current[direction];
                             console.log("current", current);
+                            directions1 = Array.from(directions).filter( (i)=> current[i] != null && i.match(/[E]/) != null);
+                            // console.log("directions1", directions1);
+                            break;
                         }
-                        else{ continue }
+                        // 一致しなければcurrent内の別の方位を探す
+                        // else if(current[direction].value.id != id){
+                        else{
+                            console.log("continue!", direction);
+                            continue;
+                        }
+                    
                     }
-                    return false;
+                    limit ++;
+                    // return false;
                 }
-
+                
             }
 
         }
@@ -775,7 +794,11 @@
     console.log("nodeTree", nodeTree);
     console.log("nodeTree", nodeTree.serch(0));
     console.log("nodeTree serch1", nodeTree.serch(1));
-    console.log("nodeTree serch5", nodeTree.serch(5));
+    console.log("nodeTree serch2", nodeTree.serch(2));
+    console.log("nodeTree serch3", nodeTree.serch(3));
+    console.log("nodeTree serch4", nodeTree.serch(4));
+    // console.log("nodeTree serch5", nodeTree.serch(5));
+    // console.log("nodeTree serch6", nodeTree.serch(6));
 
 
     // 辺を探す処理
