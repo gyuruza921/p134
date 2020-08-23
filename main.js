@@ -703,7 +703,7 @@
 
 
     // 木から各頂点の座標のリストを作る
-    function cordinateListFromTree(tree, graph, x, y){
+    function cordinateListFromTree(tree, x, y){
         // 
         // 前準備
         // 
@@ -723,7 +723,7 @@
         const standardPoint = {x:x, y:y};
 
         // 各点の座標のリスト
-        const cordinateList = new Array(graph.length);
+        const cordinateList = new Array(nodeList.length);
         // リストをnullで埋める
         cordinateList.fill(null);
         // 最初の頂点だけは事前に設定しておく
@@ -750,20 +750,29 @@
                 // 登録済みの頂点にその方位に応じて座標を割り当てる
                 let x = standardPointN.x;
                 let y = standardPointN.y;
+
+                // 現在の頂点nodeと隣接する辺の距離を調べる
+                console.log("distance", node.value.distance);
+                console.log(`cost ${node.value.id} to ${node[direction].value.id} is ${node.value.distance[node[direction].value.id]}`)
+
                 // 東ならx＋南ならy‐西はx－北はy＋
                     // 南北
-                    if(direction.match(/[N]/)){
-                        y -=80;
-                    }
-                    else if(direction.match(/[S]/)){
-                        y += 80;
-                    }
+                    if(direction.match(/[N]/)){ y -=80 }
+                    else if(direction.match(/[S]/)){ y += 80 }
                     // 東西
-                    if(direction.match(/[E]/)){x += 80}
-                    else if(direction.match(/[W]/)){x -= 80}
+                    if(direction.match(/[E]/)){ x += 80 }
+                    else if(direction.match(/[W]/)){ x -= 80 }
+
+                    console.log("x", x, "y", y);
 
                 // 割り当てた座標を座標リストに登録
-                cordinateList[ node[direction].value.id ] = {x:x, y:y};             
+                if(cordinateList[node[direction].value.id] == null){
+                    cordinateList[ node[direction].value.id ] = {x:x, y:y};  
+                }
+                else{
+                    console.log("another", node[direction].value.id, "x", x, "y", y);
+                }
+                           
             }
 
         }
@@ -775,14 +784,7 @@
     // 動作確認
     const nodeTree = addNodeTree(graph);
     console.log("nodeTree", nodeTree);
-    // console.log("nodeTree", nodeTree.serch(0));
-    // console.log("nodeTree serch1", nodeTree.serch(1));
-    // console.log("nodeTree serch2", nodeTree.serch(2));
-    // console.log("nodeTree serch3", nodeTree.serch(3));
-    // console.log("nodeTree serch4", nodeTree.serch(4));
-    // console.log("nodeTree serch5", nodeTree.serch(5));
-    // console.log("nodeTree serch6", nodeTree.serch(6));
-    const cordinateListT = cordinateListFromTree(nodeTree, graph, 80, 250)
+    const cordinateListT = cordinateListFromTree(nodeTree, 80, 250)
     console.log("cordinateListT", cordinateListT);
 
 
@@ -914,20 +916,15 @@
     }
 
 
-    // 座標のリストと辺のリスト
-
-
-
-
     // グラフを描画する処理
-    function drawGraph(graph) {
+    function drawGraphT(tree, graph) {
 
         // 
         // 前準備
         // 
 
         // 各頂点の座標
-        const cordinateList = nodeCordinateList(graph, 20,250);
+        const cordinateList = cordinateListFromTree(tree, 20, 250);
         // 各頂点間の辺
         const edges = serchEdges(graph);
 
@@ -961,7 +958,7 @@
 
     }
 
-    drawGraph(graph);
+    drawGraphT(nodeTree, graph);
 
 
 // 
@@ -991,11 +988,11 @@
     // 最短経路を表示
     button.addEventListener("click", ()=>{
 
-        const cordinateList = nodeCordinateList(graph, 20, 250);
+        const cordinateList = cordinateListFromTree(nodeTree, 20, 250);
 
         // 最短経路を計算
-        const path1 = dijkstra(graph1, selectStart.value, selectGoal.value);
-        console.log("path1", path1);        
+        const path1 = dijkstra(graph, selectStart.value, selectGoal.value);
+        // console.log("path1", path1);       
 
         // 辺を描画
         for(let i = 1; i <= path1.length - 1; i ++) {
@@ -1015,7 +1012,7 @@
     // 画面のリセット
     button1.addEventListener("click", ()=>{
         context0.clearRect(0, 0, 500, 500);
-        drawGraph();
+        drawGraphT(nodeTree, graph);
     } );
 
     // セレクトボックスの再設定
