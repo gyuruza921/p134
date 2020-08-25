@@ -86,6 +86,26 @@
     button2.setAttribute("type", "button");
     button2.innerHTML = "graph setting";
 
+    // ラジオボタン
+    const radio = document.createElement("fieldset");
+    radio.id = "radio";
+    radio.innerHTML = "<legend>経由地選択</legend><label>on</label><label>off</label>";
+
+        // 子要素の作成(on)
+        const radioOn = document.createElement("input");
+        radioOn.setAttribute("type", "radio");
+        radioOn.name = "switchOnOff";
+        
+        // 子要素の作成(off)
+        const radioOff = document.createElement("input");
+        radioOff.setAttribute("type", "radio");
+        radioOff.name = "switchOnOff";
+        radioOff.checked = true;
+
+        // 親要素radioへの追加
+        radio.appendChild(radioOn);
+        radio.appendChild(radioOff);
+
 
     // formへの要素追加
     form.appendChild(button);
@@ -97,6 +117,7 @@
     form.appendChild(selectVia);
     form.appendChild(label2);
     form.appendChild(selectGoal);
+    form.appendChild(radio);
 
     // 要素のドキュメントへの追加
     BODY.appendChild(canvas0);
@@ -931,11 +952,29 @@
     // 最短経路を表示
     button.addEventListener("click", ()=>{
 
+        // ツリーから座標リスト作成
         const cordinateList = cordinateListFromTree(nodeTree, 20, 250);
 
+        // 経由地モードのonoff検知
+        console.log("onoff", radioOn.checked);
+
         // 最短経路を計算
-        const path1 = dijkstra(graph, selectStart.value, selectGoal.value);
-        // console.log("path1", path1);       
+        let path1 = dijkstra(graph, selectStart.value, selectGoal.value);
+        // console.log("path1", path1);
+
+        // 経由地モードがonの場合
+        if(radioOn.checked){
+            const pathsv = dijkstra(graph, selectStart.value, selectVia.value);
+            console.log("pathsv", pathsv);
+
+            const pathvg = dijkstra(graph, selectVia.value, selectGoal.value);
+            console.log("pathvg", pathvg);
+
+            console.log("pathT", pathsv.concat(pathvg));
+
+            path1 = pathsv.concat(pathvg);
+
+        }
 
         // 辺を描画
         for(let i = 1; i <= path1.length - 1; i ++) {
