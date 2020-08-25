@@ -27,6 +27,7 @@
 
     }
 
+
     // スタート地点入力欄
         // ラベル作成
         const label0 = document.createElement("label");
@@ -41,13 +42,27 @@
         const startOptions = [];
 
 
+    // スタート地点入力欄
+        // ラベル作成
+        const label1 = document.createElement("label");
+        label1.innerText = "経由地点を入力";
+        label1.setAttribute("for", "selectVia");
+
+        // セレクトボックス要素
+        const selectVia = document.createElement("select");
+        selectVia.id = "selectVia";
+
+        // selectStartにoption要素を追加
+        const viaOptions = [];
+
+
     // ゴール地点入力欄の作成
         const selectGoal = document.createElement("select");
         selectGoal.id = "selectGoal";
 
-        const label1 = document.createElement("label");
-        label1.innerText = "ゴール地点を入力";
-        label1.setAttribute("for", "selectGoal");
+        const label2 = document.createElement("label");
+        label2.innerText = "ゴール地点を入力";
+        label2.setAttribute("for", "selectGoal");
 
         // 選択肢を収める配列
         const goalOptions = [];
@@ -79,6 +94,8 @@
     form.appendChild(label0);
     form.appendChild(selectStart);
     form.appendChild(label1);
+    form.appendChild(selectVia);
+    form.appendChild(label2);
     form.appendChild(selectGoal);
 
     // 要素のドキュメントへの追加
@@ -227,6 +244,18 @@
             selectStart.textContent = null;
             // 子要素の追加
             addOption(startOptions, selectStart);
+
+            // 始点
+            for(let option = 0; option <= graph.length - 1; option++){
+                viaOptions[option] = document.createElement("option");
+                viaOptions[option].value = option;
+                viaOptions[option].innerText = option;
+            }
+
+            // 初期化
+            selectVia.textContent = null;
+            // 子要素の追加
+            addOption(viaOptions, selectVia);
             
             // 最終点
             for(let option = 0; option <= graph.length - 1; option++){
