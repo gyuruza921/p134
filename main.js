@@ -90,6 +90,7 @@
     const radio = document.createElement("fieldset");
     radio.id = "radio";
     radio.innerHTML = "<legend>経由地選択</legend><label>on</label><label>off</label>";
+    radio.setAttribute("width", "200xp");
 
         // 子要素の作成(on)
         const radioOn = document.createElement("input");
@@ -149,6 +150,8 @@
         // TreeNodeテスト
         class TreeNodeE {
             constructor(value){
+                // value
+                this.value = value;
                 // id
                 this.id = value.id;
                 // 他のノードとの距離
@@ -421,7 +424,7 @@
 
         // 登録する方位の候補リスト
         // 頂点リストから適当な要素を抜き出しその中から方位のプロパティのみ追加する
-        const directions = Object.entries(nodeList[0]).map((key)=> key[0] ).filter((i)=> i != undefined && i != "value" );
+        const directions = Object.entries(nodeList[0]).map((key)=> key[0] ).filter((i)=> i.match(/[NEWS]/) != null);
         // console.log("directions", directions);
 
         // 木を作る
@@ -484,34 +487,6 @@
                 }
             
             }
-            // 中間点　次の頂点と前の頂点が二つずつの場合
-            else if(next.length == 2 && prev.length == 2) {
-                // console.log("node", node);
-                // 次の頂点の方位を決める処理
-                const directionsN = ["NE", "SE"];
-                // 候補リストから空いてる方位に登録する
-                let i = 0;
-                for(let direction of directionsN) {
-                    if(node[direction] == null){
-                        node[direction] = nodeList[next[i]];
-                    }
-                    i++;
-                }
-                // 前の頂点の方位を決める処理
-                const directionsP = ["NW", "SW"];
-                // 候補リストから空いてる方位に登録する
-                i = 0;
-                for(let direction of directionsP) {
-                    if(node[direction] == null){
-                        node[direction] = nodeList[prev[i]];
-                    }
-                    i++;
-                }
-
-            }
-
-            // 中間点　次の頂点に終点が含まれる場合
-
 
             // 中間点　次の頂点と前の頂点が１以上の場合
             else if(next.length >= 1 && prev.length >= 1) {
@@ -541,7 +516,7 @@
                 // 次の頂点に終点が含まれる場合
                     // nextから終点を探す
                     const fp = next.some( (num)=>{return num == nodeList.length - 1} );
-                    // console.log("fp", fp);
+                    console.log("fp", fp);
                     // 終点を見つけたら
                     if(fp && next.length > 1){
                         // 終点以外の頂点をnextから抽出する
@@ -606,21 +581,23 @@
             //  prevに登録された頂点から一つずつ調べる
             for(let prevNode of prev) {
 
-                // console.log("prevNode", prevNode);
+                console.log("prevNode", prevNode);
                 // 前の頂点の1つから現在の頂点が登録されている方位を探す
                 // 発見した方位を代入する変数
                 let directionP;
                 for(let direction of directions){
 
+                    console.log("direction", direction);
                     // 一致したらその方位を変数directionPに代入する
                     if(nodeList[prevNode][direction] == node) {
-                        // console.log("find! direction", direction);
+                        console.log("find! direction", direction);
                         directionP = direction;
                     }
+                    // else{continue}
                 }
 
                 // 代入した方位を逆方向に変換する
-                // console.log("before", directionP);
+                console.log("before", directionP);
                 let directionP2 = directionP;
 
                 // 南北
