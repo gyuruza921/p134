@@ -145,6 +145,7 @@
 
             }
         }
+
         // TreeNodeテスト
         class TreeNodeE {
             constructor(value){
@@ -215,7 +216,7 @@
 
         }
 
-    // グラフのデータ
+    // 隣接行列のデータ
     const graph = [
 
         [0, 2, 3, -1, -1, -1], // 点0 点1,2と接する
@@ -226,15 +227,6 @@
         [-1, -1, -1, 3, 2, 0], // 点5　再右端　点3,4と接する
 
     ];
-
-    // 隣接行列graphを使ったTreeNodeクラスの動作確認
-        // 各頂点のインスタンス作成
-        // const node0 = new TreeNode(graph[0]);
-        // const node1 = new TreeNode(graph[1]);
-        // const node2 = new TreeNode(graph[2]);
-        // const node3 = new TreeNode(graph[3]);
-        // const node4 = new TreeNode(graph[4]);
-        // const node5 = new TreeNode(graph[5]);
 
 
     // 第二の隣接行列のデータ
@@ -292,7 +284,8 @@
 
         };
 
-    setSelects(graph);
+    // setSelects(graph);
+    setSelects(graph1);
 
 // 
 // 処理部
@@ -409,9 +402,6 @@
 
     }
 
-    // 動作確認
-    // const path = dijkstra(graph1, 0, 5);
-
 
     // 木にノードを追加する関数
     function addNodeTree(graph) {
@@ -447,7 +437,6 @@
         // graph内の頂点の数だけ繰り返す
         for(let node of nodeList){
 
-            // console.log("own",node);
             // 隣接する頂点のリストを作成
             const neighbourIndexList = nodeList.map((node)=>{ return node.value.id; }).filter( (i)=>{ return node.value.distance[i] > 0; } );
             // console.log("neighbourIndexList trees", neighbourIndexList);
@@ -461,7 +450,6 @@
             // 分岐の先にある頂点のリスト
             const next = neighbourIndexList.filter( function(i) { return i > ownId; });
             // console.log("next", next);
-
 
             // neighbourIndexList内の頂点を現在選択中の頂点の各方位に登録する
             // 登録する包囲の選び方をprevとnextの大きさに応じて変更する
@@ -496,6 +484,34 @@
                 }
             
             }
+            // 中間点　次の頂点と前の頂点が二つずつの場合
+            else if(next.length == 2 && prev.length == 2) {
+                // console.log("node", node);
+                // 次の頂点の方位を決める処理
+                const directionsN = ["NE", "SE"];
+                // 候補リストから空いてる方位に登録する
+                let i = 0;
+                for(let direction of directionsN) {
+                    if(node[direction] == null){
+                        node[direction] = nodeList[next[i]];
+                    }
+                    i++;
+                }
+                // 前の頂点の方位を決める処理
+                const directionsP = ["NW", "SW"];
+                // 候補リストから空いてる方位に登録する
+                i = 0;
+                for(let direction of directionsP) {
+                    if(node[direction] == null){
+                        node[direction] = nodeList[prev[i]];
+                    }
+                    i++;
+                }
+
+            }
+
+            // 中間点　次の頂点に終点が含まれる場合
+
 
             // 中間点　次の頂点と前の頂点が１以上の場合
             else if(next.length >= 1 && prev.length >= 1) {
@@ -640,6 +656,9 @@
                     node[directionP2] = nodeList[prevNode];
                 }
 
+                // console.log("node", node);
+                // console.log("node.W", node.W);
+
         }
 
         }
@@ -654,10 +673,6 @@
         // 
         // 前準備
         // 
-
-        // 方位の候補リスト
-        const directions = Object.keys(tree.root).filter( (key)=> key.match( /[NEWS]/ ) );
-        // console.log("directions", directions);
 
         // 頂点のリストを作る
         const nodeList = [];
@@ -716,12 +731,24 @@
 
                     // console.log("x", x, "y", y);
 
-                // 割り当てた座標を座標リストに登録
+                // 計算した座標を座標リストに登録
+                // 空白ならそのまま登録
                 if(cordinateList[node[direction].value.id] == null){
                     cordinateList[ node[direction].value.id ] = {x:x, y:y};  
                 }
+                // 既に登録済みなら基準座標に近い方に更新
                 else{
                     // console.log("another", node[direction].value.id, "x", x, "y", y);
+                    // const currentY = cordinateList[node[direction].value.id].y;
+                    // console.log("currentY", currentY);
+                    // const currentY2 = Math.abs(currentY - standardPoint.y)
+                    // console.log("currentY2", currentY2);
+                    // const anotherY = Math.abs(y - standardPoint.y);
+                    // console.log("anotherY", anotherY);
+                    // 第二候補のyがcurrentYより基準座標に近ければ更新
+                    // if(anotherY < currentY2){
+                        // cordinateList[node[direction].value.id] = {x:x, y:y};
+                    // }
                 }
                            
             }
@@ -733,10 +760,7 @@
     }    
 
     // 動作確認
-    const nodeTree = addNodeTree(graph);
-    // console.log("nodeTree", nodeTree);
-    // const cordinateListT = cordinateListFromTree(nodeTree, 80, 250)
-    // console.log("cordinateListT", cordinateListT);
+    const nodeTree = addNodeTree(graph1);
 
 
     // 木から辺を探す処理
@@ -922,7 +946,8 @@
 
     }
 
-    drawGraph(nodeTree, graph);
+    // drawGraph(nodeTree, graph);
+    drawGraph(nodeTree, graph1);
 
 
 // 
@@ -950,7 +975,8 @@
     let goal = 0;
 
     // 最短経路を表示
-    button.addEventListener("click", ()=>{
+    // 関数
+    function drawShortestPath(nodeTree, graph) {
 
         // ツリーから座標リスト作成
         const cordinateList = cordinateListFromTree(nodeTree, 20, 250);
@@ -989,12 +1015,17 @@
             drawNumber(cordinateList[node].x - 3, cordinateList[node].y + 2, node, "rgb(250, 250, 250)");
         }
 
-    });
+    }
+
+    console.log("nodeTree", nodeTree);
+    // button.addEventListener("click", drawShortestPath(nodeTree, graph));
+    button.addEventListener("click", ()=> drawShortestPath(nodeTree, graph1));
 
     // 画面のリセット
     button1.addEventListener("click", ()=>{
         context0.clearRect(0, 0, 500, 500);
-        drawGraph(nodeTree, graph);
+        // drawGraph(nodeTree, graph);
+        drawGraph(nodeTree, graph1);
     } );
 
     // セレクトボックスの再設定
