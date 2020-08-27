@@ -90,22 +90,23 @@
     const radio = document.createElement("fieldset");
     radio.id = "radio";
     radio.innerHTML = "<legend>経由地選択</legend><label>on</label><label>off</label>";
-    radio.setAttribute("width", "200xp");
 
         // 子要素の作成(on)
         const radioOn = document.createElement("input");
+        radioOn.id = "radioOn";
         radioOn.setAttribute("type", "radio");
         radioOn.name = "switchOnOff";
         
         // 子要素の作成(off)
         const radioOff = document.createElement("input");
+        radioOff.id = "radioOff";
         radioOff.setAttribute("type", "radio");
         radioOff.name = "switchOnOff";
         radioOff.checked = true;
 
         // 親要素radioへの追加
-        radio.appendChild(radioOn);
-        radio.appendChild(radioOff);
+        radio.childNodes[1].appendChild(radioOn);
+        radio.childNodes[2].appendChild(radioOff);
 
 
     // formへの要素追加
@@ -587,7 +588,7 @@
                 let directionP;
                 for(let direction of directions){
 
-                    console.log("direction", direction);
+                    // console.log("direction", direction);
                     // 一致したらその方位を変数directionPに代入する
                     if(nodeList[prevNode][direction] == node) {
                         console.log("find! direction", direction);
