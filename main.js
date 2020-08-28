@@ -238,7 +238,7 @@
 
         [0, 2, 3, -1, -1, -1, -1], // 頂点0　再左端　頂点1,2と接する
         [2, 0, 4, 5, -1, -1, -1], // 頂点1　頂点0,2,3と接する
-        [3, -1, 0, 2, -1, -1, -1], // 頂点2　頂点0,3と接する
+        [3, 4, 0, 2, -1, -1, -1], // 頂点2　頂点0,1,3と接する
         [-1, 5, 2, 0, 2, 4, -1], // 頂点3　頂点1,2,4,5と接する
         [-1, -1, -1, 2, 0, 7, 5], // 頂点4　頂点3,5,6と接する
         [-1, -1, -1, 4, 7, 0, 3], // 頂点5　頂点3,4,6と接する
@@ -454,7 +454,7 @@
 
             // 分岐の先にある頂点のリスト
             const next = neighbourIndexList.filter( function(i) { return i > ownId; });
-            // console.log("next", next);
+            console.log("next", next);
 
             // neighbourIndexList内の頂点を現在選択中の頂点の各方位に登録する
             // 登録する包囲の選び方をprevとnextの大きさに応じて変更する
@@ -483,7 +483,7 @@
                     // 方位リストから東を除外する
                     directionsN.splice(1, 1);                    
                 }
-                console.log("directionsN", directionsN);
+                // console.log("directionsN", directionsN);
 
                 // 候補リストから空いている方位に登録する
                 let i = 0;
@@ -496,6 +496,66 @@
                     i ++;
                 }
             
+            }
+
+            // 中間点　次の頂点が2つで前の頂点が1つの場合
+            // else if(next.length == 2 && prev.length == 1) {
+            //     console.log("current node", node);
+            //     // 前の頂点と今の頂点との位置関係を確認
+            //     const prevDirections = [];
+            //     for(const index of prev){
+            //         // nodeList[index]の各方位を探索して現在の頂点を見つけたらその方位を登録
+            //         for(const direction of directions){
+            //             if(nodeList[index][direction] == node){
+            //                 prevDirections.push(direction);
+            //             }
+            //         }
+
+            //     }
+
+            //     console.log("prevDirections", prevDirections);
+            // }
+
+            // 中間点　次の頂点が1つで前の頂点が2つの場合
+            else if(next.length == 1 && prev.length == 2) {
+
+                console.log("current node", node);
+
+                // 前の頂点と今の頂点との位置関係を確認
+                const prevDirections = [];
+                for(const index of prev){
+                    // nodeList[index]の各方位を探索して現在の頂点を見つけたらその方位を登録
+                    for(const direction of directions){
+                        if(nodeList[index][direction] == node){
+                            prevDirections.push(direction);
+                        }
+                    }
+
+                }
+                console.log("prevDirections", prevDirections);
+
+                // 初期化
+                nodeList[prev[1]][prevDirections[1]] = null;
+                // 次の頂点を登録する方位
+                let nextDirection = "E";
+                // 番号の若い点を基準にもう片方を南北いずれかに登録
+                if(prevDirections[0].match(/[N]/) != null){
+                    console.log("N");
+                    // 登録
+                    node.S = nodeList[prev[1]];
+                    nodeList[prev[1]].N = node;
+                }
+                else{
+                    console.log("S");
+                    // 登録
+                    node.N = nodeList[prev[1]];
+                    nodeList[prev[1]].S = node;
+                }
+
+                // const nextDirection = "NE";
+
+                node[nextDirection] = nodeList[next[0]];
+
             }
 
             // 中間点　次の頂点と前の頂点が１以上の場合
@@ -526,11 +586,11 @@
                 // 次の頂点に終点が含まれる場合
                     // nextから終点を探す
                     const fp = next.some( (num)=>{return num == nodeList.length - 1} );
-                    console.log("fp", fp);
+                    // console.log("fp", fp);
                     // 終点を見つけたら
                     if(fp && next.length > 1){
                         // 終点以外の頂点をnextから抽出する
-                        const others = Array.from(next).filter( (value)=>{return value != nodeList.length - 1} );
+                        const others = Array.from(next).filter( (node)=>{return node != nodeList.length - 1} );
                         // console.log("others", others);
                         // 終点でない頂点の登録とその頂点が登録された方位の初期化
                         for(let other of others){
@@ -591,27 +651,26 @@
             //  prevに登録された頂点から一つずつ調べる
             for(let prevNode of prev) {
 
-                console.log("prevNode", prevNode);
+                // console.log("prevNode", prevNode);
                 // 前の頂点の1つから現在の頂点が登録されている方位を探す
                 // 発見した方位を代入する変数
                 let directionP;
                 for(let direction of directions){
 
-                    // console.log("direction", direction);
+                    console.log("direction", direction);
                     // 一致したらその方位を変数directionPに代入する
                     if(nodeList[prevNode][direction] == node) {
-                        console.log("find! direction", direction);
+                        // console.log("find! direction", direction);
                         directionP = direction;
                     }
                     // else{continue}
                 }
 
                 // 代入した方位を逆方向に変換する
-                // console.log("before", directionP);
                 console.log("directionP", directionP);
                 let directionP2 = directionP;
 
-                // 
+                // directionPが未定義でない場合
                 if(directionP != undefined){
 
                     // 南北
@@ -629,7 +688,7 @@
                         directionP2 = directionP2.replace(/[W]/, "E");
                     }
 
-                    console.log("after", directionP2);
+                    // console.log("after", directionP2);
 
                     // 今の頂点の変換した方位に前の頂点を登録
                     // もし未登録ならそのまま登録
@@ -640,21 +699,19 @@
                     else{
                         // 今のdirectionP2が配列directionsの何番目にあるのか確かめる
                         const currentIndex = directions.findIndex((d)=> d == directionP2);
-                        // console.log("current direction in", currentIndex);
+                        console.log("current direction in", currentIndex);
+                        if(currentIndex <= 0){
+                            continue;
+                        }
                         // directionP2を変更
                         directionP2 = directions[currentIndex - 1];
-                        // console.log("directionP2", directionP2);
+                        console.log("directionP2", directionP2);
                         node[directionP2] = nodeList[prevNode];
                     }
 
                 }
 
-
-
-                // console.log("node", node);
-                // console.log("node.W", node.W);
-
-        }
+            }
 
         }
 
