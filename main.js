@@ -14,9 +14,71 @@
     canvas0.height = 500;
     canvas0.width = 500;
 
-    // form要素の追加
+    // form要素の作成
     const form = document.createElement("form");
     form.id = "form";
+
+    // table要素の作成
+    const table = document.createElement("table");
+    table.id = "table";
+    table.setAttribute("border","1");
+
+    // table
+    const tr = document.createElement("tr");
+    tr.id = "tr";
+
+    const th = document.createElement("th");
+    th.id = "th";
+    th.innerText = "頂点番号";
+
+    const th1 = document.createElement("th");
+    th1.id = "th1";
+    th1.innerText = "x座標";
+
+    const th2 = document.createElement("th");
+    th2.id = "th2";
+    th2.innerText = "y座標";
+
+    tr.appendChild(th);
+    tr.appendChild(th1);
+    tr.appendChild(th2);
+
+    const tr1 = document.createElement("tr");
+    tr1.id = "tr1";
+
+    const td = document.createElement("td");
+    td.id = "td";
+    td.innerText = "0";
+
+    const td1 = document.createElement("td");
+    td1.id = "td1";
+    td1.innerText = "0";
+
+    const td2 = document.createElement("td");
+    td2.id = "td2";
+    td2.innerText = "0";
+
+    // 
+    tr1.appendChild(td);
+    tr1.appendChild(td1);
+    tr1.appendChild(td2);
+
+    // tableに要素を追加
+    table.appendChild(tr);
+    // table.appendChild(tr1);
+
+    // recordを追加する関数
+    function addRecorde(id) {
+        const record = document.createElement("tr");
+        record.id = `tr${id}`;
+        record.innerHTML = "<td>0</td><td>0</td><td>0</td>";
+        // for(let i = 0; i >= 2; i++){
+        //     const td = document.createElement("td");
+        //     td.innerText = "0";
+        //     record.appendChild(td);
+        // }
+        table.appendChild(record);
+    }
 
     // optionを追加する関数
     function addOption(options, select) {
@@ -124,6 +186,7 @@
     // 要素のドキュメントへの追加
     BODY.appendChild(canvas0);
     BODY.appendChild(form);
+    BODY.appendChild(table);
 
 // 
 // 入力部
@@ -183,12 +246,11 @@
                 let current = this.root;
                 // 木のノードのプロパティから方位のみを取り出す
                 const directions = Object.keys(this.root).filter( (key)=> key.match( /[NEWS]/ ) != null );
-                // console.log(directions);
                 // 一番先頭の値が探していた値ならそれを返す
                 if(id == current.value.id){ return current }
                 // 見つからなければ枝を辿っていく
-                // loop
-                let limit = this.root.value.distance.length;
+                // 探索する回数の上限
+                let limit = this.root.value.distance.length ** 2;
                 while(limit > 0){
 
                     let directions1 = Array.from(directions).filter( (d)=> current[d] != null );
@@ -215,10 +277,12 @@
                     limit --;
                 }
 
-            return false;    
+            return false;
+
             }
 
         }
+
 
     // 隣接行列のデータ
     const graph = [
@@ -231,7 +295,6 @@
         [-1, -1, -1, 3, 2, 0], // 点5　再右端　点3,4と接する
 
     ];
-
 
     // 第二の隣接行列のデータ
     const graph1 = [
@@ -328,9 +391,7 @@
             // どんどんminDistanceIndexに入れていけば、最終的に最小のiが得られる
             let minDistanceIndex = 0;
             for(let i = 0; i < nodeIndexList.length; i++) {
-                // 
-                // 課題：ここを埋める
-                // 
+
                 // 頂点iからスタート地点への総距離
                 const distanceToStart = distance[nodeIndexList[i]];
 
@@ -351,9 +412,6 @@
             // 繋がっていたら番号iをneighbourIndexListに入れる
             const neighbourIndexList = [];
             for(let i = 0; i < nodeNum; i++) {
-                // 
-                // 課題：ここを埋める
-                // 
 
                 const from = nodeIndex;
                 const to = nodeIndexList[i];
@@ -370,9 +428,6 @@
             // Bが小さい場合はdistance[nIndex]をBで更新し、
             // previousNode[nIndex]にnodeIndexを入れる
             for(const nIndex of neighbourIndexList) {
-                // 
-                // 課題：ここを埋める
-                // 
 
                 // Aを求める
                 let A;
@@ -418,7 +473,7 @@
         const nodeList = [];
         // 木のノードを作りリストに加えていく
         for(let i = 0; i <= graph.length - 1; i ++) {
-            const treeNode = new TreeNode( {id:i, distance: graph[i]} )
+            const treeNode = new TreeNodeE( {id:i, distance: graph[i]} );
             nodeList.push(treeNode);
         }
         // console.log("nodeList", nodeList);
@@ -452,7 +507,6 @@
             const ownId = node.value.id;
             // リストのうちownidの値より小さいものを抜き出す
             const prev = neighbourIndexList.filter( function(i) { return i < ownId; });
-            // const prev = neighbourIndexList.filter( function(i) { return nodeList[i] != null });
             console.log("prev", prev);
 
             // 分岐の先にある頂点のリスト
@@ -602,7 +656,7 @@
                     let directionsN;
                     // 次の頂点が１つの時
                     if(next.length == 1) {
-                        directionsN = Array.from(directions).splice(2, 1);
+                        directionsN = ["W"];
                     }
                     // 次の頂点が複数の時
                     else if(next.length == 2) {
@@ -666,15 +720,14 @@
                 // prev.lengthが2の場合
                 else if(prev.length == 2) {
                     // 方位リストから北西から南西までを取り出す
-                    // directionsP = Array.from(directions).splice(5, 3);
                     // 順番を逆にする
                     directionsP = [];
                     directionsP.push(directions[7]);
                     directionsP.push(directions[6]);
                     directionsP.push(directions[5]);
                 }
-                // 
-                if(next.length % 2 == 0){directionsP.splice(1, 1)}
+                // 偶数の時は西だけを除外する
+                if(next.length % 2 == 0){ directionsP = directionsP.filter( (direction)=> direction != "W" ) }
                 // console.log("directionsP", directionsP);
 
                 // 候補リストから空いている方位に登録する
@@ -728,46 +781,30 @@
                 // console.log("directionP", directionP);
                 let directionP2 = directionP;
 
-                // directionPが未定義でない場合
-                if(directionP != undefined){
+                // 南北
+                if(directionP.match(/[N]/) != null){
+                    directionP2 = directionP.replace(/[N]/, "S");
+                }
+                else if(directionP.match(/[S]/) != null){
+                    directionP2 = directionP.replace(/[S]/, "N");
+                }
+                // 東西
+                if(directionP.match(/[E]/) != null){
+                    directionP2 = directionP2.replace(/[E]/, "W");
+                }
+                else if(directionP.match(/[W]/) != null){
+                    directionP2 = directionP2.replace(/[W]/, "E");
+                }
 
-                    // 南北
-                    if(directionP.match(/[N]/) != null){
-                        directionP2 = directionP.replace(/[N]/, "S");
-                    }
-                    else if(directionP.match(/[S]/) != null){
-                        directionP2 = directionP.replace(/[S]/, "N");
-                    }
-                    // 東西
-                    if(directionP.match(/[E]/) != null){
-                        directionP2 = directionP2.replace(/[E]/, "W");
-                    }
-                    else if(directionP.match(/[W]/) != null){
-                        directionP2 = directionP2.replace(/[W]/, "E");
-                    }
+                // console.log("after", directionP2);
 
-                    // console.log("after", directionP2);
-
-                    // 今の頂点の変換した方位に前の頂点を登録
-                    // もし未登録ならそのまま登録
-                    if(node[directionP2] == null && node != nodeList[nodeList.length - 1] && directionP2 != undefined){
-                        node[directionP2] = nodeList[prevNode];
-                    }
-                    // 既に登録済みかつ終点以外なら別の西の方位に登録する
-                    else if(node != nodeList[nodeList.length - 1] && directionP2 != undefined){
-                        console.log("node", node);
-                        // 今のdirectionP2が配列directionsの何番目にあるのか確かめる
-                        const currentIndex = directions.findIndex((d)=> d == directionP2);
-                        console.log("current direction in", currentIndex);
-                        if(currentIndex <= 0){
-                            continue;
-                        }
-                        // directionP2を変更
-                        directionP2 = directions[currentIndex - 1];
-                        console.log("directionP2", directionP2);
-                        // node[directionP2] = nodeList[prevNode];
-                    }
-
+                // 今の頂点の変換した方位に前の頂点を登録
+                // もし未登録ならそのまま登録
+                if(node[directionP2] == null && directionP2 != undefined){
+                    node[directionP2] = nodeList[prevNode];
+                }
+                // 既に登録済みかつ終点以外なら別の西の方位に登録する
+                else if( directionP2 != undefined){
                 }
 
             }
@@ -1105,10 +1142,20 @@
     // 最短経路を算出
     button.addEventListener("click", ()=> drawShortestPath(nodeTree, graph1));
 
+    let num = 0;
     // 画面のリセット
     button1.addEventListener("click", ()=>{
         context0.clearRect(0, 0, 500, 500);
         drawGraph(graph1);
+        // 表のリセット
+        // console.log("table.childNodes.length", table.childNodes.length);
+        if(table.childNodes.length > 2){
+            while(table.childNodes.length > 2){
+                table.removeChild(table.childNodes[table.childNodes.length - 1]);
+            }
+            num = 0;         
+        }
+
     } );
 
     // セレクトボックスの再設定
@@ -1116,7 +1163,19 @@
 
     // canvas0をクリックしたときにその座標を表示
     canvas0.addEventListener("click", (e)=>{
-        console.log(e);
-        console.log(e.clientX);
-        console.log(e.clientY);
+        // table要素に出力
+        td1.innerText = e.clientX;
+        td2.innerText = e.clientY
     });
+
+    // let num = 0;
+    // table.childNodes[num].firstChild.innerText = num;
+
+    addRecorde(num);
+    th.addEventListener("click", ()=>{
+        addRecorde(num);
+        num++;
+        table.childNodes[num + 1].firstChild.innerText = num;
+        
+        console.log("table.childNodes[num].firstChild", table.childNodes);
+    } );
