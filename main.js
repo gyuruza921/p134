@@ -23,7 +23,7 @@
     table.id = "table";
     table.setAttribute("border","1");
 
-    // table
+    // tableの見出しの一列を作成
     const tr = document.createElement("tr");
     tr.id = "tr";
 
@@ -39,44 +39,23 @@
     th2.id = "th2";
     th2.innerText = "y座標";
 
+    const th3 = document.createElement("th");
+    th3.id = "th3";
+    th3.innerText = "距離";
+
     tr.appendChild(th);
     tr.appendChild(th1);
     tr.appendChild(th2);
-
-    const tr1 = document.createElement("tr");
-    tr1.id = "tr1";
-
-    const td = document.createElement("td");
-    td.id = "td";
-    td.innerText = "0";
-
-    const td1 = document.createElement("td");
-    td1.id = "td1";
-    td1.innerText = "0";
-
-    const td2 = document.createElement("td");
-    td2.id = "td2";
-    td2.innerText = "0";
-
-    // 
-    tr1.appendChild(td);
-    tr1.appendChild(td1);
-    tr1.appendChild(td2);
+    tr.appendChild(th3);
 
     // tableに要素を追加
     table.appendChild(tr);
-    // table.appendChild(tr1);
 
     // recordを追加する関数
     function addRecorde(id) {
         const record = document.createElement("tr");
         record.id = `tr${id}`;
-        record.innerHTML = "<td>0</td><td>0</td><td>0</td>";
-        // for(let i = 0; i >= 2; i++){
-        //     const td = document.createElement("td");
-        //     td.innerText = "0";
-        //     record.appendChild(td);
-        // }
+        record.innerHTML = "<td>0</td><td>0</td><td>0</td><td>0</td>";
         table.appendChild(record);
     }
 
@@ -148,6 +127,12 @@
     button2.setAttribute("type", "button");
     button2.innerHTML = "graph setting";
 
+    // 消去ボタン
+    const button3 = document.createElement("button");
+    button3.id = "button3";
+    button3.setAttribute("type", "button");
+    button3.innerHTML = "graph delete";
+
     // ラジオボタン
     const radio = document.createElement("fieldset");
     radio.id = "radio";
@@ -170,11 +155,53 @@
         radio.childNodes[1].appendChild(radioOn);
         radio.childNodes[2].appendChild(radioOff);
 
+    // tableを制御するfieldset
+    const tableControl = document.createElement("fieldset");
+    tableControl.id = "tableControl";
+    tableControl.innerHTML = "<legend>表の操作</legend>";
+
+        // 表をリセット
+        const tableReset = document.createElement("button");
+        tableReset.id = "tableReset";
+        tableReset.setAttribute("type", "button");
+        tableReset.innerText = "reset";
+
+        // 列を追加
+        const tableAdd = document.createElement("button");
+        tableAdd.id = "tableAdd";
+        tableAdd.setAttribute("type", "button");
+        tableAdd.innerText = "add";
+
+        // 他の頂点との距離を設定(予定)
+        const setDistance = document.createElement("input");
+        setDistance.id = "setDistance";
+        // setDistance.setAttribute("type", "");
+
+        // 設定した距離の表への入力
+        const inputDistance = document.createElement("button");
+        inputDistance.id = "inputDistance";
+        inputDistance.setAttribute("type", "button");
+        inputDistance.innerText = "inputDistance";
+
+        // tableの内容から隣接行列を作る
+        const createGraph = document.createElement("button");
+        createGraph.id = "createGraph";
+        createGraph.setAttribute("type", "button");
+        createGraph.innerText = "createGraph";
+
+        // fieldsetに子要素を追加
+        tableControl.appendChild(tableReset);
+        tableControl.appendChild(tableAdd);
+        tableControl.appendChild(setDistance);
+        tableControl.appendChild(inputDistance);
+        tableControl.appendChild(createGraph);
+
 
     // formへの要素追加
     form.appendChild(button);
     form.appendChild(button1);
     form.appendChild(button2);
+    form.appendChild(button3);
     form.appendChild(label0);
     form.appendChild(selectStart);
     form.appendChild(label1);
@@ -182,8 +209,9 @@
     form.appendChild(label2);
     form.appendChild(selectGoal);
     form.appendChild(radio);
+    form.appendChild(tableControl);
 
-    // 要素のドキュメントへの追加
+    // BODYへ要素追加
     BODY.appendChild(canvas0);
     BODY.appendChild(form);
     BODY.appendChild(table);
@@ -193,26 +221,9 @@
 // 
 
     // Treeクラスの用意
+
         // TreeNode
         class TreeNode {
-            constructor(value){
-                // そのノードの値
-                this.value = value;
-                // 他のノードとの位置関係
-                this.N = null;
-                this.NE= null;
-                this.E= null;
-                this.SE= null;
-                this.S= null;
-                this.SW= null;
-                this.W= null;
-                this.NW= null;
-
-            }
-        }
-
-        // TreeNodeテスト
-        class TreeNodeE {
             constructor(value){
                 // value
                 this.value = value;
@@ -473,7 +484,7 @@
         const nodeList = [];
         // 木のノードを作りリストに加えていく
         for(let i = 0; i <= graph.length - 1; i ++) {
-            const treeNode = new TreeNodeE( {id:i, distance: graph[i]} );
+            const treeNode = new TreeNode( {id:i, distance: graph[i]} );
             nodeList.push(treeNode);
         }
         // console.log("nodeList", nodeList);
@@ -1145,8 +1156,40 @@
     let num = 0;
     // 画面のリセット
     button1.addEventListener("click", ()=>{
+
         context0.clearRect(0, 0, 500, 500);
-        drawGraph(graph1);
+        drawGraph(graph1);       
+
+    } );
+
+    // セレクトボックスの再設定
+    button2.addEventListener("click", setSelects);
+
+    // 画面の消去
+    button3.addEventListener("click", ()=> context0.clearRect(0, 0, 500, 500));
+
+    // canvas0をクリックしたときにその座標を表示
+    canvas0.addEventListener("click", (e)=>{
+        
+        // table要素に出力
+        table.childNodes[num + 1].childNodes[1].innerText = e.clientX;
+        table.childNodes[num + 1].childNodes[2].innerText = e.clientY;
+
+    });
+
+
+    // 表に列を追加
+    addRecorde(num);
+    tableAdd.addEventListener("click", ()=>{
+        addRecorde(num);
+        num++;
+        table.childNodes[num + 1].firstChild.innerText = num;
+        // console.log("table.childNodes[num].firstChild", table.childNodes);
+    } );
+
+    // 表の列をリセット
+    tableReset.addEventListener("click", ()=>{
+
         // 表のリセット
         // console.log("table.childNodes.length", table.childNodes.length);
         if(table.childNodes.length > 2){
@@ -1156,26 +1199,58 @@
             num = 0;         
         }
 
-    } );
-
-    // セレクトボックスの再設定
-    button2.addEventListener("click", setSelects);
-
-    // canvas0をクリックしたときにその座標を表示
-    canvas0.addEventListener("click", (e)=>{
-        // table要素に出力
-        td1.innerText = e.clientX;
-        td2.innerText = e.clientY
     });
 
-    // let num = 0;
-    // table.childNodes[num].firstChild.innerText = num;
+    // input要素の内容を表の距離の項目に入力
+    inputDistance.addEventListener("click", ()=>{
+        // console.log("distance!", setDistance.value);
+        // 最新の表の列の距離の項目を入力
+        table.childNodes[table.childNodes.length - 1].childNodes[3].innerText = setDistance.value;
 
-    addRecorde(num);
-    th.addEventListener("click", ()=>{
-        addRecorde(num);
-        num++;
-        table.childNodes[num + 1].firstChild.innerText = num;
+    });
+
+    // 表の内容から隣接行列を作る
+    // 処理をまとめた関数
+    function graphFromTable(table) {
+
+        // 隣接行列
+        const graph = [];
+
+        // 座標リスト
+        const cordinateList = [];
+
+        // 木
+        // const nodeTree = new Tree();
+
+        // 表の内容を代入していく
+        // 頂点番号
+        for(let node = 1; node <= table.childNodes.length - 1; node++){
+            console.log("node", table.childNodes[node]);
+            // 座標
+            const cordinateX = table.childNodes[node].childNodes[1].innerText;
+            const cordinateY = table.childNodes[node].childNodes[2].innerText;
+            cordinateList.push({x: cordinateX, y: cordinateY});
+            // 距離
+            let distance = table.childNodes[node].lastChild.innerText;
+            console.log("node", distance);
+            distance = distance.split(',')
+            distance = distance.map((value)=>{return +value} )
+            graph.push(distance);
+        }
+
+        const nodeTree = addNodeTree(graph); 
         
-        console.log("table.childNodes[num].firstChild", table.childNodes);
-    } );
+        // graphに座標リストを添付
+        nodeTree["cordinateList"] = cordinateList;
+
+        // 
+        nodeTree["graph"] = graph;
+
+        console.log("graph", graph);
+        console.log("nodeTree", nodeTree);
+        return nodeTree;
+
+    }
+
+    // 
+    createGraph.addEventListener("click",()=> graphFromTable(table));
