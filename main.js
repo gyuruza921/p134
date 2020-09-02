@@ -1127,6 +1127,7 @@
 
         // 経由地モードがonの場合
         if(radioOn.checked){
+            
             const pathsv = dijkstra(graph, selectStart.value, selectVia.value);
 
             const pathvg = dijkstra(graph, selectVia.value, selectGoal.value);
@@ -1151,7 +1152,8 @@
     }
 
     // 最短経路を算出
-    button.addEventListener("click", ()=> drawShortestPath(nodeTree, graph1));
+    const tree1 = addNodeTree(graph1);
+    button.addEventListener("click", ()=> drawShortestPath(tree1, graph1));
 
     let num = 0;
     // 画面のリセット
@@ -1227,14 +1229,15 @@
         for(let node = 1; node <= table.childNodes.length - 1; node++){
             console.log("node", table.childNodes[node]);
             // 座標
-            const cordinateX = table.childNodes[node].childNodes[1].innerText;
-            const cordinateY = table.childNodes[node].childNodes[2].innerText;
+            const cordinateX = +table.childNodes[node].childNodes[1].innerText;
+            const cordinateY = +table.childNodes[node].childNodes[2].innerText;
             cordinateList.push({x: cordinateX, y: cordinateY});
             // 距離
             let distance = table.childNodes[node].lastChild.innerText;
-            console.log("node", distance);
-            distance = distance.split(',')
-            distance = distance.map((value)=>{return +value} )
+            console.log("distance", distance);
+            distance = distance.split(',');
+            distance = distance.map((value)=>{return +value} );
+            console.log("distance", distance);
             graph.push(distance);
         }
 
