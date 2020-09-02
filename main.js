@@ -83,7 +83,7 @@
         const startOptions = [];
 
 
-    // スタート地点入力欄
+    // 経由地点入力欄
         // ラベル作成
         const label1 = document.createElement("label");
         label1.innerText = "経由地点を入力";
@@ -172,10 +172,23 @@
         tableAdd.setAttribute("type", "button");
         tableAdd.innerText = "add";
 
+        // 列を選択
+        // ラベル作成
+        const label3 = document.createElement("label");
+        label3.innerText = "入力する対象を選択";
+        label3.setAttribute("for", "recordSelect");
+
+        // セレクトボックス要素
+        const recordSelect = document.createElement("select");
+        recordSelect.id = "recordSelect";
+
+        // recordSelectにoption要素を追加
+        const recordOptions = [];
+
+
         // 他の頂点との距離を設定(予定)
         const setDistance = document.createElement("input");
         setDistance.id = "setDistance";
-        // setDistance.setAttribute("type", "");
 
         // 設定した距離の表への入力
         const inputDistance = document.createElement("button");
@@ -193,6 +206,8 @@
         tableControl.appendChild(tableReset);
         tableControl.appendChild(tableAdd);
         tableControl.appendChild(setDistance);
+        tableControl.appendChild(label3);
+        tableControl.appendChild(recordSelect);
         tableControl.appendChild(inputDistance);
         tableControl.appendChild(createGraph);
 
@@ -336,7 +351,7 @@
             // 子要素の追加
             addOption(startOptions, selectStart);
 
-            // 始点
+            // 中継点
             for(let option = 0; option <= graph.length - 1; option++){
                 viaOptions[option] = document.createElement("option");
                 viaOptions[option].value = option;
@@ -1127,7 +1142,7 @@
 
         // 経由地モードがonの場合
         if(radioOn.checked){
-            
+
             const pathsv = dijkstra(graph, selectStart.value, selectVia.value);
 
             const pathvg = dijkstra(graph, selectVia.value, selectGoal.value);
@@ -1183,10 +1198,24 @@
     // 表に列を追加
     addRecorde(num);
     tableAdd.addEventListener("click", ()=>{
+        // idが`tr${num}`の列を追加
         addRecorde(num);
         num++;
+        // 頂点番号を記入
         table.childNodes[num + 1].firstChild.innerText = num;
         // console.log("table.childNodes[num].firstChild", table.childNodes);
+        // recordSelectの選択肢を更新
+        // 子要素の作成
+        for(let option = 0; option <= table.childNodes.length - 1; option++){
+            recordOptions[option] = document.createElement("option");
+            recordOptions[option].value = option;
+            recordOptions[option].innerText = option;
+        }
+        // 初期化
+        recordSelect.textContent = null;
+        // 子要素の追加
+        addOption(recordOptions,recordSelect);
+
     } );
 
     // 表の列をリセット
@@ -1201,13 +1230,22 @@
             num = 0;         
         }
 
+        // セレクトボックスのリセット
+        while(recordSelect.childNodes.length > 1){
+            recordSelect.removeChild(recordSelect.childNodes[recordSelect.childNodes.length - 1]);
+        }
+
     });
 
     // input要素の内容を表の距離の項目に入力
+
+    // ボタンを押すと入力
     inputDistance.addEventListener("click", ()=>{
         // console.log("distance!", setDistance.value);
         // 最新の表の列の距離の項目を入力
-        table.childNodes[table.childNodes.length - 1].childNodes[3].innerText = setDistance.value;
+        // table.childNodes[table.childNodes.length - 1].childNodes[3].innerText = setDistance.value;
+        // 列を選択して入力(予定)
+        table.childNodes[recordSelect.value + 1].childNodes[3].innerText = setDistance.value;
 
     });
 
