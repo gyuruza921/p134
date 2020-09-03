@@ -1189,8 +1189,12 @@
     canvas0.addEventListener("click", (e)=>{
         
         // table要素に出力
-        table.childNodes[num + 1].childNodes[1].innerText = e.clientX;
-        table.childNodes[num + 1].childNodes[2].innerText = e.clientY;
+        // table.childNodes[num + 1].childNodes[1].innerText = e.clientX;
+        // table.childNodes[num + 1].childNodes[2].innerText = e.clientY;
+
+        // table要素に出力
+        table.childNodes[ +recordSelect.value + 1].childNodes[1].innerText = e.clientX;
+        table.childNodes[ +recordSelect.value + 1].childNodes[2].innerText = e.clientY;
 
     });
 
@@ -1206,13 +1210,13 @@
         // console.log("table.childNodes[num].firstChild", table.childNodes);
         // recordSelectの選択肢を更新
         // 子要素の作成
-        for(let option = 0; option <= table.childNodes.length - 1; option++){
+        for(let option = 0; option <= table.childNodes.length - 2; option++){
             recordOptions[option] = document.createElement("option");
             recordOptions[option].value = option;
             recordOptions[option].innerText = option;
         }
         // 初期化
-        recordSelect.textContent = null;
+        recordSelect.value = 0;
         // 子要素の追加
         addOption(recordOptions,recordSelect);
 
@@ -1244,9 +1248,13 @@
         // console.log("distance!", setDistance.value);
         // 最新の表の列の距離の項目を入力
         // table.childNodes[table.childNodes.length - 1].childNodes[3].innerText = setDistance.value;
-        // 列を選択して入力(予定)
-        table.childNodes[recordSelect.value + 1].childNodes[3].innerText = setDistance.value;
-
+        // 列を選択して距離を入力
+        table.childNodes[+recordSelect.value + 1].childNodes[3].innerText = setDistance.value;
+        // 列を選択して座標を入力
+        // ｘ座標
+        // table.childNodes[+recordSelect.value + 1].childNodes[1].innerText = setDistance.value;
+        // ｙ座標
+        // table.childNodes[+recordSelect.value + 1].childNodes[2].innerText = setDistance.value;
     });
 
     // 表の内容から隣接行列を作る
