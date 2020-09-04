@@ -377,7 +377,7 @@
 
         };
 
-    // setSelects(graph);
+    // セレクトボックスの選択肢を設定
     setSelects(graph1);
 
 // 
@@ -526,18 +526,18 @@
         for(let node of nodeList){
 
             // 隣接する頂点のリストを作成
-            const neighbourIndexList = nodeList.map((node)=>{ return node.value.id; }).filter( (i)=>{ return node.value.distance[i] > 0; } );
+            const neighbourIndexList = nodeList.map((node)=>{ return node.id; }).filter( (i)=>{ return node.distance[i] > 0; } );
             // console.log("neighbourIndexList", neighbourIndexList);
 
             // 隣接する点のリストから方位を登録済みの頂点を探す
-            const ownId = node.value.id;
+            const ownId = node.id;
             // リストのうちownidの値より小さいものを抜き出す
             const prev = neighbourIndexList.filter( function(i) { return i < ownId; });
-            console.log("prev", prev);
+            // console.log("prev", prev);
 
             // 分岐の先にある頂点のリスト
             const next = neighbourIndexList.filter( function(i) { return i > ownId; });
-            console.log("next", next);
+            // console.log("next", next);
 
             // neighbourIndexList内の頂点を現在選択中の頂点の各方位に登録する
             // 登録する包囲の選び方をprevとnextの大きさに応じて変更する
@@ -598,7 +598,7 @@
                 console.log("prevDirections", prevDirections);
                 // 第一の次の頂点を登録する
                 // 今の頂点より若い番号なら北そうでないなら南に登録
-                if(next[0] < node.value.id){
+                if(next[0] < node.id){
                     node.N = nodeList[next[0]];
                     nodeList[next[0]].S = node;
                 }
@@ -611,12 +611,12 @@
                 let nextDirection2 = "E";
                 let nextDirectionR2 = "W";
                 // 次の頂点につながる辺の長さを比較する
-                const distance = nodeList[next[1]].value.distance;
+                const distance = nodeList[next[1]].distance;
                 console.log("distance", distance);
-                console.log(`distance ${node.value.id} to ${next[1]}`, distance[node.value.id]);
+                console.log(`distance ${node.id} to ${next[1]}`, distance[node.id]);
                 console.log(`distance ${next[0]} to ${next[1]}`, distance[next[0]]);
                 // 今の頂点と第二の次の頂点との距離が第一の次の頂点と第二の次の頂点との距離より大い場合
-                if(distance[node.value.id] > distance[next[0]]){
+                if(distance[node.id] > distance[next[0]]){
                     // prevDirectionの方位に応じてnextdirectionの方位を曲げる
                     if(prevDirections[0].match(/[N]/) != null){
                         nextDirection2 = "SE";
@@ -668,8 +668,6 @@
                     nodeList[prev[1]].S = node;
                     nextDirection = "NE";
                 }
-
-                // const 
 
                 node[nextDirection] = nodeList[next[0]];
 
@@ -800,7 +798,7 @@
                         // console.log("find! direction", direction);
                         directionP = direction;
                     }
-                    // else{continue}
+
                 }
 
                 // 代入した方位を逆方向に変換する
@@ -824,13 +822,10 @@
 
                 // console.log("after", directionP2);
 
-                // 今の頂点の変換した方位に前の頂点を登録
+                // 今の頂点の反転した方位に前の頂点を登録
                 // もし未登録ならそのまま登録
                 if(node[directionP2] == null && directionP2 != undefined){
                     node[directionP2] = nodeList[prevNode];
-                }
-                // 既に登録済みかつ終点以外なら別の西の方位に登録する
-                else if( directionP2 != undefined){
                 }
 
             }
@@ -838,7 +833,7 @@
         }
 
         // 動作確認
-        console.log("tree", tree);
+        // console.log("tree", tree);
         
         return tree;
 
@@ -1185,121 +1180,3 @@
     // 画面の消去
     button3.addEventListener("click", ()=> context0.clearRect(0, 0, 500, 500));
 
-    // canvas0をクリックしたときにその座標を表示
-    canvas0.addEventListener("click", (e)=>{
-        
-        // table要素に出力
-        // table.childNodes[num + 1].childNodes[1].innerText = e.clientX;
-        // table.childNodes[num + 1].childNodes[2].innerText = e.clientY;
-
-        // table要素に出力
-        table.childNodes[ +recordSelect.value + 1].childNodes[1].innerText = e.clientX;
-        table.childNodes[ +recordSelect.value + 1].childNodes[2].innerText = e.clientY;
-
-    });
-
-
-    // 表に列を追加
-    addRecorde(num);
-    tableAdd.addEventListener("click", ()=>{
-        // idが`tr${num}`の列を追加
-        addRecorde(num);
-        num++;
-        // 頂点番号を記入
-        table.childNodes[num + 1].firstChild.innerText = num;
-        // console.log("table.childNodes[num].firstChild", table.childNodes);
-        // recordSelectの選択肢を更新
-        // 子要素の作成
-        for(let option = 0; option <= table.childNodes.length - 2; option++){
-            recordOptions[option] = document.createElement("option");
-            recordOptions[option].value = option;
-            recordOptions[option].innerText = option;
-        }
-        // 初期化
-        recordSelect.value = 0;
-        // 子要素の追加
-        addOption(recordOptions,recordSelect);
-
-    } );
-
-    // 表の列をリセット
-    tableReset.addEventListener("click", ()=>{
-
-        // 表のリセット
-        // console.log("table.childNodes.length", table.childNodes.length);
-        if(table.childNodes.length > 2){
-            while(table.childNodes.length > 2){
-                table.removeChild(table.childNodes[table.childNodes.length - 1]);
-            }
-            num = 0;         
-        }
-
-        // セレクトボックスのリセット
-        while(recordSelect.childNodes.length > 1){
-            recordSelect.removeChild(recordSelect.childNodes[recordSelect.childNodes.length - 1]);
-        }
-
-    });
-
-    // input要素の内容を表の距離の項目に入力
-
-    // ボタンを押すと入力
-    inputDistance.addEventListener("click", ()=>{
-        // console.log("distance!", setDistance.value);
-        // 最新の表の列の距離の項目を入力
-        // table.childNodes[table.childNodes.length - 1].childNodes[3].innerText = setDistance.value;
-        // 列を選択して距離を入力
-        table.childNodes[+recordSelect.value + 1].childNodes[3].innerText = setDistance.value;
-        // 列を選択して座標を入力
-        // ｘ座標
-        // table.childNodes[+recordSelect.value + 1].childNodes[1].innerText = setDistance.value;
-        // ｙ座標
-        // table.childNodes[+recordSelect.value + 1].childNodes[2].innerText = setDistance.value;
-    });
-
-    // 表の内容から隣接行列を作る
-    // 処理をまとめた関数
-    function graphFromTable(table) {
-
-        // 隣接行列
-        const graph = [];
-
-        // 座標リスト
-        const cordinateList = [];
-
-        // 木
-        // const nodeTree = new Tree();
-
-        // 表の内容を代入していく
-        // 頂点番号
-        for(let node = 1; node <= table.childNodes.length - 1; node++){
-            console.log("node", table.childNodes[node]);
-            // 座標
-            const cordinateX = +table.childNodes[node].childNodes[1].innerText;
-            const cordinateY = +table.childNodes[node].childNodes[2].innerText;
-            cordinateList.push({x: cordinateX, y: cordinateY});
-            // 距離
-            let distance = table.childNodes[node].lastChild.innerText;
-            console.log("distance", distance);
-            distance = distance.split(',');
-            distance = distance.map((value)=>{return +value} );
-            console.log("distance", distance);
-            graph.push(distance);
-        }
-
-        const nodeTree = addNodeTree(graph); 
-        
-        // graphに座標リストを添付
-        nodeTree["cordinateList"] = cordinateList;
-
-        // 
-        nodeTree["graph"] = graph;
-
-        console.log("graph", graph);
-        console.log("nodeTree", nodeTree);
-        return nodeTree;
-
-    }
-
-    // 
-    createGraph.addEventListener("click",()=> graphFromTable(table));
