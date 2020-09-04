@@ -6,7 +6,7 @@
 //
 
     // body要素の取得
-    const BODY = document.getElementById("body");
+    const BODY = document.querySelector("body");
 
     // canvas要素の作成
     const canvas0 = document.createElement("canvas");
@@ -43,10 +43,59 @@
     th3.id = "th3";
     th3.innerText = "距離";
 
+    // 各頂点の方位毎に登録された頂点と距離を登録
+    const thN = document.createElement("th");
+    thN.id = "thN";
+    thN.className = "direction";
+    thN.innerText = "N";
+
+    const thNE = document.createElement("th");
+    thNE.className = "direction";
+    thNE.id = "thNE";
+    thNE.innerText = "NE";
+
+    const thE = document.createElement("th");
+    thE.id = "thE";
+    thE.className = "direction";
+    thE.innerText = "E";
+
+    const thSE = document.createElement("th");
+    thSE.id = "thSE";
+    thSE.className = "direction";
+    thSE.innerText = "SE";
+
+    const thS = document.createElement("th");
+    thS.id = "thS";
+    thS.className = "direction";
+    thS.innerText = "S";
+
+    const thSW= document.createElement("th");
+    thSW.id = "thSW";
+    thSW.className = "direction";
+    thSW.innerText = "SW";
+
+    const thW = document.createElement("th");
+    thW.id = "thW";
+    thW.className = "direction";
+    thW.innerText = "W";
+
+    const thNW = document.createElement("th");
+    thNW.id = "thW";
+    thNW.className = "direction";
+    thNW.innerText = "NW";
+
     tr.appendChild(th);
     tr.appendChild(th1);
     tr.appendChild(th2);
     tr.appendChild(th3);
+    tr.appendChild(thN);
+    tr.appendChild(thNE);
+    tr.appendChild(thW);
+    tr.appendChild(thSE);
+    tr.appendChild(thS);
+    tr.appendChild(thSW);
+    tr.appendChild(thW);
+    tr.appendChild(thNW);
 
     // tableに要素を追加
     table.appendChild(tr);
@@ -55,7 +104,7 @@
     function addRecorde(id) {
         const record = document.createElement("tr");
         record.id = `tr${id}`;
-        record.innerHTML = "<td>0</td><td>0</td><td>0</td><td>0</td>";
+        record.innerHTML = "<td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>";
         table.appendChild(record);
     }
 
@@ -186,7 +235,7 @@
         const recordOptions = [];
 
 
-        // 他の頂点との距離を設定(予定)
+        // 他の頂点との距離を設定
         const setDistance = document.createElement("input");
         setDistance.id = "setDistance";
 
@@ -1103,80 +1152,4 @@
     }
 
     drawGraph(graph1);
-
-
-// 
-// 操作部
-// 
-// ドキュメント部のスイッチ等を操作した時に対応した処理を実行する
-
-    // 選択された値を表示
-    selectStart.addEventListener("change", ()=>{
-        context0.clearRect(0, 0, 60, 20);
-        drawNumber(30, 10, selectStart.value, "rgb( 0, 0, 0)");
-    });
-
-    // 選択された値を表示
-    selectGoal.addEventListener("change", ()=>{
-        context0.clearRect(50, 0, 20, 20);
-        drawNumber(60, 10, selectGoal.value, "rgb( 0, 0, 0)");
-    });
-
-
-    // 前準備
-
-    // 最短経路を表示
-    // 関数
-    function drawShortestPath(nodeTree, graph) {
-
-        // ツリーから座標リスト作成
-        const cordinateList = cordinateListFromTree(nodeTree, 20, 250);
-
-        // 最短経路を計算
-        let path1 = dijkstra(graph, selectStart.value, selectGoal.value);
-
-        // 経由地モードがonの場合
-        if(radioOn.checked){
-
-            const pathsv = dijkstra(graph, selectStart.value, selectVia.value);
-
-            const pathvg = dijkstra(graph, selectVia.value, selectGoal.value);
-
-            path1 = pathsv.concat(pathvg);
-
-        }
-
-        // 辺を描画
-        for(let i = 1; i <= path1.length - 1; i ++) {
-            const start = cordinateList[ path1[i - 1] ];
-            const end = cordinateList[ path1[i] ];
-            drawLineBetweenPoints(start, end, "rgb(0, 150, 0)");
-        }
-
-        // 経路の頂点を緑で表示
-        for(const node of path1){
-            drawNode(cordinateList[node].x, cordinateList[node].y, "rgb(0, 150, 0)");
-            drawNumber(cordinateList[node].x - 3, cordinateList[node].y + 2, node, "rgb(250, 250, 250)");
-        }
-
-    }
-
-    // 最短経路を算出
-    const tree1 = addNodeTree(graph1);
-    button.addEventListener("click", ()=> drawShortestPath(tree1, graph1));
-
-    let num = 0;
-    // 画面のリセット
-    button1.addEventListener("click", ()=>{
-
-        context0.clearRect(0, 0, 500, 500);
-        drawGraph(graph1);       
-
-    } );
-
-    // セレクトボックスの再設定
-    button2.addEventListener("click", setSelects);
-
-    // 画面の消去
-    button3.addEventListener("click", ()=> context0.clearRect(0, 0, 500, 500));
 

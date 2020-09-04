@@ -1,6 +1,79 @@
 "use strict"
 
+// 
 // 操作部
+// 
+
+// ドキュメント部のスイッチ等を操作した時に対応した処理を実行する
+
+    // 選択された値を表示
+    selectStart.addEventListener("change", ()=>{
+        context0.clearRect(0, 0, 60, 20);
+        drawNumber(30, 10, selectStart.value, "rgb( 0, 0, 0)");
+    });
+
+    // 選択された値を表示
+    selectGoal.addEventListener("change", ()=>{
+        context0.clearRect(50, 0, 20, 20);
+        drawNumber(60, 10, selectGoal.value, "rgb( 0, 0, 0)");
+    });
+
+    // 最短経路を表示
+    // 関数
+    function drawShortestPath(nodeTree, graph) {
+
+        // ツリーから座標リスト作成
+        const cordinateList = cordinateListFromTree(nodeTree, 20, 250);
+
+        // 最短経路を計算
+        let path1 = dijkstra(graph, selectStart.value, selectGoal.value);
+
+        // 経由地モードがonの場合
+        if(radioOn.checked){
+
+            const pathsv = dijkstra(graph, selectStart.value, selectVia.value);
+
+            const pathvg = dijkstra(graph, selectVia.value, selectGoal.value);
+
+            path1 = pathsv.concat(pathvg);
+
+        }
+
+        // 辺を描画
+        for(let i = 1; i <= path1.length - 1; i ++) {
+            const start = cordinateList[ path1[i - 1] ];
+            const end = cordinateList[ path1[i] ];
+            drawLineBetweenPoints(start, end, "rgb(0, 150, 0)");
+        }
+
+        // 経路の頂点を緑で表示
+        for(const node of path1){
+            drawNode(cordinateList[node].x, cordinateList[node].y, "rgb(0, 150, 0)");
+            drawNumber(cordinateList[node].x - 3, cordinateList[node].y + 2, node, "rgb(250, 250, 250)");
+        }
+
+    }
+
+
+    // 最短経路を算出
+    const tree1 = addNodeTree(graph1);
+    button.addEventListener("click", ()=> drawShortestPath(tree1, graph1));
+
+    
+    // 画面のリセット
+    button1.addEventListener("click", ()=>{
+
+        context0.clearRect(0, 0, 500, 500);
+        drawGraph(graph1);       
+
+    } );
+
+    // セレクトボックスの再設定
+    button2.addEventListener("click", setSelects);
+
+    // 画面の消去
+    button3.addEventListener("click", ()=> context0.clearRect(0, 0, 500, 500));
+
 
     // canvas0をクリックしたときにその座標を表示
     canvas0.addEventListener("click", (e)=>{
@@ -12,6 +85,16 @@
     });
 
 
+    let num = 0;
+    // ページをロードした時に実行
+    // セレクトボックスに選択肢を追加
+    recordSelect.value = 0;
+    recordSelect.innerText = 0;
+    recordOptions[0] = document.createElement("option");
+    recordOptions[0].value = 0;
+    recordOptions[0].innerText = 0;
+    addOption(recordOptions,recordSelect);
+
     // 表に列を追加
     addRecorde(num);
     tableAdd.addEventListener("click", ()=>{
@@ -22,14 +105,19 @@
         table.childNodes[num + 1].firstChild.innerText = num;
         // console.log("table.childNodes[num].firstChild", table.childNodes);
         // recordSelectの選択肢を更新
+        // 初期化
+        while(recordSelect.childNodes.length > 1){
+            recordSelect.removeChild(recordSelect.childNodes[recordSelect.childNodes.length - 1]);
+            console.log("remove", recordSelect.childNodes[recordSelect.childNodes.length - 1])
+        }
         // 子要素の作成
-        for(let option = 0; option <= table.childNodes.length - 2; option++){
+        for(let option = 1; option <= table.childNodes.length - 2; option++){
             recordOptions[option] = document.createElement("option");
             recordOptions[option].value = option;
             recordOptions[option].innerText = option;
         }
         // 初期化
-        recordSelect.value = 0;
+        // recordSelect.value = 0;
         // 子要素の追加
         addOption(recordOptions,recordSelect);
 
@@ -83,7 +171,7 @@
             const cordinateY = +table.childNodes[node].childNodes[2].innerText;
             cordinateList.push({x: cordinateX, y: cordinateY});
             // 距離
-            let distance = table.childNodes[node].lastChild.innerText;
+            let distance = table.childNodes[node].childNodes[3].innerText;
             console.log("distance", distance);
             distance = distance.split(',');
             distance = distance.map((value)=>{return +value} );
