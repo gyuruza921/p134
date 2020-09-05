@@ -108,7 +108,7 @@
         // 初期化
         while(recordSelect.childNodes.length > 1){
             recordSelect.removeChild(recordSelect.childNodes[recordSelect.childNodes.length - 1]);
-            console.log("remove", recordSelect.childNodes[recordSelect.childNodes.length - 1])
+            // console.log("remove", recordSelect.childNodes[recordSelect.childNodes.length - 1]);
         }
         // 子要素の作成
         for(let option = 1; option <= table.childNodes.length - 2; option++){
@@ -123,7 +123,7 @@
 
     } );
 
-    // 表の列をリセット
+    // 表とセレクトボックスをリセット
     tableReset.addEventListener("click", ()=>{
 
         // 表のリセット
@@ -145,9 +145,6 @@
     // input要素の内容を表の距離の項目に入力
     // ボタンを押すと入力
     inputDistance.addEventListener("click", ()=>{
-        // console.log("distance!", setDistance.value);
-        // 最新の表の列の距離の項目を入力
-        // table.childNodes[table.childNodes.length - 1].childNodes[3].innerText = setDistance.value;
         // 列を選択して距離を入力
         table.childNodes[+recordSelect.value + 1].childNodes[3].innerText = setDistance.value;
     });
@@ -165,17 +162,17 @@
         // 表の内容を代入していく
         // 頂点番号
         for(let node = 1; node <= table.childNodes.length - 1; node++){
-            console.log("node", table.childNodes[node]);
+            // console.log("node", table.childNodes[node]);
             // 座標
             const cordinateX = +table.childNodes[node].childNodes[1].innerText;
             const cordinateY = +table.childNodes[node].childNodes[2].innerText;
             cordinateList.push({x: cordinateX, y: cordinateY});
             // 距離
             let distance = table.childNodes[node].childNodes[3].innerText;
-            console.log("distance", distance);
+            // console.log("distance", distance);
             distance = distance.split(',');
             distance = distance.map((value)=>{return +value} );
-            console.log("distance", distance);
+            // console.log("distance", distance);
             graph.push(distance);
         }
 
@@ -187,7 +184,7 @@
         // 
         nodeTree["graph"] = graph;
 
-        console.log("graph", graph);
+        // console.log("graph", graph);
         console.log("nodeTree", nodeTree);
         return nodeTree;
 

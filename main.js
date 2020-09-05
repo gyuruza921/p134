@@ -104,7 +104,13 @@
     function addRecorde(id) {
         const record = document.createElement("tr");
         record.id = `tr${id}`;
-        record.innerHTML = "<td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>";
+
+        // console.log(td);
+        for(let i = 0; i <= 10; i ++){
+            const td = document.createElement("td");
+            td.innerText = "0";            
+            record.appendChild(td);
+        }
         table.appendChild(record);
     }
 
@@ -204,6 +210,7 @@
         radio.childNodes[1].appendChild(radioOn);
         radio.childNodes[2].appendChild(radioOff);
 
+
     // tableを制御するfieldset
     const tableControl = document.createElement("fieldset");
     tableControl.id = "tableControl";
@@ -235,9 +242,16 @@
         const recordOptions = [];
 
 
+        // ラベルを作成
+        const label4 = document.createElement("label");
+        label4.innerText = "距離を入力";
+        label4.setAttribute("for", "setDistance");
+
+
         // 他の頂点との距離を設定
         const setDistance = document.createElement("input");
         setDistance.id = "setDistance";
+
 
         // 設定した距離の表への入力
         const inputDistance = document.createElement("button");
@@ -245,19 +259,54 @@
         inputDistance.setAttribute("type", "button");
         inputDistance.innerText = "inputDistance";
 
+        // 方位を選択して頂点と距離を入力
+            // ラベルを作成
+            const label5 = document.createElement("label");
+            label5.innerText = "方位を選択して頂点と距離を入力";
+            label5.setAttribute("for", "setDistance");
+
+            // 方位を選択
+            const selectDirection = document.createElement("select");
+            selectDirection.id = "selectDirection";
+            // 選択肢のリスト
+            const directionOptions2 = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+
+            const directionOptions3 = directionOptions2.map( (value)=> {
+                console.log("value", value);
+                const direction = document.createElement("option");
+                direction.value = value;
+                direction.innerText = value;
+                // directionOptions.push(direction);
+                return direction;
+            } )
+
+            console.log("directionOptions3", directionOptions3);
+
+            addOption(directionOptions3, selectDirection);
+
+            // 頂点と距離を入力
+            // ラベルを作成
+            const label6 = document.createElement("label");
+
+            // ラベルに子要素を追加
+            label5.appendChild(selectDirection);
+
         // tableの内容から隣接行列を作る
         const createGraph = document.createElement("button");
         createGraph.id = "createGraph";
         createGraph.setAttribute("type", "button");
         createGraph.innerText = "createGraph";
 
+
         // fieldsetに子要素を追加
         tableControl.appendChild(tableReset);
         tableControl.appendChild(tableAdd);
+        tableControl.appendChild(label4);
         tableControl.appendChild(setDistance);
         tableControl.appendChild(label3);
         tableControl.appendChild(recordSelect);
         tableControl.appendChild(inputDistance);
+        tableControl.appendChild(label5);
         tableControl.appendChild(createGraph);
 
 
