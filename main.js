@@ -90,7 +90,7 @@
     tr.appendChild(th3);
     tr.appendChild(thN);
     tr.appendChild(thNE);
-    tr.appendChild(thW);
+    tr.appendChild(thE);
     tr.appendChild(thSE);
     tr.appendChild(thS);
     tr.appendChild(thSW);
@@ -104,11 +104,16 @@
     function addRecorde(id) {
         const record = document.createElement("tr");
         record.id = `tr${id}`;
+        const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
 
         // console.log(td);
-        for(let i = 0; i <= 10; i ++){
+        for(let i = 0; i <= 11; i ++){
             const td = document.createElement("td");
-            td.innerText = "0";            
+            td.innerText = "0";
+            // 方位入力欄にクラス名を追加
+            if(i >= 11 - 7){
+                td.className = directions[i - 4];
+            }
             record.appendChild(td);
         }
         table.appendChild(record);
@@ -269,10 +274,10 @@
             const selectDirection = document.createElement("select");
             selectDirection.id = "selectDirection";
             // 選択肢のリスト
-            const directionOptions2 = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+            const directionOptions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
 
-            const directionOptions3 = directionOptions2.map( (value)=> {
-                console.log("value", value);
+            const directionOptions3 = directionOptions.map( (value)=> {
+                // console.log("value", value);
                 const direction = document.createElement("option");
                 direction.value = value;
                 direction.innerText = value;
@@ -287,6 +292,20 @@
             // 頂点と距離を入力
             // ラベルを作成
             const label6 = document.createElement("label");
+            label6.innerText = "頂点と距離を入力";
+
+            // input要素を作成
+            const setNodeAndCost = document.createElement("input");
+
+            // ボタン要素の追加
+            const inputNodeAndCost = document.createElement("button");
+            inputNodeAndCost.id = "inputNodeAndCost";
+            inputNodeAndCost.innerText = "input";
+            inputNodeAndCost.setAttribute("type", "button");
+
+            // ラベルに子要素を追加
+            label6.appendChild(setNodeAndCost);
+            label6.appendChild(inputNodeAndCost);
 
             // ラベルに子要素を追加
             label5.appendChild(selectDirection);
@@ -307,6 +326,7 @@
         tableControl.appendChild(recordSelect);
         tableControl.appendChild(inputDistance);
         tableControl.appendChild(label5);
+        tableControl.appendChild(label6);
         tableControl.appendChild(createGraph);
 
 

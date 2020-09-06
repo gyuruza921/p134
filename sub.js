@@ -116,8 +116,6 @@
             recordOptions[option].value = option;
             recordOptions[option].innerText = option;
         }
-        // 初期化
-        // recordSelect.value = 0;
         // 子要素の追加
         addOption(recordOptions,recordSelect);
 
@@ -149,6 +147,21 @@
         table.childNodes[+recordSelect.value + 1].childNodes[3].innerText = setDistance.value;
     });
 
+    // 頂点と方位と距離を入力(テスト)
+    inputNodeAndCost.addEventListener("click", ()=>{
+
+        let selected;
+        table.childNodes[+recordSelect.value + 1].childNodes.forEach( (node)=> {
+            if(node.className == selectDirection.value){
+                selected = node;
+            }
+        } );
+        
+        console.log("selected td", selected);
+        selected.innerText = setNodeAndCost.value;
+
+    } )
+
     // 表の内容から隣接行列を作る
     // 処理をまとめた関数
     function graphFromTable(table) {
@@ -178,10 +191,10 @@
 
         const nodeTree = addNodeTree(graph); 
         
-        // graphに座標リストを添付
+        // nodeTreeに座標リストプロパティを追加
         nodeTree["cordinateList"] = cordinateList;
 
-        // 
+        // nodeTreeに隣接行列graphのプロパティを追加
         nodeTree["graph"] = graph;
 
         // console.log("graph", graph);
