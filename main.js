@@ -8,6 +8,11 @@
     // body要素の取得
     const BODY = document.querySelector("body");
 
+    // br要素の作成
+    const br = document.createElement("br");
+    const br2 = document.createElement("br");
+    const br3 = document.createElement("br");
+
     // canvas要素の作成
     const canvas0 = document.createElement("canvas");
     canvas0.id = "canvas0";
@@ -320,11 +325,13 @@
         // fieldsetに子要素を追加
         tableControl.appendChild(tableReset);
         tableControl.appendChild(tableAdd);
+        tableControl.appendChild(br);
         tableControl.appendChild(label4);
         tableControl.appendChild(setDistance);
         tableControl.appendChild(label3);
         tableControl.appendChild(recordSelect);
         tableControl.appendChild(inputDistance);
+        tableControl.appendChild(br2);
         tableControl.appendChild(label5);
         tableControl.appendChild(label6);
         tableControl.appendChild(createGraph);
@@ -342,6 +349,7 @@
     form.appendChild(label2);
     form.appendChild(selectGoal);
     form.appendChild(radio);
+    form.appendChild(br3);
     form.appendChild(tableControl);
 
     // BODYへ要素追加

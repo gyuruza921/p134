@@ -203,5 +203,36 @@
 
     }
 
+
+    // 表の内容から木を作る
+    function treeFromTable(table){
+
+        // 
+        // 前準備
+        // 
+
+        // 木のインスタンス作成
+        const tree = new Tree;
+
+        // 頂点のリスト
+        const nodeList = [];
+
+        // 表の列の数だけ繰り返す
+        for(let i = 1; i <= table.childNodes.length - 1; i ++){
+            // 頂点のインスタンス作成
+            nodeList[i - 1] = new TreeNode({id: i - 1, distance: []});
+            // 表の列内部の値を読み取る
+            console.log("table.childNodes.childNodes", table.childNodes.childNodes);
+        }
+
+        tree.root = nodeList[0]
+        console.log("tree", tree);
+
+    }
+
+
     // ボタンを押すと表の値を基に隣接行列を作成
-    createGraph.addEventListener("click",()=> graphFromTable(table));
+    createGraph.addEventListener("click",()=> {
+        graphFromTable(table);
+        treeFromTable(table);
+    } );
