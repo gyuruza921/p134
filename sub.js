@@ -233,16 +233,29 @@
         // 表の列の数だけ繰り返す
         for(let i = 1; i <= table.childNodes.length - 1; i ++){
 
+            // 列内部の子要素のデータ
             const tableData = Array.from(table.childNodes[i].childNodes);
             // 表の列内部の値を読み取る
             console.log("tableData", tableData);
             
-            // 列内部の子要素のデータを抜き出す
-            const neighbourNode = tableData.filter( (node)=> {return node.className.match(/[NEWS]/) != null && node.innerText != "0" } );
+            // 隣接する頂点のリスト
+            const neighbourNodeList = tableData.filter( (node)=> {return node.className.match(/[NEWS]/) != null && node.innerText != "0" } );
 
-            console.log("neighbourNode", neighbourNode);
-            console.log("neighbourNode.innertext", neighbourNode[0].innerText);
-            console.log("neighbourNode.className", neighbourNode[0].className);
+            // 
+            neighbourNodeList.forEach((value)=>{
+                // 
+                console.log("value", value);
+                console.log("value", value.innerText);
+                console.log("value", value.className);
+                // 頂点番号と距離
+                const nodeAndCost = value.innerText.split(",");
+                console.log("nodeAndCost",nodeAndCost);
+                // 方位
+                const direction = value.className;
+                // 現在の頂点の方位に隣接する頂点を登録する
+                nodeList[i - 1][direction] = nodeList[+nodeAndCost[0]];
+
+            })
 
 
         }
