@@ -325,11 +325,11 @@
         // fieldsetに子要素を追加
         tableControl.appendChild(tableReset);
         tableControl.appendChild(tableAdd);
+        tableControl.appendChild(label3);
+        tableControl.appendChild(recordSelect);
         tableControl.appendChild(br);
         tableControl.appendChild(label4);
         tableControl.appendChild(setDistance);
-        tableControl.appendChild(label3);
-        tableControl.appendChild(recordSelect);
         tableControl.appendChild(inputDistance);
         tableControl.appendChild(br2);
         tableControl.appendChild(label5);
@@ -709,7 +709,7 @@
 
             // 中間点　次の頂点が2つで前の頂点が1つの場合
             else if(next.length == 2 && prev.length == 1) {
-                console.log("current node", node);
+                // console.log("current node", node);
                 // 前の頂点と今の頂点との位置関係を確認
                 const prevDirections = [];
                 for(const index of prev){
@@ -721,7 +721,7 @@
                     }
 
                 }
-                console.log("prevDirections", prevDirections);
+                // console.log("prevDirections", prevDirections);
                 // 第一の次の頂点を登録する
                 // 今の頂点より若い番号なら北そうでないなら南に登録
                 if(next[0] < node.id){
@@ -803,58 +803,58 @@
             else if(next.length >= 1 && prev.length >= 1) {
                 // console.log("node", node);
                 // 次の頂点の方位を決める処理
-                    let directionsN;
-                    // 次の頂点が１つの時
-                    if(next.length == 1) {
-                        directionsN = ["W"];
-                    }
-                    // 次の頂点が複数の時
-                    else if(next.length == 2) {
-                        directionsN = Array.from(directions).splice(1, 3);
-                        directionsN.splice(1, 1);
-                    }
-                    // 候補リストから空いている方位に登録する
-                    let i = 0;
-                    for(let direction of directionsN){
+                let directionsN;
+                // 次の頂点が１つの時
+                if(next.length == 1) {
+                    directionsN = ["W"];
+                }
+                // 次の頂点が複数の時
+                else if(next.length == 2) {
+                    directionsN = Array.from(directions).splice(1, 3);
+                    directionsN.splice(1, 1);
+                }
+                // 候補リストから空いている方位に登録する
+                let i = 0;
+                for(let direction of directionsN){
 
-                        // console.log("direction", direction);
-                        if(node[direction] == null){
-                            node[direction] = nodeList[next[i]]
-                        }
-                        i ++;
+                    // console.log("direction", direction);
+                    if(node[direction] == null){
+                        node[direction] = nodeList[next[i]]
                     }
+                    i ++;
+                }
 
                 // 次の頂点に終点が含まれる場合
-                    // nextから終点を探す
-                    const fp = next.some( (num)=>{return num == nodeList.length - 1} );
-                    // console.log("fp", fp);
-                    // 終点を見つけたら
-                    if(fp && next.length > 1){
-                        // 終点以外の頂点をnextから抽出する
-                        const others = Array.from(next).filter( (node)=>{return node != nodeList.length - 1} );
-                        // console.log("others", others);
-                        // その頂点が登録された方位の初期化と終点でない頂点の登録
-                        for(let other of others){
+                // nextから終点を探す
+                const fp = next.some( (num)=>{return num == nodeList.length - 1} );
+                // console.log("fp", fp);
+                // 終点を見つけたら
+                if(fp && next.length > 1){
+                    // 終点以外の頂点をnextから抽出する
+                    const others = Array.from(next).filter( (node)=>{return node != nodeList.length - 1} );
+                    // console.log("others", others);
+                    // その頂点が登録された方位の初期化と終点でない頂点の登録
+                    for(let other of others){
 
-                            // otherが登録されている方位を現在の頂点から探して初期化
-                            for(let direction of directions){
-                                if(node[direction] == nodeList[other]){
-                                    // console.log("previous direction", direction);
-                                    node[direction] = null;
-                                }
-                            }
-
-                            // otherの現在の頂点の方位への登録
-                            // otherの番号が現在の頂点の番号より大きい場合
-                            if(other > node.value.id){
-                                node.S = nodeList[other];
-                            }
-                            else{
-                                node.N = nodeList[other];
+                        // otherが登録されている方位を現在の頂点から探して初期化
+                        for(let direction of directions){
+                            if(node[direction] == nodeList[other]){
+                                // console.log("previous direction", direction);
+                                node[direction] = null;
                             }
                         }
 
+                        // otherの現在の頂点の方位への登録
+                        // otherの番号が現在の頂点の番号より大きい場合
+                        if(other > node.value.id){
+                            node.S = nodeList[other];
+                        }
+                        else{
+                            node.N = nodeList[other];
+                        }
                     }
+
+                }
 
             }
             // 終点　次の頂点が存在しない場合
@@ -872,9 +872,9 @@
                     // 方位リストから北西から南西までを取り出す
                     // 順番を逆にする
                     directionsP = [];
-                    directionsP.push(directions[7]);
-                    directionsP.push(directions[6]);
-                    directionsP.push(directions[5]);
+                    for(let i = 7; i >= 5; i --){
+                        directionsP.push(directions[i]);
+                    }
                 }
                 // 偶数の時は西だけを除外する
                 if(next.length % 2 == 0){ directionsP = directionsP.filter( (direction)=> direction != "W" ) }

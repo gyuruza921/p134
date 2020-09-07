@@ -217,12 +217,34 @@
         // 頂点のリスト
         const nodeList = [];
 
+        // 頂点のリストに内容を加える
+        for(let i = 1; i <= table.childNodes.length - 1; i ++){
+            // 距離表の作成
+            const distance = new Array(table.childNodes.length - 1);
+            distance.fill(-1);
+            // 頂点のインスタンス作成
+            nodeList[i - 1] = new TreeNode({id: i - 1, distance: distance});
+        }
+
+        // 
+        // 計算
+        // 
+
         // 表の列の数だけ繰り返す
         for(let i = 1; i <= table.childNodes.length - 1; i ++){
-            // 頂点のインスタンス作成
-            nodeList[i - 1] = new TreeNode({id: i - 1, distance: []});
+
+            const tableData = Array.from(table.childNodes[i].childNodes);
             // 表の列内部の値を読み取る
-            console.log("table.childNodes.childNodes", table.childNodes.childNodes);
+            console.log("tableData", tableData);
+            
+            // 列内部の子要素のデータを抜き出す
+            const neighbourNode = tableData.filter( (node)=> {return node.className.match(/[NEWS]/) != null && node.innerText != "0" } );
+
+            console.log("neighbourNode", neighbourNode);
+            console.log("neighbourNode.innertext", neighbourNode[0].innerText);
+            console.log("neighbourNode.className", neighbourNode[0].className);
+
+
         }
 
         tree.root = nodeList[0]
