@@ -74,6 +74,9 @@
     // 画面の消去
     button3.addEventListener("click", ()=> context0.clearRect(0, 0, 500, 500));
 
+    // テスト
+    button4.addEventListener("click", ()=>{console.log("graphV", graphV)})
+
 
     // canvas0をクリックしたときにその座標を表示
     canvas0.addEventListener("click", (e)=>{
@@ -217,6 +220,16 @@
         // 頂点のリスト
         const nodeList = [];
 
+        // 隣接行列
+        const graph = [];
+
+        // 座標リスト
+        const cordinateList = [];
+
+        // 
+        // 計算
+        // 
+
         // 頂点のリストに内容を加える
         for(let i = 1; i <= table.childNodes.length - 1; i ++){
             // 距離表の作成
@@ -241,6 +254,9 @@
             // 隣接する頂点のリスト
             const neighbourNodeList = tableData.filter( (node)=> {return node.className.match(/[NEWS]/) != null && node.innerText != "0" } );
 
+            // 現在の頂点の距離プロパティを設定
+            nodeList[i - 1].distance[i - 1] = 0;
+
             // 
             neighbourNodeList.forEach((value)=>{
                 // 
@@ -254,14 +270,35 @@
                 const direction = value.className;
                 // 現在の頂点の方位に隣接する頂点を登録する
                 nodeList[i - 1][direction] = nodeList[+nodeAndCost[0]];
+                // 現在の頂点と隣接する頂点の距離を設定
+                nodeList[i - 1].distance[+nodeAndCost[0]] = +nodeAndCost[1];
 
-            })
+            });
+
+            // graph
+            graph.push(nodeList[i - 1].distance);
+
+            // cordinateList
+            cordinateList.push({x: +tableData[1].innerText, y: +tableData[2].innerText}); 
 
 
         }
 
-        tree.root = nodeList[0]
+        // tree.rootを設定
+        tree.root = nodeList[0];
+
+        // tree.nodeList
+        tree["nodeList"] = nodeList;
+
+        // tree.graph
+        tree["graph"] = graph;
+
+        // tree.cordinateList
+        tree["cordinateList"] = cordinateList;
+
         console.log("tree", tree);
+
+        return tree;
 
     }
 
@@ -269,5 +306,6 @@
     // ボタンを押すと表の値を基に隣接行列を作成
     createGraph.addEventListener("click",()=> {
         graphFromTable(table);
-        treeFromTable(table);
+        graphV = treeFromTable(table);
+        console.log("graphV", graphV);
     } );

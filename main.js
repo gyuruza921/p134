@@ -28,101 +28,102 @@
     table.id = "table";
     table.setAttribute("border","1");
 
-    // tableの見出しの一列を作成
-    const tr = document.createElement("tr");
-    tr.id = "tr";
+        // tableの見出しの一列を作成
+        const tr = document.createElement("tr");
+        tr.id = "tr";
 
-    const th = document.createElement("th");
-    th.id = "th";
-    th.innerText = "頂点番号";
+        const th = document.createElement("th");
+        th.id = "th";
+        th.innerText = "頂点番号";
 
-    const th1 = document.createElement("th");
-    th1.id = "th1";
-    th1.innerText = "x座標";
+        const th1 = document.createElement("th");
+        th1.id = "th1";
+        th1.innerText = "x座標";
 
-    const th2 = document.createElement("th");
-    th2.id = "th2";
-    th2.innerText = "y座標";
+        const th2 = document.createElement("th");
+        th2.id = "th2";
+        th2.innerText = "y座標";
 
-    const th3 = document.createElement("th");
-    th3.id = "th3";
-    th3.innerText = "距離";
+        const th3 = document.createElement("th");
+        th3.id = "th3";
+        th3.innerText = "距離";
 
-    // 各頂点の方位毎に登録された頂点と距離を登録
-    const thN = document.createElement("th");
-    thN.id = "thN";
-    thN.className = "direction";
-    thN.innerText = "N";
+        // 各頂点の方位毎に登録された頂点と距離を登録
+        const thN = document.createElement("th");
+        thN.id = "thN";
+        thN.className = "direction";
+        thN.innerText = "N";
 
-    const thNE = document.createElement("th");
-    thNE.className = "direction";
-    thNE.id = "thNE";
-    thNE.innerText = "NE";
+        const thNE = document.createElement("th");
+        thNE.className = "direction";
+        thNE.id = "thNE";
+        thNE.innerText = "NE";
 
-    const thE = document.createElement("th");
-    thE.id = "thE";
-    thE.className = "direction";
-    thE.innerText = "E";
+        const thE = document.createElement("th");
+        thE.id = "thE";
+        thE.className = "direction";
+        thE.innerText = "E";
 
-    const thSE = document.createElement("th");
-    thSE.id = "thSE";
-    thSE.className = "direction";
-    thSE.innerText = "SE";
+        const thSE = document.createElement("th");
+        thSE.id = "thSE";
+        thSE.className = "direction";
+        thSE.innerText = "SE";
 
-    const thS = document.createElement("th");
-    thS.id = "thS";
-    thS.className = "direction";
-    thS.innerText = "S";
+        const thS = document.createElement("th");
+        thS.id = "thS";
+        thS.className = "direction";
+        thS.innerText = "S";
 
-    const thSW= document.createElement("th");
-    thSW.id = "thSW";
-    thSW.className = "direction";
-    thSW.innerText = "SW";
+        const thSW= document.createElement("th");
+        thSW.id = "thSW";
+        thSW.className = "direction";
+        thSW.innerText = "SW";
 
-    const thW = document.createElement("th");
-    thW.id = "thW";
-    thW.className = "direction";
-    thW.innerText = "W";
+        const thW = document.createElement("th");
+        thW.id = "thW";
+        thW.className = "direction";
+        thW.innerText = "W";
 
-    const thNW = document.createElement("th");
-    thNW.id = "thW";
-    thNW.className = "direction";
-    thNW.innerText = "NW";
+        const thNW = document.createElement("th");
+        thNW.id = "thW";
+        thNW.className = "direction";
+        thNW.innerText = "NW";
 
-    tr.appendChild(th);
-    tr.appendChild(th1);
-    tr.appendChild(th2);
-    tr.appendChild(th3);
-    tr.appendChild(thN);
-    tr.appendChild(thNE);
-    tr.appendChild(thE);
-    tr.appendChild(thSE);
-    tr.appendChild(thS);
-    tr.appendChild(thSW);
-    tr.appendChild(thW);
-    tr.appendChild(thNW);
+        tr.appendChild(th);
+        tr.appendChild(th1);
+        tr.appendChild(th2);
+        tr.appendChild(th3);
+        tr.appendChild(thN);
+        tr.appendChild(thNE);
+        tr.appendChild(thE);
+        tr.appendChild(thSE);
+        tr.appendChild(thS);
+        tr.appendChild(thSW);
+        tr.appendChild(thW);
+        tr.appendChild(thNW);
 
-    // tableに要素を追加
-    table.appendChild(tr);
+        // tableに要素を追加
+        table.appendChild(tr);
 
-    // recordを追加する関数
-    function addRecorde(id) {
-        const record = document.createElement("tr");
-        record.id = `tr${id}`;
-        const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
+        // recordを追加する関数
+        function addRecorde(id) {
+            const record = document.createElement("tr");
+            record.id = `tr${id}`;
+            const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
 
-        // console.log(td);
-        for(let i = 0; i <= 11; i ++){
-            const td = document.createElement("td");
-            td.innerText = "0";
-            // 方位入力欄にクラス名を追加
-            if(i >= 11 - 7){
-                td.className = directions[i - 4];
+            // console.log(td);
+            for(let i = 0; i <= 11; i ++){
+                const td = document.createElement("td");
+                td.innerText = "0";
+                // 方位入力欄にクラス名を追加
+                if(i >= 11 - 7){
+                    td.className = directions[i - 4];
+                }
+                record.appendChild(td);
             }
-            record.appendChild(td);
+            table.appendChild(record);
         }
-        table.appendChild(record);
-    }
+
 
     // optionを追加する関数
     function addOption(options, select) {
@@ -197,6 +198,12 @@
     button3.id = "button3";
     button3.setAttribute("type", "button");
     button3.innerHTML = "graph delete";
+
+    // テストボタン
+    const button4 = document.createElement("button");
+    button4.id = "button4";
+    button4.setAttribute("type", "button");
+    button4.innerHTML = "test";
 
     // ラジオボタン
     const radio = document.createElement("fieldset");
@@ -342,6 +349,7 @@
     form.appendChild(button1);
     form.appendChild(button2);
     form.appendChild(button3);
+    form.appendChild(button4);
     form.appendChild(label0);
     form.appendChild(selectStart);
     form.appendChild(label1);
@@ -460,6 +468,9 @@
         [-1, -1, -1, -1, 5, 3, 0], // 頂点6　再右端 頂点4,5と接する
 
     ];
+
+    // 可変式の隣接行列のデータ
+    let graphV;
 
 
     // セレクトボックスの選択肢を再設定
