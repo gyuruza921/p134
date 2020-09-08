@@ -75,7 +75,11 @@
     button3.addEventListener("click", ()=> context0.clearRect(0, 0, 500, 500));
 
     // テスト
-    button4.addEventListener("click", ()=>{console.log("graphV", graphV)})
+    button4.addEventListener("click", ()=>{
+        console.log("graphV", graphV);
+        // drawGraph(graphV.graph);
+        drawGraphFromTree(graphV);
+    });
 
 
     // canvas0をクリックしたときにその座標を表示
@@ -305,7 +309,6 @@
 
     // ボタンを押すと表の値を基に隣接行列を作成
     createGraph.addEventListener("click",()=> {
-        graphFromTable(table);
         graphV = treeFromTable(table);
         console.log("graphV", graphV);
     } );

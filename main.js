@@ -374,6 +374,7 @@
         // TreeNode
         class TreeNode {
             constructor(value){
+
                 // value
                 this.value = value;
                 // id
@@ -1241,3 +1242,51 @@
 
     drawGraph(graph1);
 
+
+    // 木構造から路線図を描画する
+    function drawGraphFromTree(tree) {
+
+        // 
+        // 前準備
+        // 
+
+        // 隣接行列からツリーを作る
+        const tree1 = tree;
+        // 各頂点の座標
+        const cordinateList = tree.cordinateList;
+        // 各頂点間の辺
+        const edges = serchEdges(tree1);
+
+        // 
+        // 描画処理
+        // 
+
+        // 頂点を描画
+        for(let node of cordinateList){
+            drawNode(node.x, node.y, "rgb(0, 0, 250)");
+        }
+
+        // 辺を描画
+        for(let edge of edges){
+            const start = edge.start;
+            const end = edge.end;
+            drawLineBetweenPoints(cordinateList[start], cordinateList[end], "rgb(0, 0, 250)");
+            // 辺の距離を描画
+            // 距離を表示する座標を算出
+            const xs = cordinateList[start].x;
+            const xe = cordinateList[end].x;
+            const ys = cordinateList[start].y;
+            const ye = cordinateList[end].y;
+            const cost = graph[start][end];
+            // 
+            drawNumber(xs - 5 + ((xe - xs) / 2), ys - 9 + ((ye - ys) / 2), cost, "rgb( 0, 0, 0)")
+        }
+
+        // 番号を記入
+        let number = 0;
+        for(let node of cordinateList){
+            drawNumber(node.x - 2, node.y + 3, number, "rgb(250, 250, 250)");
+            number++;
+        }
+
+    }
