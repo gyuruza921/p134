@@ -4,7 +4,7 @@
 // 操作部
 // 
 
-// ドキュメント部のスイッチ等を操作した時に対応した処理を実行する
+// ドキュメント部のスイッチ等の要素を操作した時に対応した処理を実行する
 
     // 選択された値を表示
     selectStart.addEventListener("change", ()=>{
@@ -126,6 +126,9 @@
         // 子要素の追加
         addOption(recordOptions,recordSelect);
 
+        // セレクトボックスの値を更新
+        recordSelect.value = num;
+
     } );
 
     // 表とセレクトボックスをリセット
@@ -154,7 +157,7 @@
         table.childNodes[+recordSelect.value + 1].childNodes[3].innerText = setDistance.value;
     });
 
-    // 頂点と方位と距離を入力(テスト)
+    // 各方位に頂点と距離を入力
     inputNodeAndCost.addEventListener("click", ()=>{
 
         let selected;
@@ -170,7 +173,6 @@
     } )
 
     // 表の内容から隣接行列を作る
-    // 処理をまとめた関数
     function graphFromTable(table) {
 
         // 隣接行列
