@@ -297,7 +297,7 @@
                 return direction;
             } )
 
-            console.log("directionOptions3", directionOptions3);
+            // console.log("directionOptions3", directionOptions3);
 
             addOption(directionOptions3, selectDirection);
 
@@ -328,6 +328,29 @@
         createGraph.setAttribute("type", "button");
         createGraph.innerText = "createGraph";
 
+        // 方位の自動設定機能
+        // フィールドセット作成
+        const radio1 = document.createElement("fieldset");
+        radio1.id = "radio1";
+        radio1.innerHTML = "<legend>方位自動設定</legend><label>on</label><label>off</label>";
+
+            // 子要素の作成(on)
+            const radio1On = document.createElement("input");
+            radio1On.id = "radio1On";
+            radio1On.setAttribute("type", "radio");
+            radio1On.name = "switchOnOff1";
+
+            // 子要素の作成(off)
+            const radio1Off = document.createElement("input");
+            radio1Off.id = "radioOff";
+            radio1Off.setAttribute("type", "radio");
+            radio1Off.name = "switchOnOff1";
+            radio1Off.checked = true;
+        
+        // 親要素radio1への追加
+        radio1.childNodes[1].appendChild(radio1On);
+        radio1.childNodes[2].appendChild(radio1Off);
+
 
         // fieldsetに子要素を追加
         tableControl.appendChild(tableReset);
@@ -341,6 +364,7 @@
         tableControl.appendChild(br2);
         tableControl.appendChild(label5);
         tableControl.appendChild(label6);
+        tableControl.appendChild(radio1);
         tableControl.appendChild(createGraph);
 
 
@@ -1288,5 +1312,12 @@
             drawNumber(node.x - 2, node.y + 3, number, "rgb(250, 250, 250)");
             number++;
         }
+
+    }
+
+    // 方位を自動設定
+    function directionAutoSet(event , currentPoint) {
+
+        // eventの座標とcurrentPointの座標を比較して相対的な方位を表示
 
     }

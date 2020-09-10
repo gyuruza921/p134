@@ -6,13 +6,15 @@
 
 // ドキュメント部のスイッチ等の要素を操作した時に対応した処理を実行する
 
-    // 選択された値を表示
+    // ロードと同時に実行
+
+    // selectStartの値が変化したときに選択された値を表示
     selectStart.addEventListener("change", ()=>{
         context0.clearRect(0, 0, 60, 20);
         drawNumber(30, 10, selectStart.value, "rgb( 0, 0, 0)");
     });
 
-    // 選択された値を表示
+    // selectGoalの値が変化したときに選択された値を表示
     selectGoal.addEventListener("change", ()=>{
         context0.clearRect(50, 0, 20, 20);
         drawNumber(60, 10, selectGoal.value, "rgb( 0, 0, 0)");
@@ -82,12 +84,55 @@
     });
 
 
-    // canvas0をクリックしたときにその座標を表示
+    // canvas0をクリックしたときにその座標を設定
     canvas0.addEventListener("click", (e)=>{
 
-        // table要素に出力
-        table.childNodes[ +recordSelect.value + 1].childNodes[1].innerText = e.clientX;
-        table.childNodes[ +recordSelect.value + 1].childNodes[2].innerText = e.clientY;
+        // 方位自動設定機能がoffの時のみ設定
+        if(!radio1On.checked){
+            // table要素に出力
+            table.childNodes[ +recordSelect.value + 1].childNodes[1].innerText = e.clientX;
+            table.childNodes[ +recordSelect.value + 1].childNodes[2].innerText = e.clientY;            
+        }
+        // 方位自動設定がonの時の処理
+        else{
+
+            // 基準となる座標を基にクリックした座標との相対的な方位を計算
+
+            const point1x = +table.childNodes[ +recordSelect.value + 1].childNodes[1].innerText;
+            const point1y = +table.childNodes[ +recordSelect.value + 1].childNodes[2].innerText;
+            // 基準となる座標を表示
+            console.log("point1", point1x, point1y);
+            // クリックした座標を表示
+            console.log("point2", e.clientX, e.clientY);
+
+            // 相対的な方位を計算
+                // point1とpoint2の差を計算
+                const difX = e.clientX - point1x;
+                const difY = e.clientY - point1y;
+
+                // 差を表示
+                console.log("difX", difX);
+                console.log("difY", difY);
+
+                // 方位を設定
+                let direction = "";
+                const directionTan = Math.atan2(difY, difX);
+                // const directionTan = Math.atan2(Math.abs(difY) , Math.abs(difX));
+                console.log("directionTan", directionTan);
+                const deg = -directionTan / Math.PI * 180;
+                console.log("deg", deg);
+
+                // 南北を設定
+                if(difY > 0){ direction = direction + "S" }
+                else{ direction = direction + "N" }
+
+                // 東西を設定
+                if(difX > 0){ direction = direction + "E"}
+                else{direction = direction + "W"}
+
+                console.log("direction", direction);
+
+        }
 
     });
 
