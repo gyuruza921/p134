@@ -495,7 +495,7 @@
     ];
 
     // 可変式の隣接行列のデータ
-    let graphV;
+    let graphV = graph1;
 
 
     // セレクトボックスの選択肢を再設定
@@ -1264,7 +1264,6 @@
 
     }
 
-    drawGraph(graph1);
 
 
     // 木構造から路線図を描画する
@@ -1273,6 +1272,9 @@
         // 
         // 前準備
         // 
+
+        // 
+        const graph = tree.graph;
 
         // 隣接行列からツリーを作る
         const tree1 = tree;
