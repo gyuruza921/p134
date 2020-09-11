@@ -191,7 +191,7 @@
     const button2= document.createElement("button");
     button2.id = "button2";
     button2.setAttribute("type", "button");
-    button2.innerHTML = "graph setting";
+    button2.innerHTML = "selectbox setting";
 
     // 消去ボタン
     const button3 = document.createElement("button");
@@ -304,12 +304,16 @@
             // 頂点と距離を入力
             // ラベルを作成
             const label6 = document.createElement("label");
+            label6.id = "label6";
             label6.innerText = "頂点と距離を入力";
 
             // input要素を作成
             const setNodeAndCost = document.createElement("input");
             setNodeAndCost.id = "setNodeAndCost";
-            // setNodeAndCost
+
+            // input要素を作成
+            const setCost = document.createElement("input");
+            setCost.id = "setCost";
 
             // ボタン要素の追加
             const inputNodeAndCost = document.createElement("button");
@@ -319,6 +323,7 @@
 
             // ラベルに子要素を追加
             label6.appendChild(setNodeAndCost);
+            label6.appendChild(setCost);
             label6.appendChild(inputNodeAndCost);
 
             // ラベルに子要素を追加
@@ -503,6 +508,12 @@
     // セレクトボックスの選択肢を再設定
     function setSelects(graph) {
 
+
+            // 各選択肢の初期化
+            startOptions.splice(0, startOptions.length - 1);
+            viaOptions.splice(0, viaOptions.length - 1);
+            goalOptions.splice(0, goalOptions.length - 1);
+
             // 始点
             for(let option = 0; option <= graph.length - 1; option++){
                 startOptions[option] = document.createElement("option");
@@ -514,6 +525,7 @@
             selectStart.textContent = null;
             // 子要素の追加
             addOption(startOptions, selectStart);
+
 
             // 中継点
             for(let option = 0; option <= graph.length - 1; option++){
@@ -541,8 +553,6 @@
 
         };
 
-    // セレクトボックスの選択肢を設定
-    setSelects(graph1);
 
 // 
 // 処理部

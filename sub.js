@@ -248,7 +248,10 @@
         // tree1初期設定
         let tree1 = addNodeTree(graphV);
         tree1.graph = graph1;
-        tree1.cordinateList = cordinateListFromTree(tree1, 20, 250);    
+        tree1.cordinateList = cordinateListFromTree(tree1, 20, 250);
+        
+        // 出発地点、経由地点、目的地のセレクトボックスを設定
+        setSelects(tree1.graph);
 
         // 定数graph1を基に路線図を描画
         drawGraph(graphV);
@@ -307,12 +310,16 @@
         button1.addEventListener("click", ()=>{
 
             context0.clearRect(0, 0, 500, 500);
-            drawGraph(graphV);    
+            drawGraphFromTree(tree1);
 
         } );
 
         // セレクトボックスの再設定
-        button2.addEventListener("click", setSelects);
+        button2.addEventListener("click", ()=>{
+            console.log("tree1.graph", tree1.graph);
+            setSelects(tree1.graph);
+            }
+        );
 
         // 画面の消去
         button3.addEventListener("click", ()=> context0.clearRect(0, 0, 500, 500));
