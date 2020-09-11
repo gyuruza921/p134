@@ -116,21 +116,37 @@
 
                 // 方位を設定
                 let direction = "";
-                const directionTan = Math.atan2(difY, difX);
-                // const directionTan = Math.atan2(Math.abs(difY) , Math.abs(difX));
+                const directionTan = Math.atan2(-difY, difX);
                 console.log("directionTan", directionTan);
-                const deg = -directionTan / Math.PI * 180;
+                const deg = directionTan / Math.PI * 180;
+                // const deg = -directionTan / Math.PI * 180;
                 console.log("deg", deg);
 
+                // 35 +-17.5
                 // 南北を設定
-                if(difY > 0){ direction = direction + "S" }
-                else{ direction = direction + "N" }
+                // 北 90 107.5~90~72.5
+                if(deg <= 117.5 && deg >= 72.5){ direction = "N" }
+                // 北東 45 72.5~45~22.5
+                else if(deg <= 72.5 && deg >= 22.5) { direction = "NE" }
+                // 東 0 22.5~0~-17.5
+                else if(deg <= 22.5 && deg >= -17.5) { direction = "E" }
+                // 南東 -45 -17.5~-45~-72.5
+                else if(deg <= -17.5 && deg >= -72.5) { direction = "SE" }
+                // 南 -90 -72.5~-90~-107.5
+                else if(deg <= -72.5 && deg >= -117.5) { direction = "S" }
+                // 南西 -135 -107.5~-135~-152.5
+                else if(deg <= -117.5 && deg >= -152.5) { direction = "SW" }
+                // 西 180 -152.5~-180 180~152.5
+                else if(Math.abs(deg) <= 180 && Math.abs(deg) >= 152.5) { direction = "W" }
+                else if(deg >= -180 && deg <= -152.5) { direction = "W" }
+                // 北西 135 
+                else if(deg <= 162.5 && deg >= 117.5) { direction = "NW" }
+                // else if(Math.abs(deg) <= 152.5 && Math.abs(deg) >= 117.5) { direction = "NW" }
 
-                // 東西を設定
-                if(difX > 0){ direction = direction + "E"}
-                else{direction = direction + "W"}
-
+                // 方位を設定
                 console.log("direction", direction);
+                selectDirection.value = direction;
+
 
         }
 
