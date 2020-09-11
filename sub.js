@@ -5,23 +5,8 @@
 // 
 
 // ドキュメント部のスイッチ等の要素を操作した時に対応した処理を実行する
-
-    // ロードと同時に実行
-
-    // selectStartの値が変化したときに選択された値を表示
-    selectStart.addEventListener("change", ()=>{
-        context0.clearRect(0, 0, 60, 20);
-        drawNumber(30, 10, selectStart.value, "rgb( 0, 0, 0)");
-    });
-
-    // selectGoalの値が変化したときに選択された値を表示
-    selectGoal.addEventListener("change", ()=>{
-        context0.clearRect(50, 0, 20, 20);
-        drawNumber(60, 10, selectGoal.value, "rgb( 0, 0, 0)");
-    });
-
+    // 実行する処理
     // 最短経路を表示
-    // 関数
     function drawShortestPath(nodeTree, graph) {
 
         // ツリーから座標リスト作成
@@ -57,115 +42,141 @@
     }
 
 
+    // 方位自動設定
+    function directionSet(e) {
+        // 基準となる座標を基にクリックした座標との相対的な方位を計算
+
+        const point1x = +table.childNodes[ +recordSelect.value + 1].childNodes[1].innerText;
+        const point1y = +table.childNodes[ +recordSelect.value + 1].childNodes[2].innerText;
+        // 基準となる座標を表示
+        console.log("point1", point1x, point1y);
+        // クリックした座標を表示
+        console.log("point2", e.clientX, e.clientY);
+
+        // 相対的な方位を計算
+            // point1とpoint2の差を計算
+            const difX = e.clientX - point1x;
+            const difY = e.clientY - point1y;
+
+            // 差を表示
+            console.log("difX", difX);
+            console.log("difY", difY);
+
+            // 方位を設定
+            let direction = "";
+            const directionS = Math.atan2( difY, difX);
+            // const directionS = Math.acosh(difY);
+            console.log("directionTan", directionS);
+            const deg = directionS / Math.PI * 180;
+            // const deg = -directionTan / Math.PI * 180;
+            console.log("deg", deg);
+
+            // 方位を設定
+            // 北 -90 -112~-90~-45
+            if(deg >= -112 && deg <= -68){ direction = "N" }
+            // 北東 -45 -68~-45~-22
+            else if(deg >= -68 && deg <= -22){ direction = "NE" }
+            // 東 0 -45~0~45
+            else if(deg <= 22 && deg >= -22){ direction = "E" }
+            // 南東 45 22~45~68
+            else if(deg <= 68 && deg >= 22){ direction = "SE" }
+            // 南 90 45~90~135
+            else if(deg <= 135 && deg >= 45){ direction = "S" }
+            // 南西　135 112~135~158
+            else if(deg <= 158 && deg >= 112){ direction = "SW" }
+            // 西 180 135~180
+            else if(deg <= 180 && deg >= 112){ direction = "W" }
+            // -180 -180~-158
+            else if(deg <= -158 && deg >= -180){ direction = "W" }
+            // 北西　-135 -112~-135~-158
+            else if(deg >= -158 && deg <= -112){ direction = "NW" }
+
+
+            // 方位を設定
+            console.log("direction", direction);
+            selectDirection.value = direction;                    
+    }
+    
+
     // 最短経路を算出
     const tree1 = addNodeTree(graph1);
     button.addEventListener("click", ()=> drawShortestPath(tree1, graph1));
 
+
+    // イベント検知
+    // ロードと同時に実行
+        // セレクトボックスに選択肢を追加
+        let num = 0;
+        recordSelect.value = 0;
+        recordSelect.innerText = 0;
+        recordOptions[0] = document.createElement("option");
+        recordOptions[0].value = 0;
+        recordOptions[0].innerText = 0;
+        addOption(recordOptions,recordSelect);
+
+        // 表に列を追加
+        addRecorde(num);
+
+
+    // selectStartの値が変化したときに選択された値を表示
+    selectStart.addEventListener("change", ()=>{
+        context0.clearRect(0, 0, 60, 20);
+        drawNumber(30, 10, selectStart.value, "rgb( 0, 0, 0)");
+    });
+
+    // selectGoalの値が変化したときに選択された値を表示
+    selectGoal.addEventListener("change", ()=>{
+        context0.clearRect(50, 0, 20, 20);
+        drawNumber(60, 10, selectGoal.value, "rgb( 0, 0, 0)");
+    });
+
+
+    // ボタン
+
+        // 最短経路を算出
+        button.addEventListener("click", ()=> drawShortestPath(tree1, graph1));
     
-    // 画面のリセット
-    button1.addEventListener("click", ()=>{
+        // 画面のリセット
+        button1.addEventListener("click", ()=>{
 
-        context0.clearRect(0, 0, 500, 500);
-        drawGraph(graph1);       
+            context0.clearRect(0, 0, 500, 500);
+            drawGraph(graph1);       
 
-    } );
+        } );
 
-    // セレクトボックスの再設定
-    button2.addEventListener("click", setSelects);
+        // セレクトボックスの再設定
+        button2.addEventListener("click", setSelects);
 
-    // 画面の消去
-    button3.addEventListener("click", ()=> context0.clearRect(0, 0, 500, 500));
+        // 画面の消去
+        button3.addEventListener("click", ()=> context0.clearRect(0, 0, 500, 500));
 
-    // テスト
-    button4.addEventListener("click", ()=>{
-        console.log("graphV", graphV);
-        // drawGraph(graphV.graph);
-        drawGraphFromTree(graphV);
-    });
-
-
-    // canvas0をクリックしたときにその座標を設定
-    canvas0.addEventListener("click", (e)=>{
-
-        // 方位自動設定機能がoffの時のみ設定
-        if(!radio1On.checked){
-            // table要素に出力
-            table.childNodes[ +recordSelect.value + 1].childNodes[1].innerText = e.clientX;
-            table.childNodes[ +recordSelect.value + 1].childNodes[2].innerText = e.clientY;            
-        }
-        // 方位自動設定がonの時の処理
-        else{
-
-            // 基準となる座標を基にクリックした座標との相対的な方位を計算
-
-            const point1x = +table.childNodes[ +recordSelect.value + 1].childNodes[1].innerText;
-            const point1y = +table.childNodes[ +recordSelect.value + 1].childNodes[2].innerText;
-            // 基準となる座標を表示
-            console.log("point1", point1x, point1y);
-            // クリックした座標を表示
-            console.log("point2", e.clientX, e.clientY);
-
-            // 相対的な方位を計算
-                // point1とpoint2の差を計算
-                const difX = e.clientX - point1x;
-                const difY = e.clientY - point1y;
-
-                // 差を表示
-                console.log("difX", difX);
-                console.log("difY", difY);
-
-                // 方位を設定
-                let direction = "";
-                const directionS = Math.atan2( difY, difX);
-                // const directionS = Math.acosh(difY);
-                console.log("directionTan", directionS);
-                const deg = directionS / Math.PI * 180;
-                // const deg = -directionTan / Math.PI * 180;
-                console.log("deg", deg);
-
-                // 方位を設定
-                // 北 -90 -112~-90~-45
-                if(deg >= -112 && deg <= -68){ direction = "N" }
-                // 北東 -45 -68~-45~-22
-                else if(deg >= -68 && deg <= -22){ direction = "NE" }
-                // 東 0 -45~0~45
-                else if(deg <= 22 && deg >= -22){ direction = "E" }
-                // 南東 45 22~45~68
-                else if(deg <= 68 && deg >= 22){ direction = "SE" }
-                // 南 90 45~90~135
-                else if(deg <= 135 && deg >= 45){ direction = "S" }
-                // 南西　135 112~135~158
-                else if(deg <= 158 && deg >= 112){ direction = "SW" }
-                // 西 180 135~180
-                else if(deg <= 180 && deg >= 112){ direction = "W" }
-                // -180 -180~-158
-                else if(deg <= -158 && deg >= -180){ direction = "W" }
-                // 北西　-135 -112~-135~-158
-                else if(deg >= -158 && deg <= -112){ direction = "NW" }
+        // テスト
+        button4.addEventListener("click", ()=>{
+            console.log("graphV", graphV);
+            // drawGraph(graphV.graph);
+            drawGraphFromTree(graphV);
+        });
 
 
-                // 方位を設定
-                console.log("direction", direction);
-                selectDirection.value = direction;
+    // 画面
 
+        // canvas0をクリックしたときにその座標を設定
+        canvas0.addEventListener("click", (e)=>{
 
-        }
+            // 方位自動設定機能がoffの時のみ設定
+            if(!radio1On.checked){
+                // table要素に出力
+                table.childNodes[ +recordSelect.value + 1].childNodes[1].innerText = e.clientX;
+                table.childNodes[ +recordSelect.value + 1].childNodes[2].innerText = e.clientY;            
+            }
+            // 方位自動設定がonの時の処理
+            else{ directionSet(e) }
 
-    });
+        });
 
-
-    let num = 0;
-    // ページをロードした時に実行
-    // セレクトボックスに選択肢を追加
-    recordSelect.value = 0;
-    recordSelect.innerText = 0;
-    recordOptions[0] = document.createElement("option");
-    recordOptions[0].value = 0;
-    recordOptions[0].innerText = 0;
-    addOption(recordOptions,recordSelect);
 
     // 表に列を追加
-    addRecorde(num);
+
     tableAdd.addEventListener("click", ()=>{
         // idが`tr${num}`の列を追加
         addRecorde(num);
@@ -206,7 +217,7 @@
         }
 
         // セレクトボックスのリセット
-        while(recordSelect.childNodes.length > 1){
+        while(recordSelect.childNodes.length > 2){
             recordSelect.removeChild(recordSelect.childNodes[recordSelect.childNodes.length - 1]);
         }
 
@@ -327,6 +338,7 @@
 
             // 
             neighbourNodeList.forEach((value)=>{
+
                 // 
                 // console.log("value", value);
                 // console.log("value", value.innerText);
@@ -364,7 +376,7 @@
         // tree.cordinateList
         tree["cordinateList"] = cordinateList;
 
-        console.log("tree", tree);
+        // console.log("tree", tree);
 
         return tree;
 

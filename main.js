@@ -774,9 +774,9 @@
                 let nextDirectionR2 = "W";
                 // 次の頂点につながる辺の長さを比較する
                 const distance = nodeList[next[1]].distance;
-                console.log("distance", distance);
-                console.log(`distance ${node.id} to ${next[1]}`, distance[node.id]);
-                console.log(`distance ${next[0]} to ${next[1]}`, distance[next[0]]);
+                // console.log("distance", distance);
+                // console.log(`distance ${node.id} to ${next[1]}`, distance[node.id]);
+                // console.log(`distance ${next[0]} to ${next[1]}`, distance[next[0]]);
                 // 今の頂点と第二の次の頂点との距離が第一の次の頂点と第二の次の頂点との距離より大い場合
                 if(distance[node.id] > distance[next[0]]){
                     // prevDirectionの方位に応じてnextdirectionの方位を曲げる
@@ -790,7 +790,7 @@
                     }
 
                 }
-                console.log("nextDirection2",nextDirection2);
+                // console.log("nextDirection2",nextDirection2);
                 node[nextDirection2] = nodeList[next[1]];
                 nodeList[next[1]][nextDirectionR2] = node;
 
