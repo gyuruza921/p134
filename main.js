@@ -308,6 +308,8 @@
 
             // input要素を作成
             const setNodeAndCost = document.createElement("input");
+            setNodeAndCost.id = "setNodeAndCost";
+            // setNodeAndCost
 
             // ボタン要素の追加
             const inputNodeAndCost = document.createElement("button");

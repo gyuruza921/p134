@@ -239,14 +239,16 @@
     }
     
 
-    // tree1初期設定
-    let tree1 = addNodeTree(graphV);
-    tree1.graph = graph1;
-    tree1.cordinateList = cordinateListFromTree(tree1, 20, 250);
+
 
 
     // イベント検知
     // ロードと同時に実行
+
+        // tree1初期設定
+        let tree1 = addNodeTree(graphV);
+        tree1.graph = graph1;
+        tree1.cordinateList = cordinateListFromTree(tree1, 20, 250);    
 
         // 定数graph1を基に路線図を描画
         drawGraph(graphV);
@@ -263,35 +265,48 @@
         // 表に列を追加
         addRecorde(num);
 
+    // HTML要素の状態が変化した時に実行
 
-    // selectStartの値が変化したときに選択された値を表示
-    selectStart.addEventListener("change", ()=>{
-        context0.clearRect(0, 0, 60, 20);
-        drawNumber(30, 10, selectStart.value, "rgb( 0, 0, 0)");
-    });
+        // selectStartの値が変化したときに選択された値を表示
+        selectStart.addEventListener("change", ()=>{
+            context0.clearRect(0, 0, 60, 20);
+            drawNumber(30, 10, selectStart.value, "rgb( 0, 0, 0)");
+        });
 
-    // selectGoalの値が変化したときに選択された値を表示
-    selectGoal.addEventListener("change", ()=>{
-        context0.clearRect(50, 0, 20, 20);
-        drawNumber(60, 10, selectGoal.value, "rgb( 0, 0, 0)");
-    });
+        // selectGoalの値が変化したときに選択された値を表示
+        selectGoal.addEventListener("change", ()=>{
+            context0.clearRect(50, 0, 20, 20);
+            drawNumber(60, 10, selectGoal.value, "rgb( 0, 0, 0)");
+        });
+
+        // selectDirectionの値が変化したときに実行
+        selectDirection.addEventListener("change", ()=>{
+
+            // 頂点及び距離の入力欄の値を選んだ項目の値に変更する
+            // 表の列の中から選ばれた項目
+            let selected;
+            table.childNodes[+recordSelect.value + 1].childNodes.forEach( (node)=> {
+                if(node.className == selectDirection.value){
+                    selected = node;
+                }
+            } );
+            
+            console.log("selected td", selected);
+
+            setNodeAndCost.value = selected.innerText ;
+
+        })
 
 
-    // ボタン
+    // HTML要素がクリックされた時に実行
 
         // 最短経路を算出
-        // button.addEventListener("click", ()=> drawShortestPath(tree1, graph1));
-        button.addEventListener("click", ()=>{
-            // tree1 = graphV;
-            console.log(tree1);
-            drawShortestPath(tree1);
-        });
+        button.addEventListener("click", ()=> drawShortestPath(tree1) );
     
         // 画面のリセット
         button1.addEventListener("click", ()=>{
 
             context0.clearRect(0, 0, 500, 500);
-            // drawGraph(graph1); 
             drawGraph(graphV);    
 
         } );
@@ -367,6 +382,7 @@
         // 各方位に頂点と距離を入力
         inputNodeAndCost.addEventListener("click", ()=>{
 
+            // 表の列の中から選ばれた項目
             let selected;
             table.childNodes[+recordSelect.value + 1].childNodes.forEach( (node)=> {
                 if(node.className == selectDirection.value){
