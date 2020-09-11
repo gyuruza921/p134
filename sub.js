@@ -317,7 +317,7 @@
             // 列内部の子要素のデータ
             const tableData = Array.from(table.childNodes[i].childNodes);
             // 表の列内部の値を読み取る
-            console.log("tableData", tableData);
+            // console.log("tableData", tableData);
             
             // 隣接する頂点のリスト
             const neighbourNodeList = tableData.filter( (node)=> {return node.className.match(/[NEWS]/) != null && node.innerText != "0" } );
@@ -328,12 +328,12 @@
             // 
             neighbourNodeList.forEach((value)=>{
                 // 
-                console.log("value", value);
-                console.log("value", value.innerText);
-                console.log("value", value.className);
+                // console.log("value", value);
+                // console.log("value", value.innerText);
+                // console.log("value", value.className);
                 // 頂点番号と距離
                 const nodeAndCost = value.innerText.split(",");
-                console.log("nodeAndCost",nodeAndCost);
+                // console.log("nodeAndCost",nodeAndCost);
                 // 方位
                 const direction = value.className;
                 // 現在の頂点の方位に隣接する頂点を登録する
