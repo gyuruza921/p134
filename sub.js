@@ -116,32 +116,33 @@
 
                 // 方位を設定
                 let direction = "";
-                const directionTan = Math.atan2(-difY, difX);
-                console.log("directionTan", directionTan);
-                const deg = directionTan / Math.PI * 180;
+                const directionS = Math.atan2( difY, difX);
+                // const directionS = Math.acosh(difY);
+                console.log("directionTan", directionS);
+                const deg = directionS / Math.PI * 180;
                 // const deg = -directionTan / Math.PI * 180;
                 console.log("deg", deg);
 
-                // 35 +-17.5
-                // 南北を設定
-                // 北 90 107.5~90~72.5
-                if(deg <= 117.5 && deg >= 72.5){ direction = "N" }
-                // 北東 45 72.5~45~22.5
-                else if(deg <= 72.5 && deg >= 22.5) { direction = "NE" }
-                // 東 0 22.5~0~-17.5
-                else if(deg <= 22.5 && deg >= -17.5) { direction = "E" }
-                // 南東 -45 -17.5~-45~-72.5
-                else if(deg <= -17.5 && deg >= -72.5) { direction = "SE" }
-                // 南 -90 -72.5~-90~-107.5
-                else if(deg <= -72.5 && deg >= -117.5) { direction = "S" }
-                // 南西 -135 -107.5~-135~-152.5
-                else if(deg <= -117.5 && deg >= -152.5) { direction = "SW" }
-                // 西 180 -152.5~-180 180~152.5
-                else if(Math.abs(deg) <= 180 && Math.abs(deg) >= 152.5) { direction = "W" }
-                else if(deg >= -180 && deg <= -152.5) { direction = "W" }
-                // 北西 135 
-                else if(deg <= 162.5 && deg >= 117.5) { direction = "NW" }
-                // else if(Math.abs(deg) <= 152.5 && Math.abs(deg) >= 117.5) { direction = "NW" }
+                // 方位を設定
+                // 北 -90 -112~-90~-45
+                if(deg >= -112 && deg <= -68){ direction = "N" }
+                // 北東 -45 -68~-45~-22
+                else if(deg >= -68 && deg <= -22){ direction = "NE" }
+                // 東 0 -45~0~45
+                else if(deg <= 22 && deg >= -22){ direction = "E" }
+                // 南東 45 22~45~68
+                else if(deg <= 68 && deg >= 22){ direction = "SE" }
+                // 南 90 45~90~135
+                else if(deg <= 135 && deg >= 45){ direction = "S" }
+                // 南西　135 112~135~158
+                else if(deg <= 158 && deg >= 112){ direction = "SW" }
+                // 西 180 135~180
+                else if(deg <= 180 && deg >= 112){ direction = "W" }
+                // -180 -180~-158
+                else if(deg <= -158 && deg >= -180){ direction = "W" }
+                // 北西　-135 -112~-135~-158
+                else if(deg >= -158 && deg <= -112){ direction = "NW" }
+
 
                 // 方位を設定
                 console.log("direction", direction);
