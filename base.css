@@ -13,3 +13,8 @@
 }
 
 #tr th {min-width:70px;}
+
+td input {
+    min-width: 70px;
+    max-width: 70px;
+}

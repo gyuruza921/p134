@@ -114,10 +114,11 @@
             // console.log(td);
             for(let i = 0; i <= 11; i ++){
                 const td = document.createElement("td");
-                td.innerText = "0";
+                td.innerHTML = "0";
                 // 方位入力欄にクラス名を追加
                 if(i >= 11 - 7){
                     td.className = directions[i - 4];
+                    td.innerHTML = "<input></input>";
                 }
                 record.appendChild(td);
             }

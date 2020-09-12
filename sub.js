@@ -187,7 +187,12 @@
             // console.log("tableData", tableData);
             
             // 隣接する頂点のリスト
-            const neighbourNodeList = tableData.filter( (node)=> {return node.className.match(/[NEWS]/) != null && node.innerText != "0" } );
+            // const neighbourNodeList = tableData.filter( (node)=> {return node.className.match(/[NEWS]/) != null && node.innerText != "0" } );
+            
+            // 隣接する頂点のリスト
+            const neighbourNodeList = tableData.filter( (node)=> {
+                return node.className.match(/[NEWS]/) != null && node.childNodes[0].value != "";
+             } );
 
             // 現在の頂点の距離プロパティを設定
             nodeList[i - 1].distance[i - 1] = 0;
@@ -197,18 +202,27 @@
 
                 // 
                 // console.log("value", value);
-                // console.log("value", value.innerText);
-                // console.log("value", value.className);
+                // console.log("value", value.firstChild);
+                // console.log("value", value.firstChild.value);
+
                 // 頂点番号と距離
-                const nodeAndCost = value.innerText.split(",");
-                // console.log("nodeAndCost",nodeAndCost);
+                const nodeAndCost = value.firstChild.value.split(",");
                 // 方位
                 const direction = value.className;
+
                 // 現在の頂点の方位に隣接する頂点を登録する
                 nodeList[i - 1][direction] = nodeList[+nodeAndCost[0]];
                 // 現在の頂点と隣接する頂点の距離を設定
-                nodeList[i - 1].distance[+nodeAndCost[0]] = +nodeAndCost[1];
-
+                if( !isNaN(+nodeAndCost[1]) ){
+                    nodeList[i - 1].distance[+nodeAndCost[0]] = +nodeAndCost[1];
+                }
+                else if( +nodeAndCost[1] == i - 1 ){
+                    nodeList[i - 1].distance[i - 1] = 0;
+                }
+                else{
+                    nodeList[i - 1].distance[+nodeAndCost[0]] = -1;
+                }
+                
             });
 
             // graph
@@ -232,7 +246,7 @@
         // tree.cordinateList
         tree["cordinateList"] = cordinateList;
 
-        // console.log("tree", tree);
+        console.log("tree", tree);
 
         return tree;
 
@@ -256,7 +270,7 @@
         // 定数graph1を基に路線図を描画
         drawGraph(graphV);
 
-        // セレクトボックスに選択肢を追加
+        // セレクトボックスに最初の選択肢を追加
         let num = 0;
         recordSelect.value = 0;
         recordSelect.innerText = 0;
@@ -370,7 +384,7 @@
                 num = 0;         
             }
             // 表の最後の列のリセット
-            table.childNodes[1].childNodes.forEach( (node)=> node.innerText = 0 )
+            table.childNodes[1].childNodes.forEach( (node)=> node.childNodes[0].value = null )
 
             // セレクトボックスのリセット
             while(recordSelect.childNodes.length > 2){
@@ -398,7 +412,8 @@
             } );
             
             console.log("selected td", selected);
-            selected.innerText = setNodeAndCost.value;
+            // selected.innerText = setNodeAndCost.value;
+            selected.firstChild.value = setNodeAndCost.value;
 
         } );
 
