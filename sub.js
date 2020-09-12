@@ -54,12 +54,12 @@
         // 基準となる座標を表示
         console.log("point1", point1x, point1y);
         // クリックした座標を表示
-        console.log("point2", e.clientX, e.clientY);
+        console.log("point2", e.offsetX, e.offsetY);
 
         // 相対的な方位を計算
             // point1とpoint2の差を計算
-            const difX = e.clientX - point1x;
-            const difY = e.clientY - point1y;
+            const difX = e.offsetX - point1x;
+            const difY = e.offsetY - point1y;
 
             // 差を表示
             console.log("difX", difX);
@@ -411,11 +411,12 @@
         // canvas0をクリックしたときにその座標を設定
         canvas0.addEventListener("click", (e)=>{
 
+            console.log(e);
             // 方位自動設定機能がoffの時のみ設定
             if(!radio1On.checked){
                 // table要素に出力
-                table.childNodes[ +recordSelect.value + 1].childNodes[1].innerText = e.clientX;
-                table.childNodes[ +recordSelect.value + 1].childNodes[2].innerText = e.clientY;            
+                table.childNodes[ +recordSelect.value + 1].childNodes[1].innerText = e.offsetX;
+                table.childNodes[ +recordSelect.value + 1].childNodes[2].innerText = e.offsetY;            
             }
             // 方位自動設定がonの時の処理
             else{ directionSet(e) }

@@ -1310,14 +1310,14 @@
             const end = edge.end;
             drawLineBetweenPoints(cordinateList[start], cordinateList[end], "rgb(0, 0, 250)");
             // 辺の距離を描画
-            // 距離を表示する座標を算出
-            const xs = cordinateList[start].x;
-            const xe = cordinateList[end].x;
-            const ys = cordinateList[start].y;
-            const ye = cordinateList[end].y;
-            const cost = graph[start][end];
-            // 
-            drawNumber(xs - 5 + ((xe - xs) / 2), ys - 9 + ((ye - ys) / 2), cost, "rgb( 0, 0, 0)")
+                // 距離を表示する座標を算出
+                const xs = cordinateList[start].x;
+                const xe = cordinateList[end].x;
+                const ys = cordinateList[start].y;
+                const ye = cordinateList[end].y;
+                const cost = graph[start][end];
+                // 
+                drawNumber(xs - 5 + ((xe - xs) / 2), ys - 9 + ((ye - ys) / 2), cost, "rgb( 0, 0, 0)");
         }
 
         // 番号を記入
