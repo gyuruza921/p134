@@ -555,6 +555,62 @@
         };
 
 
+    // 方位自動設定
+    function directionSet(e) {
+        // 基準となる座標を基にクリックした座標との相対的な方位を計算
+
+        const point1x = +table.childNodes[ +recordSelect.value + 1].childNodes[1].innerText;
+        const point1y = +table.childNodes[ +recordSelect.value + 1].childNodes[2].innerText;
+        // 基準となる座標を表示
+        console.log("point1", point1x, point1y);
+        // クリックした座標を表示
+        console.log("point2", e.offsetX, e.offsetY);
+
+        // 相対的な方位を計算
+            // point1とpoint2の差を計算
+            const difX = e.offsetX - point1x;
+            const difY = e.offsetY - point1y;
+
+            // 差を表示
+            console.log("difX", difX);
+            console.log("difY", difY);
+
+            // 方位を設定
+            let direction = "";
+            const directionS = Math.atan2( difY, difX);
+            // const directionS = Math.acosh(difY);
+            console.log("directionTan", directionS);
+            const deg = directionS / Math.PI * 180;
+            // const deg = -directionTan / Math.PI * 180;
+            console.log("deg", deg);
+
+            // 方位を設定
+            // 北 -90 -112~-90~-45
+            if(deg >= -112 && deg <= -68){ direction = "N" }
+            // 北東 -45 -68~-45~-22
+            else if(deg >= -68 && deg <= -22){ direction = "NE" }
+            // 東 0 -45~0~45
+            else if(deg <= 22 && deg >= -22){ direction = "E" }
+            // 南東 45 22~45~68
+            else if(deg <= 68 && deg >= 22){ direction = "SE" }
+            // 南 90 45~90~135
+            else if(deg <= 135 && deg >= 45){ direction = "S" }
+            // 南西　135 112~135~158
+            else if(deg <= 158 && deg >= 112){ direction = "SW" }
+            // 西 180 135~180
+            else if(deg <= 180 && deg >= 112){ direction = "W" }
+            // -180 -180~-158
+            else if(deg <= -158 && deg >= -180){ direction = "W" }
+            // 北西　-135 -112~-135~-158
+            else if(deg >= -158 && deg <= -112){ direction = "NW" }
+
+            // 方位を設定
+            console.log("direction", direction);
+            selectDirection.value = direction;
+
+    }
+
+
 // 
 // 処理部
 // 
@@ -1177,7 +1233,6 @@
 
     }
 
-    // 動作確認
 
 // 
 // 表示部
@@ -1214,7 +1269,6 @@
 
     }
 
-
     // 2点間に線を引く関数
     function drawLineBetweenPoints(point1, point2, color) {
 
@@ -1230,7 +1284,6 @@
         context0.stroke();
 
     }
-
 
     // グラフを描画する処理
     function drawGraph(graph) {
@@ -1276,8 +1329,6 @@
         }
 
     }
-
-
 
     // 木構造から路線図を描画する
     function drawGraphFromTree(tree) {
@@ -1330,9 +1381,41 @@
 
     }
 
-    // 方位を自動設定
-    function directionAutoSet(event , currentPoint) {
+    // 最短経路を描画
+    function drawShortestPath(nodeTree) {
 
-        // eventの座標とcurrentPointの座標を比較して相対的な方位を表示
+
+        const graph = nodeTree.graph;
+        // ツリーから座標リスト作成
+        // const cordinateList = cordinateListFromTree(nodeTree, 20, 250);
+        const cordinateList = nodeTree.cordinateList;
+
+        // 最短経路を計算
+        let path1 = dijkstra(graph, selectStart.value, selectGoal.value);
+
+        // 経由地モードがonの場合
+        if(radioOn.checked){
+
+            const pathsv = dijkstra(graph, selectStart.value, selectVia.value);
+
+            const pathvg = dijkstra(graph, selectVia.value, selectGoal.value);
+
+            path1 = pathsv.concat(pathvg);
+
+        }
+
+        // 辺を描画
+        for(let i = 1; i <= path1.length - 1; i ++) {
+            const start = cordinateList[ path1[i - 1] ];
+            const end = cordinateList[ path1[i] ];
+            drawLineBetweenPoints(start, end, "rgb(0, 150, 0)");
+        }
+
+        // 経路の頂点を緑で表示
+        for(const node of path1){
+            drawNode(cordinateList[node].x, cordinateList[node].y, "rgb(0, 150, 0)");
+            drawNumber(cordinateList[node].x - 3, cordinateList[node].y + 2, node, "rgb(250, 250, 250)");
+        }
 
     }
+
