@@ -614,110 +614,7 @@
 // 
 // 処理部
 // 
-// 入力部のデータを処理し、表示部で扱える状態にする。
-
-
-    // ダイクストラ法で最短経路を算出する
-    // graphは隣接行列、startIndexとgoalIndexは頂点番号
-    function dijkstra(graph, startIndex, goalIndex) {
-        // 
-        // 前準備
-        // 
-        const nodeNum = graph.length;           // 配列に入ってる配列の数が頂点数
-        const distance = new Array(nodeNum);    // スタート地点からの距離表を作成する
-        distance.fill(Infinity);                // 距離を無限大で埋める
-        distance[startIndex] = 0;               // ただしスタート地点からスタート地点への距離のみゼロ
-
-        const nodeIndexList = []; // 頂点番号リスト
-        for(let i = 0; i < nodeNum; i++){
-            nodeIndexList.push(i); // 頂点番号をリストに入れる
-        }
-
-        const previousNode = new Array(nodeNum); // 前の頂点
-        previousNode.fill(-1); // -1(無効)で埋める
-
-        // 
-        // 計算
-        // 
-
-        // 頂点番号リストが空でないあいだ
-        while(nodeIndexList.length > 0) {
-            // 頂点番号リストから、スタート地点からの距離が最小の頂点を選ぶ
-            // スタート地点からの総距離はdistance[nodeIndex[i]]で取得できる
-            // distance[i]がdistance[minDistanceIndex]より小さい番号iを
-            // どんどんminDistanceIndexに入れていけば、最終的に最小のiが得られる
-            let minDistanceIndex = 0;
-            for(let i = 0; i < nodeIndexList.length; i++) {
-
-                // 頂点iからスタート地点への総距離
-                const distanceToStart = distance[nodeIndexList[i]];
-
-                    if(distanceToStart < distance[minDistanceIndex]) {
-
-                    minDistanceIndex = i;
-
-                    }
-
-            }
-
-            const nodeIndex = nodeIndexList[minDistanceIndex];
-            nodeIndexList.splice(minDistanceIndex, 1); // 選んだノードを削除
-
-            // 選んだ頂点（nodeIndex）から繋がっているノードの一覧を作る
-            // 頂点fromから頂点toへの距離はgraph[from][to]で取得できる
-            // 距離が0より大きければ繋がっている
-            // 繋がっていたら番号iをneighbourIndexListに入れる
-            const neighbourIndexList = [];
-            for(let i = 0; i < nodeNum; i++) {
-
-                const from = nodeIndex;
-                const to = nodeIndexList[i];
-          
-                if(graph[from][to] > 0) {
-                  neighbourIndexList.push(to);
-                }
-
-            }
-
-            // スタート地点からnIndexまでの現在の総距離（これをAとする）と、
-            // 「スタート地点からnodeIndexまでの総距離」と「nodeIndexからnIndexまでの距離」
-            // を足したもの（これをBとする）を比較して、
-            // Bが小さい場合はdistance[nIndex]をBで更新し、
-            // previousNode[nIndex]にnodeIndexを入れる
-            for(const nIndex of neighbourIndexList) {
-
-                // Aを求める
-                let A;
-                // スタート地点からnIndexまでの距離を入力する
-                A = distance[nIndex];
-
-                // Bを求める
-                let B;
-
-                const B1 = distance[nodeIndex];
-                const B2 = graph[nodeIndex][nIndex];
-                B = B1 + B2;
-
-                if(B <= A) {
-                    distance[nIndex] = B;
-                    previousNode[nIndex] = nodeIndex;
-                }
-
-            }
-
-        }
- 
-        // 答えは出たが人間が読みやすい形式ではないので
-        // ゴールから逆順に辿って最短経路として出す
-        const shortestPath = [goalIndex];
-        for(let prev = previousNode[goalIndex]; prev >= 0; prev = previousNode[prev]) {
-            shortestPath.unshift(prev);
-        }
-
-        return shortestPath;
-
-    }
-
+// 入力部のデータを基に計算等の処理を行う
 
     // 木にノードを追加する関数
     function addNodeTree(graph) {
@@ -1146,8 +1043,7 @@
 
         // console.log("cordinateList", cordinateList);
         return cordinateList;
-    }    
-
+    } 
 
 
     // 木から辺を探す処理
@@ -1230,5 +1126,259 @@
             }
 
             return edges;
+
+    }
+
+
+    // 表の内容から隣接行列を作る
+    function graphFromTable(table) {
+
+        // 隣接行列
+        const graph = [];
+
+        // 座標リスト
+        const cordinateList = [];
+
+        // 表の内容を代入していく
+        // 頂点番号
+        for(let node = 1; node <= table.childNodes.length - 1; node++){
+            // console.log("node", table.childNodes[node]);
+            // 座標
+            const cordinateX = +table.childNodes[node].childNodes[1].innerText;
+            const cordinateY = +table.childNodes[node].childNodes[2].innerText;
+            cordinateList.push({x: cordinateX, y: cordinateY});
+            // 距離
+            let distance = table.childNodes[node].childNodes[3].innerText;
+            // console.log("distance", distance);
+            distance = distance.split(',');
+            distance = distance.map((value)=>{return +value} );
+            // console.log("distance", distance);
+            graph.push(distance);
+        }
+
+        const nodeTree = addNodeTree(graph); 
+        
+        // nodeTreeに座標リストプロパティを追加
+        nodeTree["cordinateList"] = cordinateList;
+
+        // nodeTreeに隣接行列graphのプロパティを追加
+        nodeTree["graph"] = graph;
+
+        // console.log("graph", graph);
+        console.log("nodeTree", nodeTree);
+        return nodeTree;
+
+    }
+
+
+    // 表の内容から木を作る
+    function treeFromTable(table){
+
+        // 
+        // 前準備
+        // 
+
+        // 木のインスタンス作成
+        const tree = new Tree;
+
+        // 頂点のリスト
+        const nodeList = [];
+
+        // 隣接行列
+        const graph = [];
+
+        // 座標リスト
+        const cordinateList = [];
+
+        // 
+        // 計算
+        // 
+
+        // 頂点のリストに内容を加える
+        for(let i = 1; i <= table.childNodes.length - 1; i ++){
+            // 距離表の作成
+            const distance = new Array(table.childNodes.length - 1);
+            distance.fill(-1);
+            // 頂点のインスタンス作成
+            nodeList[i - 1] = new TreeNode({id: i - 1, distance: distance});
+        }
+
+        // 
+        // 計算
+        // 
+
+        // 表の列の数だけ繰り返す
+        for(let i = 1; i <= table.childNodes.length - 1; i ++){
+
+            // 列内部の子要素のデータ
+            const tableData = Array.from(table.childNodes[i].childNodes);
+            // 表の列内部の値を読み取る
+            // console.log("tableData", tableData);
+            
+            // 隣接する頂点のリスト
+            // const neighbourNodeList = tableData.filter( (node)=> {return node.className.match(/[NEWS]/) != null && node.innerText != "0" } );
+            
+            // 隣接する頂点のリスト
+            const neighbourNodeList = tableData.filter( (node)=> {
+                return node.className.match(/[NEWS]/) != null && node.childNodes[0].value != "";
+             } );
+
+            // 現在の頂点の距離プロパティを設定
+            nodeList[i - 1].distance[i - 1] = 0;
+
+            // 
+            neighbourNodeList.forEach((value)=>{
+
+                // 
+                // console.log("value", value);
+                // console.log("value", value.firstChild);
+                // console.log("value", value.firstChild.value);
+
+                // 頂点番号と距離
+                const nodeAndCost = value.firstChild.value.split(",");
+                // 方位
+                const direction = value.className;
+
+                // 現在の頂点の方位に隣接する頂点を登録する
+                nodeList[i - 1][direction] = nodeList[+nodeAndCost[0]];
+                // 現在の頂点と隣接する頂点の距離を設定
+                if( !isNaN(+nodeAndCost[1]) ){
+                    nodeList[i - 1].distance[+nodeAndCost[0]] = +nodeAndCost[1];
+                }
+                else if( +nodeAndCost[1] == i - 1 ){
+                    nodeList[i - 1].distance[i - 1] = 0;
+                }
+                else{
+                    nodeList[i - 1].distance[+nodeAndCost[0]] = -1;
+                }
+                
+            });
+
+            // graph
+            graph.push(nodeList[i - 1].distance);
+
+            // cordinateList
+            cordinateList.push({x: +tableData[1].innerText, y: +tableData[2].innerText}); 
+
+
+        }
+
+        // tree.rootを設定
+        tree.root = nodeList[0];
+
+        // tree.nodeList
+        tree["nodeList"] = nodeList;
+
+        // tree.graph
+        tree["graph"] = graph;
+
+        // tree.cordinateList
+        tree["cordinateList"] = cordinateList;
+
+        console.log("tree", tree);
+
+        return tree;
+
+    }
+
+
+    // ダイクストラ法で最短経路を算出する
+    // graphは隣接行列、startIndexとgoalIndexは頂点番号
+    function dijkstra(graph, startIndex, goalIndex) {
+        // 
+        // 前準備
+        // 
+        const nodeNum = graph.length;           // 配列に入ってる配列の数が頂点数
+        const distance = new Array(nodeNum);    // スタート地点からの距離表を作成する
+        distance.fill(Infinity);                // 距離を無限大で埋める
+        distance[startIndex] = 0;               // ただしスタート地点からスタート地点への距離のみゼロ
+
+        const nodeIndexList = []; // 頂点番号リスト
+        for(let i = 0; i < nodeNum; i++){
+            nodeIndexList.push(i); // 頂点番号をリストに入れる
+        }
+
+        const previousNode = new Array(nodeNum); // 前の頂点
+        previousNode.fill(-1); // -1(無効)で埋める
+
+        // 
+        // 計算
+        // 
+
+        // 頂点番号リストが空でないあいだ
+        while(nodeIndexList.length > 0) {
+            // 頂点番号リストから、スタート地点からの距離が最小の頂点を選ぶ
+            // スタート地点からの総距離はdistance[nodeIndex[i]]で取得できる
+            // distance[i]がdistance[minDistanceIndex]より小さい番号iを
+            // どんどんminDistanceIndexに入れていけば、最終的に最小のiが得られる
+            let minDistanceIndex = 0;
+            for(let i = 0; i < nodeIndexList.length; i++) {
+
+                // 頂点iからスタート地点への総距離
+                const distanceToStart = distance[nodeIndexList[i]];
+
+                    if(distanceToStart < distance[minDistanceIndex]) {
+
+                    minDistanceIndex = i;
+
+                    }
+
+            }
+
+            const nodeIndex = nodeIndexList[minDistanceIndex];
+            nodeIndexList.splice(minDistanceIndex, 1); // 選んだノードを削除
+
+            // 選んだ頂点（nodeIndex）から繋がっているノードの一覧を作る
+            // 頂点fromから頂点toへの距離はgraph[from][to]で取得できる
+            // 距離が0より大きければ繋がっている
+            // 繋がっていたら番号iをneighbourIndexListに入れる
+            const neighbourIndexList = [];
+            for(let i = 0; i < nodeNum; i++) {
+
+                const from = nodeIndex;
+                const to = nodeIndexList[i];
+          
+                if(graph[from][to] > 0) {
+                  neighbourIndexList.push(to);
+                }
+
+            }
+
+            // スタート地点からnIndexまでの現在の総距離（これをAとする）と、
+            // 「スタート地点からnodeIndexまでの総距離」と「nodeIndexからnIndexまでの距離」
+            // を足したもの（これをBとする）を比較して、
+            // Bが小さい場合はdistance[nIndex]をBで更新し、
+            // previousNode[nIndex]にnodeIndexを入れる
+            for(const nIndex of neighbourIndexList) {
+
+                // Aを求める
+                let A;
+                // スタート地点からnIndexまでの距離を入力する
+                A = distance[nIndex];
+
+                // Bを求める
+                let B;
+
+                const B1 = distance[nodeIndex];
+                const B2 = graph[nodeIndex][nIndex];
+                B = B1 + B2;
+
+                if(B <= A) {
+                    distance[nIndex] = B;
+                    previousNode[nIndex] = nodeIndex;
+                }
+
+            }
+
+        }
+ 
+        // 答えは出たが人間が読みやすい形式ではないので
+        // ゴールから逆順に辿って最短経路として出す
+        const shortestPath = [goalIndex];
+        for(let prev = previousNode[goalIndex]; prev >= 0; prev = previousNode[prev]) {
+            shortestPath.unshift(prev);
+        }
+
+        return shortestPath;
 
     }
